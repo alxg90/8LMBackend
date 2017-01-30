@@ -1,11 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using _8LMCore.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace _8LMBackend.Controllers
 {
     public class HomeController : Controller
     {
+
         public IActionResult Index()
         {
+            using (var context = new dashboard_developmentContext())
+            {
+                var users = context.Campaign.ToListAsync().Result;
+
+            }
             return View();
         }
 
