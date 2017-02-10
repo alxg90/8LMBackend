@@ -1,39 +1,39 @@
 {
   "dependencies": {
     "Microsoft.NETCore.App": {
-      "version": "1.0.1",
+      "version": "1.1.0",
       "type": "platform"
     },
-    "Microsoft.AspNetCore.Diagnostics": "1.0.0",
-    "Microsoft.AspNetCore.Mvc": "1.0.1",
-    "Microsoft.AspNetCore.Razor.Tools": {
-      "version": "1.0.0-preview2-final",
-      "type": "build"
-    },
-    "Microsoft.AspNetCore.Routing": "1.0.1",
-    "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
-    "Microsoft.AspNetCore.Server.Kestrel": "1.0.1",
-    "Microsoft.AspNetCore.StaticFiles": "1.0.0",
-    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0",
+    "Microsoft.AspNetCore.Diagnostics": "1.1.0",
+    "Microsoft.AspNetCore.Mvc": "1.1.1",
     "Microsoft.Extensions.Logging.Console": "1.1.0",
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
-    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
     "Microsoft.EntityFrameworkCore.Tools": "1.1.0-preview4-final",
     "MySql.Data.EntityFrameworkCore": "7.0.6-IR31",
-    "Pomelo.EntityFrameworkCore.MySql": "1.1.1-prerelease-10015",
-    "Pomelo.EntityFrameworkCore.MySql.Design": "1.1.1-prerelease-10015"
+    "Pomelo.EntityFrameworkCore.MySql": "1.1.1-prerelease-10017",
+    "Pomelo.EntityFrameworkCore.MySql.Design": "1.1.1-prerelease-10017",
+    "Microsoft.AspNetCore.Authentication.Cookies": "1.1.0",
+    "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.1.0-preview4-final",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.1.0",
+    "Microsoft.AspNetCore.StaticFiles": "1.1.0",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.1.0",
+    "Microsoft.Extensions.Configuration.Json": "1.1.0",
+    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0",
+    "Microsoft.AspNetCore.Razor.Tools": "1.1.0-preview4-final",
+    "Microsoft.AspNetCore.Routing": "1.1.0",
+    "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0",
+    "BundlerMinifier.Core": "2.2.306",
+    "Microsoft.EntityFrameworkCore.Design": "1.1.0",
+    "Microsoft.EntityFrameworkCore.Design.Core": "1.0.0-preview2-final",
+    "8LMBackend.DataAccess": "1.0.0-*",
+    "8LMBackend.Service": "1.0.0-*"
   },
 
-  "tools": {
-    "BundlerMinifier.Core": "2.0.238",
-    "Microsoft.AspNetCore.Razor.Tools": "1.0.0-preview2-final",
-    "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"
-  },
+  "tools": { },
 
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
       "imports": [
         "dotnet5.6",
         "portable-net45+win8"

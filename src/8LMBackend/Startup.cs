@@ -4,6 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Http;
+using _8LMBackend.Service;
+using _8LMBackend.DataAccess.Repositories;
+using _8LMBackend.DataAccess.Infrastructure;
 
 namespace _8LMBackend
 {
@@ -26,6 +30,11 @@ namespace _8LMBackend
         {
             // Add framework services.
             services.AddMvc();
+
+            services.AddScoped(typeof(IDbFactory), typeof(DbFactory));
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            services.AddScoped(typeof(ICampaignService), typeof(CampaignService));
+            services.AddScoped(typeof(ICampaignsRepository), typeof(CampaignsRepository));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,6 +42,15 @@ namespace _8LMBackend
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions()
+            {
+                AuthenticationScheme = "MyCookieMiddlewareInstance",
+                LoginPath = new PathString("/Account/Unauthorized/"),
+                AccessDeniedPath = new PathString("/Account/Forbidden/"),
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true
+            });
 
             if (env.IsDevelopment())
             {
@@ -51,11 +69,6 @@ namespace _8LMBackend
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
         }
     }
