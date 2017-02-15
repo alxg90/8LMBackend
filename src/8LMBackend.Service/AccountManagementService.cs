@@ -89,5 +89,15 @@ namespace _8LMBackend.Service
 				DbContext.SaveChanges();
 			}
 		}
+
+        public void AddPromoCode(string Code, DateTime dtFrom, DateTime dtTo)
+        {
+
+        }
+
+        public void AssignPromoCode(int UserID, string Code)
+        {
+
+        }
     }
 }

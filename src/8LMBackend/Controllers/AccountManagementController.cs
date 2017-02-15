@@ -1,6 +1,7 @@
 ﻿using _8LMBackend.DataAccess.Models;
 using _8LMBackend.Service;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 
 namespace _8LMCore.Controllers
@@ -29,5 +30,15 @@ namespace _8LMCore.Controllers
 		{
 			_accountManagementService.DeassignFunction(FunctionID, RoleID);
 		}
+
+        public void AddPromoCode(string Code, DateTime dtFrom, DateTime dtTo)
+        {
+            _accountManagementService.AddPromoCode(Code, dtFrom, dtTo);
+        }
+
+        public void AssignPromoCode(int UserID, string Code)
+        {
+            _accountManagementService.AssignPromoCode(UserID, Code);
+        }
     }
 }

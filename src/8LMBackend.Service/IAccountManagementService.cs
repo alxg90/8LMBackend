@@ -11,5 +11,7 @@ namespace _8LMBackend.Service
 		AccountManagementViewModel AccountList();
 		void AssignFunction(int FunctionID, int RoleID, int CreatedBy);
 		void DeassignFunction(int FunctionID, int RoleID);
+        void AddPromoCode(string Code, DateTime dtFrom, DateTime dtTo);
+        void AssignPromoCode(int UserID, string Code);
     }
 }
