@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class PageType
+    public partial class Pagetype
     {
-        public PageType()
+        public Pagetype()
         {
             Pages = new HashSet<Pages>();
-            PageToolbox = new HashSet<PageToolbox>();
+            Pagetoolbox = new HashSet<Pagetoolbox>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<Pages> Pages { get; set; }
-        public virtual ICollection<PageToolbox> PageToolbox { get; set; }
+        public virtual ICollection<Pagetoolbox> Pagetoolbox { get; set; }
     }
 }

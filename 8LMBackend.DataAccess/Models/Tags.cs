@@ -7,14 +7,14 @@ namespace _8LMBackend.DataAccess.Models
     {
         public Tags()
         {
-            CampaignTag = new HashSet<CampaignTag>();
-            PageTag = new HashSet<PageTag>();
+            Campaigntag = new HashSet<Campaigntag>();
+            Pagetag = new HashSet<Pagetag>();
         }
 
         public int Id { get; set; }
         public string Tag { get; set; }
 
-        public virtual ICollection<CampaignTag> CampaignTag { get; set; }
-        public virtual ICollection<PageTag> PageTag { get; set; }
+        public virtual ICollection<Campaigntag> Campaigntag { get; set; }
+        public virtual ICollection<Pagetag> Pagetag { get; set; }
     }
 }

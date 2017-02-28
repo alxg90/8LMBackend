@@ -15,6 +15,8 @@ namespace _8LMBackend.Service.ViewModels
 		public string email { get; set; }
 		public string icon { get; set; }
 
-		public List<int> roles;
+        public string PromoCode { get; set; }
+
+        public List<int> roles;
     }
 }

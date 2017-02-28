@@ -7,12 +7,9 @@ namespace _8LMBackend.DataAccess.Models
     {
         public Campaign()
         {
-            CampaignEmail = new HashSet<CampaignEmail>();
-            CampaignEpage = new HashSet<CampaignEpage>();
-            CampaignProduct = new HashSet<CampaignProduct>();
-            CampaignShare = new HashSet<CampaignShare>();
-            CampaignTag = new HashSet<CampaignTag>();
-            PageCampaign = new HashSet<PageCampaign>();
+            Campaignshare = new HashSet<Campaignshare>();
+            Campaigntag = new HashSet<Campaigntag>();
+            Pagecampaign = new HashSet<Pagecampaign>();
         }
 
         public int Id { get; set; }
@@ -23,14 +20,11 @@ namespace _8LMBackend.DataAccess.Models
         public string Name { get; set; }
         public int StatusId { get; set; }
 
-        public virtual ICollection<CampaignEmail> CampaignEmail { get; set; }
-        public virtual ICollection<CampaignEpage> CampaignEpage { get; set; }
-        public virtual ICollection<CampaignProduct> CampaignProduct { get; set; }
-        public virtual ICollection<CampaignShare> CampaignShare { get; set; }
-        public virtual ICollection<CampaignTag> CampaignTag { get; set; }
-        public virtual ICollection<PageCampaign> PageCampaign { get; set; }
-        public virtual CampaignCategory Category { get; set; }
+        public virtual ICollection<Campaignshare> Campaignshare { get; set; }
+        public virtual ICollection<Campaigntag> Campaigntag { get; set; }
+        public virtual ICollection<Pagecampaign> Pagecampaign { get; set; }
+        public virtual Campaigncategory Category { get; set; }
         public virtual Users CreatedByNavigation { get; set; }
-        public virtual CampaignStatus Status { get; set; }
+        public virtual Campaignstatus Status { get; set; }
     }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class UserType
+    public partial class Usertype
     {
-        public UserType()
+        public Usertype()
         {
             Users = new HashSet<Users>();
         }

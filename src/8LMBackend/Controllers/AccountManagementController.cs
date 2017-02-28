@@ -31,7 +31,7 @@ namespace _8LMCore.Controllers
 			_accountManagementService.DeassignFunction(FunctionID, RoleID);
 		}
 
-        public void AddPromoCode(string Code, DateTime dtFrom, DateTime dtTo)
+        public void AddPromoCode(string Code, int dtFrom, int dtTo)
         {
             _accountManagementService.AddPromoCode(Code, dtFrom, dtTo);
         }
@@ -39,6 +39,27 @@ namespace _8LMCore.Controllers
         public void AssignPromoCode(int UserID, string Code)
         {
             _accountManagementService.AssignPromoCode(UserID, Code);
+        }
+
+        public void DeassignPromoCode(int UserID)
+        {
+            _accountManagementService.DeassignPromoCode(UserID);
+        }
+
+        public JsonResult CodeList()
+        {
+            var result = _accountManagementService.CodeList();
+            return Json(new { result });
+        }
+
+        public void UpdatePromoCode(int ID, string Code, int FromDate, int ToDate)
+        {
+            _accountManagementService.UpdatePromoCode(ID, Code, FromDate, ToDate);
+        }
+
+        public void DeletePromoCode(int ID)
+        {
+            _accountManagementService.DeletePromoCode(ID);
         }
     }
 }

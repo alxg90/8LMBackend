@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class ControlType
+    public partial class Controltype
     {
-        public ControlType()
+        public Controltype()
         {
-            PageToolbox = new HashSet<PageToolbox>();
+            Pagetoolbox = new HashSet<Pagetoolbox>();
         }
 
         public int Id { get; set; }
@@ -15,7 +15,7 @@ namespace _8LMBackend.DataAccess.Models
         public bool IsActive { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<PageToolbox> PageToolbox { get; set; }
-        public virtual ControlGroup Group { get; set; }
+        public virtual ICollection<Pagetoolbox> Pagetoolbox { get; set; }
+        public virtual Controlgroup Group { get; set; }
     }
 }

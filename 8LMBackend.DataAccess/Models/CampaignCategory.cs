@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class CampaignCategory
+    public partial class Campaigncategory
     {
-        public CampaignCategory()
+        public Campaigncategory()
         {
             Campaign = new HashSet<Campaign>();
         }

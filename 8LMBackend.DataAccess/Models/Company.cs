@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class Pagestatus
+    public partial class Company
     {
-        public Pagestatus()
+        public Company()
         {
-            Pages = new HashSet<Pages>();
+            Usercompany = new HashSet<Usercompany>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Pages> Pages { get; set; }
+        public virtual ICollection<Usercompany> Usercompany { get; set; }
     }
 }

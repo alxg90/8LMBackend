@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class PageCampaign
+    public partial class Pagecampaign
     {
         public int Id { get; set; }
         public int CampaignId { get; set; }

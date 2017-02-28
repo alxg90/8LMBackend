@@ -8,33 +8,47 @@ namespace _8LMBackend.DataAccess.Models
         public Users()
         {
             Campaign = new HashSet<Campaign>();
-            CampaignCategory = new HashSet<CampaignCategory>();
-            CampaignShareCreatedByNavigation = new HashSet<CampaignShare>();
-            CampaignShareUser = new HashSet<CampaignShare>();
+            Campaigncategory = new HashSet<Campaigncategory>();
+            CampaignshareCreatedByNavigation = new HashSet<Campaignshare>();
+            CampaignshareUser = new HashSet<Campaignshare>();
             Pages = new HashSet<Pages>();
-            RoleFunction = new HashSet<RoleFunction>();
-            SecurityRole = new HashSet<SecurityRole>();
-            UserTokenCreatedByNavigation = new HashSet<UserToken>();
-            UserTokenUser = new HashSet<UserToken>();
+            Rolefunction = new HashSet<Rolefunction>();
+            Securityrole = new HashSet<Securityrole>();
+            Usercompany = new HashSet<Usercompany>();
+            Usercontact = new HashSet<Usercontact>();
+            Userpromocode = new HashSet<Userpromocode>();
+            UserroleCreatedByNavigation = new HashSet<Userrole>();
+            UserroleUser = new HashSet<Userrole>();
+            UsertokenCreatedByNavigation = new HashSet<Usertoken>();
+            UsertokenUser = new HashSet<Usertoken>();
         }
 
         public int Id { get; set; }
-        public int CreatedBy { get; set; }
+        public int? CId { get; set; }
         public DateTime CreatedDate { get; set; }
+        public int? IndustryId { get; set; }
+        public int? LinenameId { get; set; }
         public string Login { get; set; }
+        public int? SalesId { get; set; }
+        public int? SourceId { get; set; }
         public int StatusId { get; set; }
         public int TypeId { get; set; }
 
         public virtual ICollection<Campaign> Campaign { get; set; }
-        public virtual ICollection<CampaignCategory> CampaignCategory { get; set; }
-        public virtual ICollection<CampaignShare> CampaignShareCreatedByNavigation { get; set; }
-        public virtual ICollection<CampaignShare> CampaignShareUser { get; set; }
+        public virtual ICollection<Campaigncategory> Campaigncategory { get; set; }
+        public virtual ICollection<Campaignshare> CampaignshareCreatedByNavigation { get; set; }
+        public virtual ICollection<Campaignshare> CampaignshareUser { get; set; }
         public virtual ICollection<Pages> Pages { get; set; }
-        public virtual ICollection<RoleFunction> RoleFunction { get; set; }
-        public virtual ICollection<SecurityRole> SecurityRole { get; set; }
-        public virtual ICollection<UserToken> UserTokenCreatedByNavigation { get; set; }
-        public virtual ICollection<UserToken> UserTokenUser { get; set; }
-        public virtual UserStatus Status { get; set; }
-        public virtual UserType Type { get; set; }
+        public virtual ICollection<Rolefunction> Rolefunction { get; set; }
+        public virtual ICollection<Securityrole> Securityrole { get; set; }
+        public virtual ICollection<Usercompany> Usercompany { get; set; }
+        public virtual ICollection<Usercontact> Usercontact { get; set; }
+        public virtual ICollection<Userpromocode> Userpromocode { get; set; }
+        public virtual ICollection<Userrole> UserroleCreatedByNavigation { get; set; }
+        public virtual ICollection<Userrole> UserroleUser { get; set; }
+        public virtual ICollection<Usertoken> UsertokenCreatedByNavigation { get; set; }
+        public virtual ICollection<Usertoken> UsertokenUser { get; set; }
+        public virtual Userstatus Status { get; set; }
+        public virtual Usertype Type { get; set; }
     }
 }
