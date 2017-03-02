@@ -544,7 +544,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.HasKey(e => new { e.Yyyy, e.Mm })
                     .HasName("PK_promocode");
 
-                entity.ToTable("promocode");
+                entity.ToTable("PromoCode");
 
                 entity.Property(e => e.Yyyy)
                     .HasColumnName("yyyy")
@@ -561,7 +561,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Promoproduct>(entity =>
             {
-                entity.ToTable("promoproduct");
+                entity.ToTable("PromoProduct");
 
                 entity.HasIndex(e => e.UserId)
                     .HasName("FK_PromoProduct_UserID");
@@ -590,7 +590,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.HasKey(e => new { e.RoleId, e.FunctionId })
                     .HasName("PK_rolefunction");
 
-                entity.ToTable("rolefunction");
+                entity.ToTable("RoleFunction");
 
                 entity.HasIndex(e => e.CreatedBy)
                     .HasName("FK_RF_CreatedBy");
@@ -631,7 +631,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Securityfunction>(entity =>
             {
-                entity.ToTable("securityfunction");
+                entity.ToTable("SecurityFunction");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
@@ -652,7 +652,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Securityrole>(entity =>
             {
-                entity.ToTable("securityrole");
+                entity.ToTable("SecurityRole");
 
                 entity.HasIndex(e => e.CreatedBy)
                     .HasName("FK_SR_CreatedBy");
@@ -737,7 +737,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.HasKey(e => new { e.UserId, e.ContactTypeId })
                     .HasName("PK_usercontact");
 
-                entity.ToTable("usercontact");
+                entity.ToTable("UserContact");
 
                 entity.HasIndex(e => e.ContactTypeId)
                     .HasName("FK_UC_CTID");
@@ -772,7 +772,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.HasKey(e => new { e.UserId, e.RoleId })
                     .HasName("PK_userrole");
 
-                entity.ToTable("userrole");
+                entity.ToTable("UserRole");
 
                 entity.HasIndex(e => e.CreatedBy)
                     .HasName("FK_UR_CreatedBy");
@@ -813,7 +813,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Users>(entity =>
             {
-                entity.ToTable("users");
+                entity.ToTable("Users");
 
                 entity.HasIndex(e => e.Login)
                     .HasName("Login")
