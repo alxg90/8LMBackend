@@ -9,14 +9,22 @@ namespace _8LMBackend.Service
 {
     public interface IAccountManagementService
     {
-		AccountManagementViewModel AccountList();
-		void AssignFunction(int FunctionID, int RoleID, int CreatedBy);
-		void DeassignFunction(int FunctionID, int RoleID);
-        void AddPromoCode(string Code, int dtFrom, int dtTo);
-        void AssignPromoCode(int UserID, string Code);
-        void DeassignPromoCode(int UserID);
-        List<Promocode> CodeList();
-        void UpdatePromoCode(int ID, string Code, int FromDate, int ToDate);
-        void DeletePromoCode(int ID);
+		AccountManagementViewModel AccountList(string access_token);
+		void AssignFunction(int FunctionID, int RoleID, string access_token);
+		void DeassignFunction(int FunctionID, int RoleID, string access_token);
+        void UpdateCode(int yyyy, int mm, string Code, string access_token);
+        List<Promocode> GetCodes(string access_token);
+        void DeletePromoCode(int yyyy, int mm, string access_token);
+        void CodesBulkUpdate(List<Promocode> codes, string access_token);
+        List<PromoUserViewModel> GetPromoUsers(int TypeID, string access_token);
+        void UpdatePromoUser(PromoUserViewModel u, string access_token);
+        List<int> GetFunctionsForUser(string access_token);
+        void CreateSecurityRole(string Name, string Description, string access_token);
+        void UpdateSecurityRole(int ID, string Name, string Description, string access_token);
+        void DeleteSecurityRole(int ID, string access_token);
+        void AssignRole(int UserID, int RoleID, string access_token);
+        void DeassignRole(int UserID, int RoleID, string access_token);
+        int GetUserID(string access_token);
+        void VerifyFunction(int FunctionID, string access_token);
     }
 }

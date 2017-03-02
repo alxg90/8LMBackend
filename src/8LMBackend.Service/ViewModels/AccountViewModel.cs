@@ -10,12 +10,9 @@ namespace _8LMBackend.Service.ViewModels
     public class AccountViewModel
     {
 		public int id { get; set; }
-		public string firstName { get; set; }
-		public string lastName { get; set; }
-		public string email { get; set; }
-		public string icon { get; set; }
-
-        public string PromoCode { get; set; }
+		public string login { get; set; }
+		public int typeID { get; set; }
+		public string typeName { get; set; }
 
         public List<int> roles;
     }

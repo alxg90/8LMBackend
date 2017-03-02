@@ -5,9 +5,8 @@ namespace _8LMBackend.DataAccess.Models
 {
     public partial class Promocode
     {
-        public int Id { get; set; }
+        public int Yyyy { get; set; }
+        public int Mm { get; set; }
         public string Code { get; set; }
-        public int FromDate { get; set; }
-        public int ToDate { get; set; }
     }
 }

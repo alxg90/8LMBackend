@@ -1,6 +1,8 @@
 ﻿using _8LMBackend.DataAccess.Models;
 using _8LMBackend.Service;
+using _8LMBackend.Service.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace _8LMCore.Controllers
@@ -14,51 +16,211 @@ namespace _8LMCore.Controllers
             _accountManagementService = accountManagementService;
         }
 
-        public JsonResult AccountList()
+        public JsonResult AccountList(string access_token)
         {
-            var accounts = _accountManagementService.AccountList();
-            return Json(new { accounts });
+            try
+            {
+                var accounts = _accountManagementService.AccountList(access_token);
+                return Json(new { accounts });
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
         }
 
-		public void AssignFunction(int FunctionID, int RoleID, int CreatedBy)
+		public JsonResult AssignFunction(int FunctionID, int RoleID, string access_token)
 		{
-			_accountManagementService.AssignFunction(FunctionID, RoleID, CreatedBy);
-		}
+            try
+            {
+                _accountManagementService.AssignFunction(FunctionID, RoleID, access_token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message});
+            }
 
-		public void DeassignFunction(int FunctionID, int RoleID)
+            return Json(new { status = "ok"});
+        }
+
+		public JsonResult DeassignFunction(int FunctionID, int RoleID, string access_token)
 		{
-			_accountManagementService.DeassignFunction(FunctionID, RoleID);
-		}
+            try
+            {
+                _accountManagementService.DeassignFunction(FunctionID, RoleID, access_token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
 
-        public void AddPromoCode(string Code, int dtFrom, int dtTo)
-        {
-            _accountManagementService.AddPromoCode(Code, dtFrom, dtTo);
+            return Json(new { status = "ok" });
         }
 
-        public void AssignPromoCode(int UserID, string Code)
+        public JsonResult UpdateCode(int yyyy, int mm, string Code, string access_token)
         {
-            _accountManagementService.AssignPromoCode(UserID, Code);
+            try
+            {
+                _accountManagementService.UpdateCode(yyyy, mm, Code, access_token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
+
+            return Json(new { status = "ok" });
         }
 
-        public void DeassignPromoCode(int UserID)
+        public JsonResult GetCodes(string access_token)
         {
-            _accountManagementService.DeassignPromoCode(UserID);
+            try
+            {
+                var result = _accountManagementService.GetCodes(access_token);
+                return Json(new { result });
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
         }
 
-        public JsonResult CodeList()
+        public JsonResult DeletePromoCode(int yyyy, int mm, string access_token)
         {
-            var result = _accountManagementService.CodeList();
-            return Json(new { result });
+            try
+            {
+                _accountManagementService.DeletePromoCode(yyyy, mm, access_token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
+
+            return Json(new { status = "ok" });
         }
 
-        public void UpdatePromoCode(int ID, string Code, int FromDate, int ToDate)
+        public JsonResult CodesBulkUpdate(List<Promocode> codes, string access_token)
         {
-            _accountManagementService.UpdatePromoCode(ID, Code, FromDate, ToDate);
+            try
+            {
+                _accountManagementService.CodesBulkUpdate(codes, access_token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
+
+            return Json(new { status = "ok" });
         }
 
-        public void DeletePromoCode(int ID)
+        public JsonResult GetPromoUsers(int TypeID, string access_token)
         {
-            _accountManagementService.DeletePromoCode(ID);
+            try
+            {
+                var result = _accountManagementService.GetPromoUsers(TypeID, access_token);
+                return Json(new { result });
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
+        }
+
+        public JsonResult UpdatePromoUser(PromoUserViewModel u, string access_token)
+        {
+            try
+            {
+                _accountManagementService.UpdatePromoUser(u, access_token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
+
+            return Json(new { status = "ok" });
+        }
+
+        public JsonResult GetFunctionsForUser(string access_token)
+        {
+            try
+            {
+                var result = _accountManagementService.GetFunctionsForUser(access_token);
+                return Json(new { result });
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
+        }
+
+        public JsonResult CreateSecurityRole(string Name, string Description, string access_token)
+        {
+            try
+            {
+                _accountManagementService.CreateSecurityRole(Name, Description, access_token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
+
+            return Json(new { status = "ok" });
+        }
+
+        public JsonResult UpdateSecurityRole(int ID, string Name, string Description, string access_token)
+        {
+            try
+            {
+                _accountManagementService.UpdateSecurityRole(ID, Name, Description, access_token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
+
+            return Json(new { status = "ok" });
+        }
+
+        public JsonResult DeleteSecurityRole(int ID, string access_token)
+        {
+            try
+            {
+                _accountManagementService.DeleteSecurityRole(ID, access_token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
+
+            return Json(new { status = "ok" });
+        }
+
+        public JsonResult AssignRole(int UserID, int RoleID, string access_token)
+        {
+            try
+            {
+                _accountManagementService.AssignRole(UserID, RoleID, access_token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
+
+            return Json(new { status = "ok" });
+        }
+
+        public JsonResult DeassignRole(int UserID, int RoleID, string access_token)
+        {
+            try
+            {
+                _accountManagementService.DeassignRole(UserID, RoleID, access_token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.InnerException.Message });
+            }
+
+            return Json(new { status = "ok" });
         }
     }
 }

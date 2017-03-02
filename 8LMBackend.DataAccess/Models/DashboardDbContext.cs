@@ -23,13 +23,13 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<Pagetoolbox> Pagetoolbox { get; set; }
         public virtual DbSet<Pagetype> Pagetype { get; set; }
         public virtual DbSet<Promocode> Promocode { get; set; }
+        public virtual DbSet<Promoproduct> Promoproduct { get; set; }
         public virtual DbSet<Rolefunction> Rolefunction { get; set; }
         public virtual DbSet<Securityfunction> Securityfunction { get; set; }
         public virtual DbSet<Securityrole> Securityrole { get; set; }
         public virtual DbSet<Tags> Tags { get; set; }
         public virtual DbSet<Usercompany> Usercompany { get; set; }
         public virtual DbSet<Usercontact> Usercontact { get; set; }
-        public virtual DbSet<Userpromocode> Userpromocode { get; set; }
         public virtual DbSet<Userrole> Userrole { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<Userstatus> Userstatus { get; set; }
@@ -40,7 +40,7 @@ namespace _8LMBackend.DataAccess.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-            optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0;port=3306;database=dashboard_development;sslmode=none;");
+            optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3306;database=dashboard_development;sslmode=none;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -108,7 +108,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.ToTable("campaigncategory");
 
                 entity.HasIndex(e => e.CreatedBy)
-                    .HasName("FK_CampaignCategory_CreatedBy");
+                    .HasName("FK_CC_CreatedBy");
 
                 entity.HasIndex(e => new { e.ParentCategoryId, e.Name, e.CreatedBy })
                     .HasName("ParentCategoryID")
@@ -138,56 +138,51 @@ namespace _8LMBackend.DataAccess.Models
                     .WithMany(p => p.Campaigncategory)
                     .HasForeignKey(d => d.CreatedBy)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_CampaignCategory_CreatedBy");
+                    .HasConstraintName("FK_CC_CreatedBy");
             });
 
             modelBuilder.Entity<Campaignshare>(entity =>
             {
+                entity.HasKey(e => new { e.CampaignId, e.UserId })
+                    .HasName("PK_campaignshare");
+
                 entity.ToTable("campaignshare");
 
                 entity.HasIndex(e => e.CreatedBy)
-                    .HasName("FK_CampaignShare_CreatedBy");
+                    .HasName("FK_CS_CreatedBy");
 
                 entity.HasIndex(e => e.UserId)
-                    .HasName("FK_CampaignShare_UserID");
-
-                entity.HasIndex(e => new { e.CampaignId, e.UserId })
-                    .HasName("CampaignID")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                    .HasName("FK_CS_UserID");
 
                 entity.Property(e => e.CampaignId)
                     .HasColumnName("CampaignID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.CreatedBy).HasColumnType("int(11)");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.UserId)
-                    .HasColumnName("UserID")
-                    .HasColumnType("int(11)");
-
                 entity.HasOne(d => d.Campaign)
                     .WithMany(p => p.Campaignshare)
                     .HasForeignKey(d => d.CampaignId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_CampaignShare_CampaignID");
+                    .HasConstraintName("FK_CS_CampaignID");
 
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.CampaignshareCreatedByNavigation)
                     .HasForeignKey(d => d.CreatedBy)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_CampaignShare_CreatedBy");
+                    .HasConstraintName("FK_CS_CreatedBy");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.CampaignshareUser)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_CampaignShare_UserID");
+                    .HasConstraintName("FK_CS_UserID");
             });
 
             modelBuilder.Entity<Campaignstatus>(entity =>
@@ -209,18 +204,13 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Campaigntag>(entity =>
             {
+                entity.HasKey(e => new { e.CampaignId, e.TagId })
+                    .HasName("PK_campaigntag");
+
                 entity.ToTable("campaigntag");
 
                 entity.HasIndex(e => e.TagId)
-                    .HasName("FK_CampaignTag_TagID");
-
-                entity.HasIndex(e => new { e.CampaignId, e.TagId })
-                    .HasName("CampaignID")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                    .HasName("FK_CT_TagID");
 
                 entity.Property(e => e.CampaignId)
                     .HasColumnName("CampaignID")
@@ -234,13 +224,13 @@ namespace _8LMBackend.DataAccess.Models
                     .WithMany(p => p.Campaigntag)
                     .HasForeignKey(d => d.CampaignId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_CampaignTag_CampaignID");
+                    .HasConstraintName("FK_CT_CampaignID");
 
                 entity.HasOne(d => d.Tag)
                     .WithMany(p => p.Campaigntag)
                     .HasForeignKey(d => d.TagId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_CampaignTag_TagID");
+                    .HasConstraintName("FK_CT_TagID");
             });
 
             modelBuilder.Entity<Company>(entity =>
@@ -299,7 +289,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.ToTable("controltype");
 
                 entity.HasIndex(e => e.GroupId)
-                    .HasName("FK_ControlType_GroupID");
+                    .HasName("FK_CT_GroupID");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
@@ -323,23 +313,18 @@ namespace _8LMBackend.DataAccess.Models
                     .WithMany(p => p.Controltype)
                     .HasForeignKey(d => d.GroupId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_ControlType_GroupID");
+                    .HasConstraintName("FK_CT_GroupID");
             });
 
             modelBuilder.Entity<Pagecampaign>(entity =>
             {
+                entity.HasKey(e => new { e.CampaignId, e.PageId })
+                    .HasName("PK_pagecampaign");
+
                 entity.ToTable("pagecampaign");
 
                 entity.HasIndex(e => e.PageId)
-                    .HasName("FK_PageCampaign_PageID");
-
-                entity.HasIndex(e => new { e.CampaignId, e.PageId })
-                    .HasName("CampaignID")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                    .HasName("FK_PCampaign_PageID");
 
                 entity.Property(e => e.CampaignId)
                     .HasColumnName("CampaignID")
@@ -353,13 +338,13 @@ namespace _8LMBackend.DataAccess.Models
                     .WithMany(p => p.Pagecampaign)
                     .HasForeignKey(d => d.CampaignId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_PageCampaign_CampaignID");
+                    .HasConstraintName("FK_PCampaign_CampaignID");
 
                 entity.HasOne(d => d.Page)
                     .WithMany(p => p.Pagecampaign)
                     .HasForeignKey(d => d.PageId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_PageCampaign_PageID");
+                    .HasConstraintName("FK_PCampaign_PageID");
             });
 
             modelBuilder.Entity<Pages>(entity =>
@@ -374,10 +359,10 @@ namespace _8LMBackend.DataAccess.Models
                     .IsUnique();
 
                 entity.HasIndex(e => e.StatusId)
-                    .HasName("FK_Pages_StatusID");
+                    .HasName("FK_Pages_SID");
 
                 entity.HasIndex(e => e.TypeId)
-                    .HasName("FK_Pages_TypeID");
+                    .HasName("FK_Pages_TID");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
@@ -419,13 +404,13 @@ namespace _8LMBackend.DataAccess.Models
                     .WithMany(p => p.Pages)
                     .HasForeignKey(d => d.StatusId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_Pages_StatusID");
+                    .HasConstraintName("FK_Pages_SID");
 
                 entity.HasOne(d => d.Type)
                     .WithMany(p => p.Pages)
                     .HasForeignKey(d => d.TypeId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_Pages_TypeID");
+                    .HasConstraintName("FK_Pages_TID");
             });
 
             modelBuilder.Entity<Pagestatistic>(entity =>
@@ -433,7 +418,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.ToTable("pagestatistic");
 
                 entity.HasIndex(e => e.PageId)
-                    .HasName("FK_PageStatistic_PageID");
+                    .HasName("FK_PS_PID");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
@@ -455,7 +440,7 @@ namespace _8LMBackend.DataAccess.Models
                     .WithMany(p => p.Pagestatistic)
                     .HasForeignKey(d => d.PageId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_PageStatistic_PageID");
+                    .HasConstraintName("FK_PS_PID");
             });
 
             modelBuilder.Entity<Pagestatus>(entity =>
@@ -477,18 +462,13 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Pagetag>(entity =>
             {
+                entity.HasKey(e => new { e.PageId, e.TagId })
+                    .HasName("PK_pagetag");
+
                 entity.ToTable("pagetag");
 
                 entity.HasIndex(e => e.TagId)
-                    .HasName("FK_PageTag_TagID");
-
-                entity.HasIndex(e => new { e.PageId, e.TagId })
-                    .HasName("PageID")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                    .HasName("FK_PT_TagID");
 
                 entity.Property(e => e.PageId)
                     .HasColumnName("PageID")
@@ -502,29 +482,24 @@ namespace _8LMBackend.DataAccess.Models
                     .WithMany(p => p.Pagetag)
                     .HasForeignKey(d => d.PageId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_PageTag_PageID");
+                    .HasConstraintName("FK_PT_PageID");
 
                 entity.HasOne(d => d.Tag)
                     .WithMany(p => p.Pagetag)
                     .HasForeignKey(d => d.TagId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_PageTag_TagID");
+                    .HasConstraintName("FK_PT_TagID");
             });
 
             modelBuilder.Entity<Pagetoolbox>(entity =>
             {
+                entity.HasKey(e => new { e.ControlTypeId, e.PageTypeId })
+                    .HasName("PK_pagetoolbox");
+
                 entity.ToTable("pagetoolbox");
 
                 entity.HasIndex(e => e.PageTypeId)
-                    .HasName("FK_PageToolbox_PageTypeID");
-
-                entity.HasIndex(e => new { e.ControlTypeId, e.PageTypeId })
-                    .HasName("ControlTypeID")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
+                    .HasName("FK_PTbox_PTID");
 
                 entity.Property(e => e.ControlTypeId)
                     .HasColumnName("ControlTypeID")
@@ -538,13 +513,13 @@ namespace _8LMBackend.DataAccess.Models
                     .WithMany(p => p.Pagetoolbox)
                     .HasForeignKey(d => d.ControlTypeId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_PageToolbox_ControlTypeID");
+                    .HasConstraintName("FK_PTbox_CTID");
 
                 entity.HasOne(d => d.PageType)
                     .WithMany(p => p.Pagetoolbox)
                     .HasForeignKey(d => d.PageTypeId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_PageToolbox_PageTypeID");
+                    .HasConstraintName("FK_PTbox_PTID");
             });
 
             modelBuilder.Entity<Pagetype>(entity =>
@@ -566,72 +541,92 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Promocode>(entity =>
             {
+                entity.HasKey(e => new { e.Yyyy, e.Mm })
+                    .HasName("PK_promocode");
+
                 entity.ToTable("promocode");
 
-                entity.HasIndex(e => e.Code)
-                    .HasName("Code")
-                    .IsUnique();
+                entity.Property(e => e.Yyyy)
+                    .HasColumnName("yyyy")
+                    .HasColumnType("int(11)");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
+                entity.Property(e => e.Mm)
+                    .HasColumnName("mm")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.Code)
                     .IsRequired()
                     .HasColumnType("varchar(255)");
+            });
 
-                entity.Property(e => e.FromDate).HasColumnType("int(11)");
+            modelBuilder.Entity<Promoproduct>(entity =>
+            {
+                entity.ToTable("promoproduct");
 
-                entity.Property(e => e.ToDate).HasColumnType("int(11)");
+                entity.HasIndex(e => e.UserId)
+                    .HasName("FK_PromoProduct_UserID");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Promoproduct)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_PromoProduct_UserID");
             });
 
             modelBuilder.Entity<Rolefunction>(entity =>
             {
+                entity.HasKey(e => new { e.RoleId, e.FunctionId })
+                    .HasName("PK_rolefunction");
+
                 entity.ToTable("rolefunction");
 
                 entity.HasIndex(e => e.CreatedBy)
-                    .HasName("FK_RoleFunction_CreatedBy");
+                    .HasName("FK_RF_CreatedBy");
 
                 entity.HasIndex(e => e.FunctionId)
-                    .HasName("FK_RoleFunction_SecurityFunctionID");
+                    .HasName("FK_RF_SFID");
 
-                entity.HasIndex(e => new { e.RoleId, e.FunctionId })
-                    .HasName("RoleID")
-                    .IsUnique();
+                entity.Property(e => e.RoleId)
+                    .HasColumnName("RoleID")
+                    .HasColumnType("int(11)");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
+                entity.Property(e => e.FunctionId)
+                    .HasColumnName("FunctionID")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.CreatedBy).HasColumnType("int(11)");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.FunctionId)
-                    .HasColumnName("FunctionID")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.RoleId)
-                    .HasColumnName("RoleID")
-                    .HasColumnType("int(11)");
-
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.Rolefunction)
                     .HasForeignKey(d => d.CreatedBy)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_RoleFunction_CreatedBy");
+                    .HasConstraintName("FK_RF_CreatedBy");
 
                 entity.HasOne(d => d.Function)
                     .WithMany(p => p.Rolefunction)
                     .HasForeignKey(d => d.FunctionId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_RoleFunction_SecurityFunctionID");
+                    .HasConstraintName("FK_RF_SFID");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Rolefunction)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_RoleFunction_SecurityRoleID");
+                    .HasConstraintName("FK_RF_SRID");
             });
 
             modelBuilder.Entity<Securityfunction>(entity =>
@@ -660,7 +655,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.ToTable("securityrole");
 
                 entity.HasIndex(e => e.CreatedBy)
-                    .HasName("FK_SecurityRole_CreatedBy");
+                    .HasName("FK_SR_CreatedBy");
 
                 entity.HasIndex(e => new { e.Name, e.CreatedBy })
                     .HasName("Name")
@@ -686,7 +681,7 @@ namespace _8LMBackend.DataAccess.Models
                     .WithMany(p => p.Securityrole)
                     .HasForeignKey(d => d.CreatedBy)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_SecurityRole_CreatedBy");
+                    .HasConstraintName("FK_SR_CreatedBy");
             });
 
             modelBuilder.Entity<Tags>(entity =>
@@ -708,61 +703,51 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Usercompany>(entity =>
             {
+                entity.HasKey(e => new { e.UserId, e.CompanyId })
+                    .HasName("PK_usercompany");
+
                 entity.ToTable("usercompany");
 
                 entity.HasIndex(e => e.CompanyId)
-                    .HasName("FK_UserCompany_CompanyID");
+                    .HasName("FK_UCompany_CID");
 
-                entity.HasIndex(e => new { e.UserId, e.CompanyId })
-                    .HasName("UserID")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.CompanyId)
                     .HasColumnName("CompanyID")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.UserId)
-                    .HasColumnName("UserID")
-                    .HasColumnType("int(11)");
-
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Usercompany)
                     .HasForeignKey(d => d.CompanyId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_UserCompany_CompanyID");
+                    .HasConstraintName("FK_UCompany_CID");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Usercompany)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_UserCompany_UserID");
+                    .HasConstraintName("FK_UCompany_UID");
             });
 
             modelBuilder.Entity<Usercontact>(entity =>
             {
+                entity.HasKey(e => new { e.UserId, e.ContactTypeId })
+                    .HasName("PK_usercontact");
+
                 entity.ToTable("usercontact");
 
                 entity.HasIndex(e => e.ContactTypeId)
-                    .HasName("FK_UserContact_ContactTypeID");
+                    .HasName("FK_UC_CTID");
 
-                entity.HasIndex(e => new { e.UserId, e.ContactTypeId })
-                    .HasName("UserID")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.ContactTypeId)
                     .HasColumnName("ContactTypeID")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.UserId)
-                    .HasColumnName("UserID")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.Value)
@@ -773,60 +758,27 @@ namespace _8LMBackend.DataAccess.Models
                     .WithMany(p => p.Usercontact)
                     .HasForeignKey(d => d.ContactTypeId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_UserContact_ContactTypeID");
+                    .HasConstraintName("FK_UC_CTID");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Usercontact)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_UserContact_UserID");
-            });
-
-            modelBuilder.Entity<Userpromocode>(entity =>
-            {
-                entity.ToTable("userpromocode");
-
-                entity.HasIndex(e => new { e.UserId, e.Code })
-                    .HasName("UserID")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Code)
-                    .IsRequired()
-                    .HasColumnType("varchar(255)");
-
-                entity.Property(e => e.CreatedBy).HasColumnType("int(11)");
-
-                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.IsActive).HasColumnType("bit(1)");
-
-                entity.Property(e => e.UserId)
-                    .HasColumnName("UserID")
-                    .HasColumnType("int(11)");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Userpromocode)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_UserPromoCode_UserID");
+                    .HasConstraintName("FK_UC_UID");
             });
 
             modelBuilder.Entity<Userrole>(entity =>
             {
                 entity.HasKey(e => new { e.UserId, e.RoleId })
-                    .HasName("UserID");
+                    .HasName("PK_userrole");
 
                 entity.ToTable("userrole");
 
                 entity.HasIndex(e => e.CreatedBy)
-                    .HasName("FK_UserRole_CreatedBy");
+                    .HasName("FK_UR_CreatedBy");
 
                 entity.HasIndex(e => e.RoleId)
-                    .HasName("FK_UserRole_SecurityRoleID");
+                    .HasName("FK_UR_SRID");
 
                 entity.Property(e => e.UserId)
                     .HasColumnName("UserID")
@@ -844,19 +796,19 @@ namespace _8LMBackend.DataAccess.Models
                     .WithMany(p => p.UserroleCreatedByNavigation)
                     .HasForeignKey(d => d.CreatedBy)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_UserRole_CreatedBy");
+                    .HasConstraintName("FK_UR_CreatedBy");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Userrole)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_UserRole_SecurityRoleID");
+                    .HasConstraintName("FK_UR_SRID");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserroleUser)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_UserRole_UserID");
+                    .HasConstraintName("FK_UR_UserID");
             });
 
             modelBuilder.Entity<Users>(entity =>
@@ -877,31 +829,13 @@ namespace _8LMBackend.DataAccess.Models
                     .HasColumnName("ID")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.CId)
-                    .HasColumnName("c_id")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.CreatedBy).HasColumnType("int(11)");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.IndustryId)
-                    .HasColumnName("industry_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.LinenameId)
-                    .HasColumnName("linename_id")
-                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.Login)
                     .IsRequired()
                     .HasColumnType("varchar(255)");
-
-                entity.Property(e => e.SalesId)
-                    .HasColumnName("sales_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.SourceId)
-                    .HasColumnName("source_id")
-                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.StatusId)
                     .HasColumnName("StatusID")
@@ -945,11 +879,8 @@ namespace _8LMBackend.DataAccess.Models
             {
                 entity.ToTable("usertoken");
 
-                entity.HasIndex(e => e.CreatedBy)
-                    .HasName("FK_UserToken_CreatedBy");
-
                 entity.HasIndex(e => e.StatusId)
-                    .HasName("FK_UserToken_UserTokenStatusID");
+                    .HasName("FK_UT_UTSID");
 
                 entity.HasIndex(e => new { e.UserId, e.Token, e.Seed })
                     .HasName("UserID")
@@ -958,10 +889,6 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.ClearPassword)
-                    .IsRequired()
-                    .HasColumnType("varchar(255)");
 
                 entity.Property(e => e.CreatedBy).HasColumnType("int(11)");
 
@@ -983,23 +910,17 @@ namespace _8LMBackend.DataAccess.Models
                     .HasColumnName("UserID")
                     .HasColumnType("int(11)");
 
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.UsertokenCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_UserToken_CreatedBy");
-
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Usertoken)
                     .HasForeignKey(d => d.StatusId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_UserToken_UserTokenStatusID");
+                    .HasConstraintName("FK_UT_UTSID");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.UsertokenUser)
+                    .WithMany(p => p.Usertoken)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_UserToken_UserID");
+                    .HasConstraintName("FK_UT_UserID");
             });
 
             modelBuilder.Entity<Usertokenstatus>(entity =>

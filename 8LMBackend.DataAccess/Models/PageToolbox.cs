@@ -5,7 +5,6 @@ namespace _8LMBackend.DataAccess.Models
 {
     public partial class Pagetoolbox
     {
-        public int Id { get; set; }
         public int ControlTypeId { get; set; }
         public int PageTypeId { get; set; }
 

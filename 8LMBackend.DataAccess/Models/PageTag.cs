@@ -5,7 +5,6 @@ namespace _8LMBackend.DataAccess.Models
 {
     public partial class Pagetag
     {
-        public int Id { get; set; }
         public int PageId { get; set; }
         public int TagId { get; set; }
 

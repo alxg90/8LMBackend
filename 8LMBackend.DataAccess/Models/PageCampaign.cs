@@ -5,7 +5,6 @@ namespace _8LMBackend.DataAccess.Models
 {
     public partial class Pagecampaign
     {
-        public int Id { get; set; }
         public int CampaignId { get; set; }
         public int PageId { get; set; }
 
