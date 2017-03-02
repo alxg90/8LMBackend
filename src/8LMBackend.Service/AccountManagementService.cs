@@ -152,75 +152,34 @@ namespace _8LMBackend.Service
                 UpdateCode(c.Yyyy, c.Mm, c.Code, access_token);
         }
 
-        public List<PromoUserViewModel> GetPromoUsers(int TypeID, string access_token)
+        public List<PromoUserViewModel> GetPromoSuppliers(string access_token)
         {
-            VerifyFunction(11, access_token);
+            //VerifyFunction(11, access_token);
 
             List<PromoUserViewModel> result = new List<PromoUserViewModel>();
-            foreach (var u in DbContext.Users.Where(p => p.TypeId == TypeID).OrderBy(p => p.Id).ToList())
+            foreach (var u in DbContext.Promosupplier.OrderBy(p => p.Id).ToList())
             {
                 PromoUserViewModel item = new PromoUserViewModel()
                 {
-                    id = u.Id
+                    id = u.Id,
+                    name = u.Name,
+                    address = u.Address,
+                    tollFree = u.Tollfree,
+                    fax = u.Fax,
+                    ordersFax = u.OrdersFax,
+                    email = u.Email,
+                    ordersEmail = u.OrdersEmail,
+                    artworkEmail = u.ArtworkEmail,
+                    web = u.Web,
+                    discountPolicy = u.DiscountPolicy,
+                    customCode = u.CustomCode
                 };
                 result.Add(item);
             }
 
             foreach (var u in result)
-            {
-                foreach (var c in DbContext.Usercontact.Where(p => p.UserId == u.id).ToList())
-                {
-                    switch (c.ContactTypeId)
-                    {
-                        case 1:
-                            u.name = c.Value;
-                            break;
-
-                        case 2:
-                            u.address = c.Value;
-                            break;
-
-                        case 3:
-                            u.tollFree = c.Value;
-                            break;
-
-                        case 4:
-                            u.fax = c.Value;
-                            break;
-
-                        case 5:
-                            u.ordersFax = c.Value;
-                            break;
-
-                        case 6:
-                            u.email = c.Value;
-                            break;
-
-                        case 7:
-                            u.ordersEmail = c.Value;
-                            break;
-
-                        case 8:
-                            u.artworkEmail = c.Value;
-                            break;
-
-                        case 9:
-                            u.web = c.Value;
-                            break;
-
-                        case 10:
-                            u.discountPolicy = c.Value;
-                            break;
-
-                        case 11:
-                            u.customCode = c.Value;
-                            break;
-                    }
-                }
-
-                foreach (var pp in DbContext.Promoproduct.Where(p => p.UserId == u.id).ToList())
+                foreach (var pp in DbContext.Promoproduct.Where(p => p.SupplierId == u.id).ToList())
                     u.products.Add(pp.Name);
-            }
 
             return result;
         }
@@ -229,39 +188,42 @@ namespace _8LMBackend.Service
         {
             VerifyFunction(12, access_token);
 
-            var item = DbContext.Users.Where(p => p.Id == u.id).FirstOrDefault();
-            if (item == default(Users))
+            bool isNew = false;
+            var item = DbContext.Promosupplier.Where(p => p.Id == u.id).FirstOrDefault();
+            if (item == default(Promosupplier))
             {
-                throw new Exception("User with ID = " + u.id.ToString() + " not found");
+                item = new Promosupplier();
+                isNew = true;
             }
 
-            foreach (var c in DbContext.Usercontact.Where(p => p.UserId == u.id).ToList())
-                DbContext.Set<Usercontact>().Remove(c);
+            item.Name = u.name;
+            item.Address = u.address;
+            item.Tollfree = u.tollFree;
+            item.Fax = u.fax;
+            item.OrdersFax = u.ordersFax;
+            item.Email = u.email;
+            item.OrdersEmail = u.ordersEmail;
+            item.ArtworkEmail = u.artworkEmail;
+            item.Web = u.web;
+            item.DiscountPolicy = u.discountPolicy;
+            item.CustomCode = u.customCode;
 
-            foreach (var pp in DbContext.Promoproduct.Where(p => p.UserId == u.id).ToList())
-                DbContext.Set<Promoproduct>().Remove(pp);
+            if (isNew)
+                DbContext.Set<Promosupplier>().Add(item);
+
+            if (!isNew)
+                foreach (var pp in DbContext.Promoproduct.Where(p => p.SupplierId == u.id).ToList())
+                    DbContext.Set<Promoproduct>().Remove(pp);
 
             foreach (var pp in u.products)
             {
-                Promoproduct product = new Promoproduct()
+                Promoproduct npp = new Promoproduct()
                 {
-                    UserId = u.id,
+                    SupplierId = u.id,
                     Name = pp
                 };
-                DbContext.Set<Promoproduct>().Add(product);
+                DbContext.Set<Promoproduct>().Add(npp);
             }
-
-            DbContext.Set<Usercontact>().Add(new Usercontact() { UserId = u.id, ContactTypeId = 1, Value = u.name });
-            DbContext.Set<Usercontact>().Add(new Usercontact() { UserId = u.id, ContactTypeId = 2, Value = u.address });
-            DbContext.Set<Usercontact>().Add(new Usercontact() { UserId = u.id, ContactTypeId = 3, Value = u.tollFree });
-            DbContext.Set<Usercontact>().Add(new Usercontact() { UserId = u.id, ContactTypeId = 4, Value = u.fax });
-            DbContext.Set<Usercontact>().Add(new Usercontact() { UserId = u.id, ContactTypeId = 5, Value = u.ordersFax });
-            DbContext.Set<Usercontact>().Add(new Usercontact() { UserId = u.id, ContactTypeId = 6, Value = u.email });
-            DbContext.Set<Usercontact>().Add(new Usercontact() { UserId = u.id, ContactTypeId = 7, Value = u.ordersEmail });
-            DbContext.Set<Usercontact>().Add(new Usercontact() { UserId = u.id, ContactTypeId = 8, Value = u.artworkEmail });
-            DbContext.Set<Usercontact>().Add(new Usercontact() { UserId = u.id, ContactTypeId = 9, Value = u.web });
-            DbContext.Set<Usercontact>().Add(new Usercontact() { UserId = u.id, ContactTypeId = 10, Value = u.discountPolicy });
-            DbContext.Set<Usercontact>().Add(new Usercontact() { UserId = u.id, ContactTypeId = 11, Value = u.customCode });
 
             DbContext.SaveChanges();
         }

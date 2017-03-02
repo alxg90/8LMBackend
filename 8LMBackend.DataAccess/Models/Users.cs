@@ -12,7 +12,6 @@ namespace _8LMBackend.DataAccess.Models
             CampaignshareCreatedByNavigation = new HashSet<Campaignshare>();
             CampaignshareUser = new HashSet<Campaignshare>();
             Pages = new HashSet<Pages>();
-            Promoproduct = new HashSet<Promoproduct>();
             Rolefunction = new HashSet<Rolefunction>();
             Securityrole = new HashSet<Securityrole>();
             Usercompany = new HashSet<Usercompany>();
@@ -34,7 +33,6 @@ namespace _8LMBackend.DataAccess.Models
         public virtual ICollection<Campaignshare> CampaignshareCreatedByNavigation { get; set; }
         public virtual ICollection<Campaignshare> CampaignshareUser { get; set; }
         public virtual ICollection<Pages> Pages { get; set; }
-        public virtual ICollection<Promoproduct> Promoproduct { get; set; }
         public virtual ICollection<Rolefunction> Rolefunction { get; set; }
         public virtual ICollection<Securityrole> Securityrole { get; set; }
         public virtual ICollection<Usercompany> Usercompany { get; set; }

@@ -113,11 +113,11 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        public JsonResult GetPromoUsers(int TypeID, string access_token)
+        public JsonResult GetPromoSuppliers(string access_token)
         {
             try
             {
-                var result = _accountManagementService.GetPromoUsers(TypeID, access_token);
+                var result = _accountManagementService.GetPromoSuppliers(access_token);
                 return Json(new { result });
             }
             catch (System.Exception ex)

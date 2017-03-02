@@ -16,7 +16,7 @@ namespace _8LMBackend.Service
         List<Promocode> GetCodes(string access_token);
         void DeletePromoCode(int yyyy, int mm, string access_token);
         void CodesBulkUpdate(List<Promocode> codes, string access_token);
-        List<PromoUserViewModel> GetPromoUsers(int TypeID, string access_token);
+        List<PromoUserViewModel> GetPromoSuppliers(string access_token);
         void UpdatePromoUser(PromoUserViewModel u, string access_token);
         List<int> GetFunctionsForUser(string access_token);
         void CreateSecurityRole(string Name, string Description, string access_token);

@@ -24,6 +24,7 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<Pagetype> Pagetype { get; set; }
         public virtual DbSet<Promocode> Promocode { get; set; }
         public virtual DbSet<Promoproduct> Promoproduct { get; set; }
+        public virtual DbSet<Promosupplier> Promosupplier { get; set; }
         public virtual DbSet<Rolefunction> Rolefunction { get; set; }
         public virtual DbSet<Securityfunction> Securityfunction { get; set; }
         public virtual DbSet<Securityrole> Securityrole { get; set; }
@@ -563,8 +564,8 @@ namespace _8LMBackend.DataAccess.Models
             {
                 entity.ToTable("PromoProduct");
 
-                entity.HasIndex(e => e.UserId)
-                    .HasName("FK_PromoProduct_UserID");
+                entity.HasIndex(e => e.SupplierId)
+                    .HasName("FK_PromoProduct_SupplierID");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
@@ -574,15 +575,68 @@ namespace _8LMBackend.DataAccess.Models
                     .IsRequired()
                     .HasColumnType("varchar(255)");
 
-                entity.Property(e => e.UserId)
-                    .HasColumnName("UserID")
+                entity.Property(e => e.SupplierId)
+                    .HasColumnName("SupplierID")
                     .HasColumnType("int(11)");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Supplier)
                     .WithMany(p => p.Promoproduct)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.SupplierId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_PromoProduct_UserID");
+                    .HasConstraintName("FK_PromoProduct_SupplierID");
+            });
+
+            modelBuilder.Entity<Promosupplier>(entity =>
+            {
+                entity.ToTable("PromoSupplier");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Address)
+                    .HasColumnName("address")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.ArtworkEmail)
+                    .HasColumnName("artworkEmail")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.CustomCode)
+                    .HasColumnName("customCode")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.DiscountPolicy)
+                    .HasColumnName("discountPolicy")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("email")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Fax)
+                    .HasColumnName("fax")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.OrdersEmail)
+                    .HasColumnName("ordersEmail")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.OrdersFax)
+                    .HasColumnName("ordersFax")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Tollfree)
+                    .HasColumnName("tollfree")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Web)
+                    .HasColumnName("web")
+                    .HasColumnType("varchar(255)");
             });
 
             modelBuilder.Entity<Rolefunction>(entity =>
