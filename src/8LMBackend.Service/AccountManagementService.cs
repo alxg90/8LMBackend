@@ -268,7 +268,11 @@ namespace _8LMBackend.Service
 
         public List<int> GetFunctionsForUser(string access_token)
         {
-            return DbContext.Userrole.Where(p => p.UserId == GetUserID(access_token)).Include(p => p.Role).ToList().Select(p => p.RoleId).Distinct().ToList();
+            var userId = GetUserID(access_token);
+            return DbContext.Userrole.Where(p => p.UserId == userId)
+                .Include(p => p.Role)
+                .Join(DbContext.Rolefunction, p => p.RoleId, rf => rf.RoleId, (p, rf) => rf.FunctionId)
+                .Distinct().ToList();
         }
 
         public void CreateSecurityRole(string Name, string Description, string access_token)
