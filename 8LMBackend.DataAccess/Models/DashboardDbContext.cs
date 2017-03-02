@@ -877,7 +877,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Usertoken>(entity =>
             {
-                entity.ToTable("usertoken");
+                entity.ToTable("UserToken");
 
                 entity.HasIndex(e => e.StatusId)
                     .HasName("FK_UT_UTSID");
