@@ -16,11 +16,11 @@ namespace _8LMCore.Controllers
             _accountManagementService = accountManagementService;
         }
 
-        public JsonResult AccountList(string access_token)
+        public JsonResult AccountList(string token)
         {
             try
             {
-                var accounts = _accountManagementService.AccountList(access_token);
+                var accounts = _accountManagementService.AccountList(token);
                 return Json(new { accounts });
             }
             catch (System.Exception ex)
@@ -30,11 +30,11 @@ namespace _8LMCore.Controllers
             }
         }
 
-		public JsonResult AssignFunction(int FunctionID, int RoleID, string access_token)
+		public JsonResult AssignFunction(int FunctionID, int RoleID, string token)
 		{
             try
             {
-                _accountManagementService.AssignFunction(FunctionID, RoleID, access_token);
+                _accountManagementService.AssignFunction(FunctionID, RoleID, token);
             }
             catch (System.Exception ex)
             {
@@ -44,11 +44,11 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok"});
         }
 
-		public JsonResult DeassignFunction(int FunctionID, int RoleID, string access_token)
+		public JsonResult DeassignFunction(int FunctionID, int RoleID, string token)
 		{
             try
             {
-                _accountManagementService.DeassignFunction(FunctionID, RoleID, access_token);
+                _accountManagementService.DeassignFunction(FunctionID, RoleID, token);
             }
             catch (System.Exception ex)
             {
@@ -58,11 +58,11 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        public JsonResult UpdateCode(int yyyy, int mm, string Code, string access_token)
+        public JsonResult UpdateCode(int yyyy, int mm, string Code, string token)
         {
             try
             {
-                _accountManagementService.UpdateCode(yyyy, mm, Code, access_token);
+                _accountManagementService.UpdateCode(yyyy, mm, Code, token);
             }
             catch (System.Exception ex)
             {
@@ -72,11 +72,11 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        public JsonResult GetCodes(string access_token)
+        public JsonResult GetCodes(string token)
         {
             try
             {
-                var result = _accountManagementService.GetCodes(access_token);
+                var result = _accountManagementService.GetCodes(token);
                 return Json(new { result });
             }
             catch (System.Exception ex)
@@ -85,11 +85,11 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public JsonResult DeletePromoCode(int yyyy, int mm, string access_token)
+        public JsonResult DeletePromoCode(int yyyy, int mm, string token)
         {
             try
             {
-                _accountManagementService.DeletePromoCode(yyyy, mm, access_token);
+                _accountManagementService.DeletePromoCode(yyyy, mm, token);
             }
             catch (System.Exception ex)
             {
@@ -99,11 +99,11 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        public JsonResult CodesBulkUpdate(List<Promocode> codes, string access_token)
+        public JsonResult CodesBulkUpdate(List<Promocode> codes, string token)
         {
             try
             {
-                _accountManagementService.CodesBulkUpdate(codes, access_token);
+                _accountManagementService.CodesBulkUpdate(codes, token);
             }
             catch (System.Exception ex)
             {
@@ -113,11 +113,11 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        public JsonResult GetPromoSuppliers(string access_token)
+        public JsonResult GetPromoSuppliers(string token)
         {
             try
             {
-                var result = _accountManagementService.GetPromoSuppliers(access_token);
+                var result = _accountManagementService.GetPromoSuppliers(token);
                 return Json(new { result });
             }
             catch (System.Exception ex)
@@ -126,11 +126,11 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public JsonResult UpdatePromoUser(PromoUserViewModel u, string access_token)
+        public JsonResult UpdatePromoUser(PromoUserViewModel u, string token)
         {
             try
             {
-                _accountManagementService.UpdatePromoUser(u, access_token);
+                _accountManagementService.UpdatePromoUser(u, token);
             }
             catch (System.Exception ex)
             {
@@ -140,11 +140,11 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        public JsonResult GetFunctionsForUser(string access_token)
+        public JsonResult GetFunctionsForUser(string token)
         {
             try
             {
-                var result = _accountManagementService.GetFunctionsForUser(access_token);
+                var result = _accountManagementService.GetFunctionsForUser(token);
                 return Json(new { result });
             }
             catch (System.Exception ex)
@@ -153,11 +153,11 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public JsonResult CreateSecurityRole(string Name, string Description, string access_token)
+        public JsonResult CreateSecurityRole(string Name, string Description, string token)
         {
             try
             {
-                _accountManagementService.CreateSecurityRole(Name, Description, access_token);
+                _accountManagementService.CreateSecurityRole(Name, Description, token);
             }
             catch (System.Exception ex)
             {
@@ -167,11 +167,11 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        public JsonResult UpdateSecurityRole(int ID, string Name, string Description, string access_token)
+        public JsonResult UpdateSecurityRole(int ID, string Name, string Description, string token)
         {
             try
             {
-                _accountManagementService.UpdateSecurityRole(ID, Name, Description, access_token);
+                _accountManagementService.UpdateSecurityRole(ID, Name, Description, token);
             }
             catch (System.Exception ex)
             {
@@ -181,11 +181,11 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        public JsonResult DeleteSecurityRole(int ID, string access_token)
+        public JsonResult DeleteSecurityRole(int ID, string token)
         {
             try
             {
-                _accountManagementService.DeleteSecurityRole(ID, access_token);
+                _accountManagementService.DeleteSecurityRole(ID, token);
             }
             catch (System.Exception ex)
             {
@@ -195,11 +195,11 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        public JsonResult AssignRole(int UserID, int RoleID, string access_token)
+        public JsonResult AssignRole(int UserID, int RoleID, string token)
         {
             try
             {
-                _accountManagementService.AssignRole(UserID, RoleID, access_token);
+                _accountManagementService.AssignRole(UserID, RoleID, token);
             }
             catch (System.Exception ex)
             {
@@ -209,11 +209,11 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        public JsonResult DeassignRole(int UserID, int RoleID, string access_token)
+        public JsonResult DeassignRole(int UserID, int RoleID, string token)
         {
             try
             {
-                _accountManagementService.DeassignRole(UserID, RoleID, access_token);
+                _accountManagementService.DeassignRole(UserID, RoleID, token);
             }
             catch (System.Exception ex)
             {
