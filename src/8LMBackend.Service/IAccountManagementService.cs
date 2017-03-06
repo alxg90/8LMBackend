@@ -26,5 +26,6 @@ namespace _8LMBackend.Service
         void DeassignRole(int UserID, int RoleID, string access_token);
         int GetUserID(string access_token);
         void VerifyFunction(int FunctionID, string access_token);
+        void DeletePromoUser(int ID, string token);
     }
 }

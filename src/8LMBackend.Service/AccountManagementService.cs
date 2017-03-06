@@ -185,7 +185,7 @@ namespace _8LMBackend.Service
 
         public void UpdatePromoUser(PromoUserViewModel u, string access_token)
         {
-            //VerifyFunction(12, access_token);
+            VerifyFunction(12, access_token);
 
             bool isNew = false;
             var item = DbContext.Promosupplier.Where(p => p.Id == u.id).FirstOrDefault();
@@ -336,6 +336,18 @@ namespace _8LMBackend.Service
             var fs = GetFunctionsForUser(access_token);
             if (!fs.Contains(FunctionID))
                 throw new Exception("Access denied");
+        }
+
+        public void DeletePromoUser(int ID, string token)
+        {
+            VerifyFunction(12, token);
+
+            var item = DbContext.Promosupplier.Where(p => p.Id == ID).FirstOrDefault();
+            if (item != default(Promosupplier))
+            {
+                DbContext.Set<Promosupplier>().Remove(item);
+                DbContext.SaveChanges();
+            }
         }
     }
 }

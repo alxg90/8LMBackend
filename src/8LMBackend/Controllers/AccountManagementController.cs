@@ -132,11 +132,11 @@ namespace _8LMCore.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdatePromoUser(PromoUserViewModel u, string token)
+        public JsonResult UpdatePromoUser([FromBody]PromoUserViewModel u)
         {
             try
             {
-                _accountManagementService.UpdatePromoUser(u, token);
+                _accountManagementService.UpdatePromoUser(u, Request.Query["token"]);
             }
             catch (System.Exception ex)
             {
@@ -224,6 +224,21 @@ namespace _8LMCore.Controllers
             try
             {
                 _accountManagementService.DeassignRole(UserID, RoleID, token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.Message });
+            }
+
+            return Json(new { status = "ok" });
+        }
+
+        [HttpPost]
+        public JsonResult DeletePromoUser(int ID, string token)
+        {
+            try
+            {
+                _accountManagementService.DeletePromoUser(ID, token);
             }
             catch (System.Exception ex)
             {

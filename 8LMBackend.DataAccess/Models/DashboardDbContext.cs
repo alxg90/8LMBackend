@@ -41,14 +41,14 @@ namespace _8LMBackend.DataAccess.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-            optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3306;database=dashboard_development;sslmode=none;");
+            optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_development;sslmode=none;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Campaign>(entity =>
             {
-                entity.ToTable("campaign");
+                entity.ToTable("Campaign");
 
                 entity.HasIndex(e => e.CategoryId)
                     .HasName("FK_Campaign_CategoryID");
@@ -106,7 +106,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Campaigncategory>(entity =>
             {
-                entity.ToTable("campaigncategory");
+                entity.ToTable("CampaignCategory");
 
                 entity.HasIndex(e => e.CreatedBy)
                     .HasName("FK_CC_CreatedBy");
@@ -147,7 +147,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.HasKey(e => new { e.CampaignId, e.UserId })
                     .HasName("PK_campaignshare");
 
-                entity.ToTable("campaignshare");
+                entity.ToTable("CampaignShare");
 
                 entity.HasIndex(e => e.CreatedBy)
                     .HasName("FK_CS_CreatedBy");
@@ -188,7 +188,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Campaignstatus>(entity =>
             {
-                entity.ToTable("campaignstatus");
+                entity.ToTable("CampaignStatus");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
@@ -208,7 +208,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.HasKey(e => new { e.CampaignId, e.TagId })
                     .HasName("PK_campaigntag");
 
-                entity.ToTable("campaigntag");
+                entity.ToTable("CampaignTag");
 
                 entity.HasIndex(e => e.TagId)
                     .HasName("FK_CT_TagID");
@@ -236,7 +236,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Company>(entity =>
             {
-                entity.ToTable("company");
+                entity.ToTable("Company");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
@@ -253,7 +253,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Contacttype>(entity =>
             {
-                entity.ToTable("contacttype");
+                entity.ToTable("ContactType");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
@@ -270,7 +270,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Controlgroup>(entity =>
             {
-                entity.ToTable("controlgroup");
+                entity.ToTable("ControlGroup");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
@@ -287,7 +287,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Controltype>(entity =>
             {
-                entity.ToTable("controltype");
+                entity.ToTable("ControlType");
 
                 entity.HasIndex(e => e.GroupId)
                     .HasName("FK_CT_GroupID");
@@ -322,7 +322,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.HasKey(e => new { e.CampaignId, e.PageId })
                     .HasName("PK_pagecampaign");
 
-                entity.ToTable("pagecampaign");
+                entity.ToTable("PageCampaign");
 
                 entity.HasIndex(e => e.PageId)
                     .HasName("FK_PCampaign_PageID");
@@ -350,7 +350,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Pages>(entity =>
             {
-                entity.ToTable("pages");
+                entity.ToTable("Pages");
 
                 entity.HasIndex(e => e.CreatedBy)
                     .HasName("FK_Pages_CreatedBy");
@@ -416,7 +416,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Pagestatistic>(entity =>
             {
-                entity.ToTable("pagestatistic");
+                entity.ToTable("PageStatistic");
 
                 entity.HasIndex(e => e.PageId)
                     .HasName("FK_PS_PID");
@@ -446,7 +446,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Pagestatus>(entity =>
             {
-                entity.ToTable("pagestatus");
+                entity.ToTable("PageStatus");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
@@ -466,7 +466,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.HasKey(e => new { e.PageId, e.TagId })
                     .HasName("PK_pagetag");
 
-                entity.ToTable("pagetag");
+                entity.ToTable("PageTag");
 
                 entity.HasIndex(e => e.TagId)
                     .HasName("FK_PT_TagID");
@@ -497,7 +497,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.HasKey(e => new { e.ControlTypeId, e.PageTypeId })
                     .HasName("PK_pagetoolbox");
 
-                entity.ToTable("pagetoolbox");
+                entity.ToTable("PageToolbox");
 
                 entity.HasIndex(e => e.PageTypeId)
                     .HasName("FK_PTbox_PTID");
@@ -525,7 +525,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Pagetype>(entity =>
             {
-                entity.ToTable("pagetype");
+                entity.ToTable("PageType");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
@@ -740,7 +740,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Tags>(entity =>
             {
-                entity.ToTable("tags");
+                entity.ToTable("Tags");
 
                 entity.HasIndex(e => e.Tag)
                     .HasName("Tag")
@@ -760,7 +760,7 @@ namespace _8LMBackend.DataAccess.Models
                 entity.HasKey(e => new { e.UserId, e.CompanyId })
                     .HasName("PK_usercompany");
 
-                entity.ToTable("usercompany");
+                entity.ToTable("UserCompany");
 
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("FK_UCompany_CID");
@@ -914,7 +914,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Userstatus>(entity =>
             {
-                entity.ToTable("userstatus");
+                entity.ToTable("UserStatus");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
@@ -979,7 +979,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Usertokenstatus>(entity =>
             {
-                entity.ToTable("usertokenstatus");
+                entity.ToTable("UserTokenStatus");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
@@ -996,7 +996,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Usertype>(entity =>
             {
-                entity.ToTable("usertype");
+                entity.ToTable("UserType");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
