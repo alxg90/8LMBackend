@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using _8LMBackend.Service.ViewModels;
 using _8LMBackend.DataAccess.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -88,12 +87,12 @@ namespace _8LMBackend.Service
             VerifyFunction(10, access_token);
 
             var rf = DbContext.Rolefunction.Where(p => p.RoleId == RoleID && p.FunctionId == FunctionID).FirstOrDefault();
-			if (rf != default(Rolefunction))
-			{
-				DbContext.Set<Rolefunction>().Remove(rf);
-				DbContext.SaveChanges();
-			}
-		}
+            if (rf != null)
+            {
+                DbContext.Rolefunction.Remove(rf);
+                DbContext.SaveChanges();
+            }
+        }
 
         public void UpdateCode(int yyyy, int mm, string Code, string access_token)
         {
