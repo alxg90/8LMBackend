@@ -30,7 +30,7 @@ namespace _8LMCore.Controllers
             }
         }
 
-        [HttpPost]
+        //[HttpPost]
 		public JsonResult AssignFunction(int FunctionID, int RoleID, string token)
 		{
             try
@@ -45,7 +45,7 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok"});
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult DeassignFunction(int FunctionID, int RoleID, string token)
 		{
             try
@@ -60,7 +60,7 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult UpdateCode(int yyyy, int mm, string Code, string token)
         {
             try
@@ -88,7 +88,7 @@ namespace _8LMCore.Controllers
             }
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult DeletePromoCode(int yyyy, int mm, string token)
         {
             try
@@ -103,7 +103,7 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult CodesBulkUpdate(List<Promocode> codes, string token)
         {
             try
@@ -131,7 +131,7 @@ namespace _8LMCore.Controllers
             }
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult UpdatePromoUser([FromBody]PromoUserViewModel u)
         {
             try
@@ -159,7 +159,7 @@ namespace _8LMCore.Controllers
             }
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult CreateSecurityRole(string Name, string Description, string token)
         {
             try
@@ -173,7 +173,7 @@ namespace _8LMCore.Controllers
             }
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult UpdateSecurityRole(int ID, string Name, string Description, string token)
         {
             try
@@ -188,7 +188,7 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult DeleteSecurityRole(int ID, string token)
         {
             try
@@ -203,7 +203,7 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult AssignRole(int UserID, int RoleID, string token)
         {
             try
@@ -218,7 +218,7 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult DeassignRole(int UserID, int RoleID, string token)
         {
             try
@@ -233,7 +233,7 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult DeletePromoUser(int ID, string token)
         {
             try
