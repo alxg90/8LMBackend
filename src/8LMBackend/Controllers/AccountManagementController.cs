@@ -26,7 +26,7 @@ namespace _8LMCore.Controllers
             catch (System.Exception ex)
             {
 
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
         }
 
@@ -38,7 +38,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message});
+                return Json(new { status = "failed", error = ex.Message});
             }
 
             return Json(new { status = "ok"});
@@ -52,7 +52,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
 
             return Json(new { status = "ok" });
@@ -66,7 +66,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
 
             return Json(new { status = "ok" });
@@ -81,7 +81,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
         }
 
@@ -93,7 +93,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
 
             return Json(new { status = "ok" });
@@ -107,7 +107,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
 
             return Json(new { status = "ok" });
@@ -122,7 +122,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
         }
 
@@ -134,7 +134,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
 
             return Json(new { status = "ok" });
@@ -149,7 +149,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
         }
 
@@ -162,7 +162,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
         }
 
@@ -174,7 +174,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
 
             return Json(new { status = "ok" });
@@ -188,7 +188,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
 
             return Json(new { status = "ok" });
@@ -202,7 +202,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
 
             return Json(new { status = "ok" });
@@ -216,7 +216,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                return Json(new { status = "failed", error = ex.InnerException.Message });
+                return Json(new { status = "failed", error = ex.Message });
             }
 
             return Json(new { status = "ok" });
