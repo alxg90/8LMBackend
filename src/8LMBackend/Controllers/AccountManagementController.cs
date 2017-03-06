@@ -157,14 +157,13 @@ namespace _8LMCore.Controllers
         {
             try
             {
-                _accountManagementService.CreateSecurityRole(Name, Description, token);
+                var id = _accountManagementService.CreateSecurityRole(Name, Description, token);
+                return Json(new { ID = id.ToString() });
             }
             catch (System.Exception ex)
             {
                 return Json(new { status = "failed", error = ex.InnerException.Message });
             }
-
-            return Json(new { status = "ok" });
         }
 
         public JsonResult UpdateSecurityRole(int ID, string Name, string Description, string token)

@@ -19,7 +19,7 @@ namespace _8LMBackend.Service
         List<PromoUserViewModel> GetPromoSuppliers(string access_token);
         void UpdatePromoUser(PromoUserViewModel u, string access_token);
         List<int> GetFunctionsForUser(string access_token);
-        void CreateSecurityRole(string Name, string Description, string access_token);
+        int CreateSecurityRole(string Name, string Description, string access_token);
         void UpdateSecurityRole(int ID, string Name, string Description, string access_token);
         void DeleteSecurityRole(int ID, string access_token);
         void AssignRole(int UserID, int RoleID, string access_token);

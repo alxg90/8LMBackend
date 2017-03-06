@@ -237,7 +237,7 @@ namespace _8LMBackend.Service
                 .Distinct().ToList();
         }
 
-        public void CreateSecurityRole(string Name, string Description, string access_token)
+        public int CreateSecurityRole(string Name, string Description, string access_token)
         {
             VerifyFunction(10, access_token);
 
@@ -258,6 +258,7 @@ namespace _8LMBackend.Service
                 item.IsActual = true;
 
             DbContext.SaveChanges();
+            return item.Id;
         }
 
         public void UpdateSecurityRole(int ID, string Name, string Description, string access_token)
