@@ -74,7 +74,6 @@ namespace _8LMBackend.Service
                     id = account.Id,
                     login = account.Login,
                     typeID = account.TypeId,
-                    typeName = account.Type.Name
                 };
             }
             return null;
