@@ -62,6 +62,24 @@ namespace _8LMBackend.Service
 			return result;
 		}
 
+        public AccountViewModel GetAccount(int id, string token)
+        {
+            VerifyFunction(9, token);
+
+            var account = DbContext.Users.FirstOrDefault(u => u.Id == id);
+            if (account != null)
+            {
+                var accountVM = new AccountViewModel
+                {
+                    id = account.Id,
+                    login = account.Login,
+                    typeID = account.TypeId,
+                    typeName = account.Type.Name
+                };
+            }
+            return null;
+        }
+
 		public void AssignFunction(int FunctionID, int RoleID, string access_token)
 		{
             VerifyFunction(10, access_token);

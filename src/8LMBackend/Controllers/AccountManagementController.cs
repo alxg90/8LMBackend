@@ -30,6 +30,24 @@ namespace _8LMCore.Controllers
             }
         }
 
+        public JsonResult GetAccount(int id, string token)
+        {
+            try
+            {
+                var account = _accountManagementService.GetAccount(id, token);
+                if (account == null)
+                {
+                    throw new System.Exception(string.Format("Account with id '{0}' not found", id));
+                }
+                return Json(new { account });
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(new { status = "failed", error = ex.Message });
+            }
+        }
+
         //[HttpPost]
 		public JsonResult AssignFunction(int FunctionID, int RoleID, string token)
 		{

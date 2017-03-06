@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using _8LMBackend.Service.ViewModels;
 using _8LMBackend.DataAccess.Models;
 
@@ -27,5 +24,6 @@ namespace _8LMBackend.Service
         int GetUserID(string access_token);
         void VerifyFunction(int FunctionID, string access_token);
         void DeletePromoUser(int ID, string token);
+        AccountViewModel GetAccount(int id, string token);
     }
 }
