@@ -186,7 +186,7 @@ namespace _8LMBackend.Service
 
         public void UpdatePromoUser(PromoUserViewModel u, string access_token)
         {
-            VerifyFunction(12, access_token);
+            //VerifyFunction(12, access_token);
 
             bool isNew = false;
             var item = DbContext.Promosupplier.Where(p => p.Id == u.id).FirstOrDefault();
