@@ -67,16 +67,17 @@ namespace _8LMBackend.Service
             VerifyFunction(9, token);
 
             var account = DbContext.Users.FirstOrDefault(u => u.Id == id);
-            if (account != null)
+            if (account == null)
             {
-                var accountVM = new AccountViewModel
-                {
-                    id = account.Id,
-                    login = account.Login,
-                    typeID = account.TypeId,
-                };
+                return null;
             }
-            return null;
+            var accountVM = new AccountViewModel
+            {
+                id = account.Id,
+                login = account.Login,
+                typeID = account.TypeId,
+            };
+            return accountVM;
         }
 
 		public void AssignFunction(int FunctionID, int RoleID, string access_token)
