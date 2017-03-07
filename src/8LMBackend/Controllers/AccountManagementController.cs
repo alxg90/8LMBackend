@@ -267,6 +267,7 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
+        [HttpPost]
         public JsonResult UpdateUser(Users u, string token)
         {
             try
@@ -281,6 +282,7 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
+        [HttpPost]
         public JsonResult DeleteUser(Users u, string token)
         {
             try
