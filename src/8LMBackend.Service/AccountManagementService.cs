@@ -21,7 +21,7 @@ namespace _8LMBackend.Service
 
 			AccountManagementViewModel result = new AccountManagementViewModel();
 			
-			foreach (var u in DbContext.Users.Include(r => r.Securityrole).Include(t => t.Type).ToList())
+			foreach (var u in DbContext.Users.Include(r => r.UserroleUser).Include(t => t.Type).ToList())
 			{
 				AccountViewModel account = new AccountViewModel()
 				{
@@ -36,7 +36,7 @@ namespace _8LMBackend.Service
                     Icon = u.Icon
 				};
 
-				account.roles = u.Securityrole.Select(p => p.Id).ToList();
+				account.roles = u.UserroleUser.Select(p => p.RoleId).ToList();
 				result.accounts.Add(account);
 			}
 
@@ -297,7 +297,7 @@ namespace _8LMBackend.Service
                 throw new Exception("Role with ID = " + ID.ToString() + " not found");
 
             var r = DbContext.Securityrole.Where(p => p.Id != ID && p.Name.ToUpper() == Name.ToUpper()).FirstOrDefault();
-            if (r == default(Securityrole))
+            if (r != default(Securityrole))
                 throw new Exception("Role with Name = '" + Name.ToString() + "' already exists");
 
             item.Name = Name;
@@ -309,14 +309,17 @@ namespace _8LMBackend.Service
         {
             VerifyFunction(10, access_token);
 
-            var item = DbContext.Securityrole.Where(p => p.Id == ID).Include(p => p.Rolefunction).Include(p => p.Userrole).FirstOrDefault();
+            //var item = DbContext.Securityrole.Where(p => p.Id == ID).Include(p => p.Rolefunction).Include(p => p.Userrole).FirstOrDefault();
+            var item = DbContext.Securityrole.FirstOrDefault(p => p.Id == ID);
             if (item == default(Securityrole))
                 throw new Exception("Role with ID = " + ID.ToString() + " not found");
 
-            if ((item.Rolefunction.Count == 0) && (item.Userrole.Count == 0))
-                DbContext.Set<Securityrole>().Remove(item);
-            else
-                item.IsActual = false;
+            DbContext.Securityrole.Remove(item);
+
+            //if ((item.Rolefunction.Count == 0) && (item.Userrole.Count == 0))
+            //    DbContext.Securityrole.Remove(item);
+            //else
+            //    item.IsActual = false;
 
             DbContext.SaveChanges();
         }

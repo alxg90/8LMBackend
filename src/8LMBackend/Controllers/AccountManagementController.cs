@@ -39,7 +39,7 @@ namespace _8LMCore.Controllers
                 {
                     throw new System.Exception(string.Format("Account with id '{0}' not found", id));
                 }
-                return Json(new { account });
+                return Json(account);
             }
             catch (System.Exception ex)
             {
@@ -268,11 +268,11 @@ namespace _8LMCore.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateUser(Users u, string token)
+        public JsonResult UpdateUser([FromBody]Users u)
         {
             try
             {
-                _accountManagementService.UpdateUser(u, token);
+                _accountManagementService.UpdateUser(u, Request.Query["token"]);
             }
             catch (System.Exception ex)
             {
