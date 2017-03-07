@@ -11,7 +11,12 @@ namespace _8LMBackend.Service.ViewModels
     {
 		public int id { get; set; }
 		public string login { get; set; }
-		public int typeID { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string ClearPassword { get; set; }
+        public string Email { get; set; }
+        public string Icon { get; set; }
+        public int typeID { get; set; }
 		public string typeName { get; set; }
 
         public List<int> roles;

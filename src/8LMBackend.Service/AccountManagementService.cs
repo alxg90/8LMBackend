@@ -27,8 +27,13 @@ namespace _8LMBackend.Service
 				{
 					id = u.Id,
 					login = u.Login,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    ClearPassword = u.ClearPassword,
+                    Email = u.Email,
 					typeID = u.TypeId,
-                    typeName = u.Type.Name
+                    typeName = u.Type.Name,
+                    Icon = u.Icon
 				};
 
 				account.roles = u.Securityrole.Select(p => p.Id).ToList();
@@ -75,7 +80,12 @@ namespace _8LMBackend.Service
             {
                 id = account.Id,
                 login = account.Login,
+                FirstName = account.FirstName,
+                LastName = account.LastName,
+                ClearPassword = account.ClearPassword,
+                Email = account.Email,
                 typeID = account.TypeId,
+                Icon = account.Icon
             };
             return accountVM;
         }
@@ -366,6 +376,40 @@ namespace _8LMBackend.Service
                 DbContext.Set<Promosupplier>().Remove(item);
                 DbContext.SaveChanges();
             }
+        }
+
+        public void UpdateUser(Users u, string token)
+        {
+            VerifyFunction(10, token);
+
+            var item = DbContext.Users.Where(p => p.Id == u.Id).FirstOrDefault();
+            if (item != default(Users))
+            {
+                item.FirstName = u.FirstName;
+                item.LastName = u.LastName;
+                item.ClearPassword = u.ClearPassword;
+                item.Email = u.Email;
+                item.Icon = u.Icon;
+                DbContext.SaveChanges();
+            }
+            else
+                throw new Exception("User with ID = " + u.Id.ToString() + " not found");
+
+        }
+
+        public void DeleteUser(Users u, string token)
+        {
+            VerifyFunction(10, token);
+
+            var item = DbContext.Users.Where(p => p.Id == u.Id).FirstOrDefault();
+            if (item != default(Users))
+            {
+                DbContext.SaveChanges();
+                DbContext.Set<Users>().Remove(item);
+            }
+            else
+                throw new Exception("User with ID = " + u.Id.ToString() + " not found");
+
         }
     }
 }

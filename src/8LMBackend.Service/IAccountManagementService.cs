@@ -25,5 +25,7 @@ namespace _8LMBackend.Service
         void VerifyFunction(int FunctionID, string access_token);
         void DeletePromoUser(int ID, string token);
         AccountViewModel GetAccount(int id, string token);
+        void UpdateUser(Users u, string token);
+        void DeleteUser(Users u, string token);
     }
 }

@@ -25,8 +25,13 @@ namespace _8LMBackend.DataAccess.Models
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public string Login { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string ClearPassword { get; set; }
+        public string Email { get; set; }
         public int StatusId { get; set; }
         public int TypeId { get; set; }
+        public string Icon { get; set; }
 
         public virtual ICollection<Campaign> Campaign { get; set; }
         public virtual ICollection<Campaigncategory> Campaigncategory { get; set; }

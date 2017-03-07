@@ -891,6 +891,22 @@ namespace _8LMBackend.DataAccess.Models
                     .IsRequired()
                     .HasColumnType("varchar(255)");
 
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.ClearPassword)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
                 entity.Property(e => e.StatusId)
                     .HasColumnName("StatusID")
                     .HasColumnType("int(11)");
@@ -910,6 +926,10 @@ namespace _8LMBackend.DataAccess.Models
                     .HasForeignKey(d => d.TypeId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_Users_TypeID");
+
+                entity.Property(e => e.Icon)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
             });
 
             modelBuilder.Entity<Userstatus>(entity =>

@@ -177,6 +177,7 @@ namespace _8LMCore.Controllers
             }
         }
 
+
         //[HttpPost]
         public JsonResult CreateSecurityRole(string Name, string Description, string token)
         {
@@ -257,6 +258,34 @@ namespace _8LMCore.Controllers
             try
             {
                 _accountManagementService.DeletePromoUser(ID, token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.Message });
+            }
+
+            return Json(new { status = "ok" });
+        }
+
+        public JsonResult UpdateUser(Users u, string token)
+        {
+            try
+            {
+                _accountManagementService.UpdateUser(u, token);
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { status = "failed", error = ex.Message });
+            }
+
+            return Json(new { status = "ok" });
+        }
+
+        public JsonResult DeleteUser(Users u, string token)
+        {
+            try
+            {
+                _accountManagementService.DeleteUser(u, token);
             }
             catch (System.Exception ex)
             {
