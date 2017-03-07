@@ -121,12 +121,12 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        //[HttpPost]
-        public JsonResult CodesBulkUpdate(List<Promocode> codes, string token)
+        [HttpPost]
+        public JsonResult CodesBulkUpdate([FromBody]List<Promocode> codes)
         {
             try
             {
-                _accountManagementService.CodesBulkUpdate(codes, token);
+                _accountManagementService.CodesBulkUpdate(codes, Request.Query["token"]);
             }
             catch (System.Exception ex)
             {
