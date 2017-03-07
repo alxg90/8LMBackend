@@ -1,5 +1,8 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft​.Extensions​.DependencyInjection;
+using Microsoft​.AspNetCore​.Mvc;
+using Microsoft​.AspNetCore​.Mvc​.Cors​.Internal;
 
 namespace _8LMBackend
 {

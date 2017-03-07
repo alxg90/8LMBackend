@@ -28,6 +28,14 @@ namespace _8LMBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials() );
+            });
             // Add framework services.
             services.AddMvc();
 
@@ -64,6 +72,8 @@ namespace _8LMBackend
             }
 
             app.UseStaticFiles();
+
+            app.UseCors("CorsPolicy");
 
             app.UseMvc(routes =>
             {
