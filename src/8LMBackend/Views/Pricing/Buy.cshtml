@@ -1,0 +1,15 @@
+<html>
+<head></head>
+<body>
+<FORM METHOD=POST ACTION="https://secure.authorize.net/gateway/transact.dll">
+    <INPUT TYPE=HIDDEN NAME="x_login" VALUE="9c6x9RG4Pt">
+    <INPUT TYPE=HIDDEN NAME="x_version" VALUE="3.1">
+    <INPUT TYPE=HIDDEN NAME="x_method" VALUE="CC">
+    <INPUT TYPE=HIDDEN NAME="x_show_form" VALUE="PAYMENT_FORM">
+    <INPUT TYPE=HIDDEN NAME="x_amount" VALUE="9.95">
+    <INPUT TYPE=HIDDEN NAME="x_relay_response" VALUE="TRUE">
+    <INPUT TYPE=HIDDEN NAME="x_relay_url" VALUE="http://core.eightlegged.media:5000/Pricing/ThankYouPage">
+    <INPUT type="submit" value="buy">
+</FORM>
+</body>
+</html>
