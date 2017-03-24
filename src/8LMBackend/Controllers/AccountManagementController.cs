@@ -122,7 +122,7 @@ namespace _8LMCore.Controllers
         }
 
         [HttpPost]
-        public JsonResult CodesBulkUpdate([FromBody]List<Promocode> codes)
+        public JsonResult CodesBulkUpdate([FromBody]List<PromoCode> codes)
         {
             try
             {
