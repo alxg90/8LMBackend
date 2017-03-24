@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace _8LMBackend.DataAccess.Repositories
 {
-    public class PromoCodeRepository : RepositoryBase<Promocode>, IPromoCodeRepository
+    public class PromoCodeRepository : RepositoryBase<PromoCode>, IPromoCodeRepository
     {
         public PromoCodeRepository(IDbFactory dbFactory)
             : base(dbFactory) { }

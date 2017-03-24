@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace _8LMBackend.DataAccess.Repositories
 {
-    public interface IUserPromoCodeRepository : IRepository<Userpromocode>
+    public interface IUserPromoCodeRepository : IRepository<UserPromoCode>
     {
     }
 }
