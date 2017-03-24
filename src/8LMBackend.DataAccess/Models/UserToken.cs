@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class Usertoken
+    public partial class UserToken
     {
         public int Id { get; set; }
         public int CreatedBy { get; set; }
@@ -13,7 +13,8 @@ namespace _8LMBackend.DataAccess.Models
         public string Token { get; set; }
         public int UserId { get; set; }
 
-        public virtual Usertokenstatus Status { get; set; }
+        public virtual Users CreatedByNavigation { get; set; }
+        public virtual UserTokenStatus Status { get; set; }
         public virtual Users User { get; set; }
     }
 }

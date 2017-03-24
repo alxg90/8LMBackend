@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class Rolefunction
+    public partial class RoleFunction
     {
         public int RoleId { get; set; }
         public int FunctionId { get; set; }
@@ -11,7 +11,7 @@ namespace _8LMBackend.DataAccess.Models
         public DateTime CreatedDate { get; set; }
 
         public virtual Users CreatedByNavigation { get; set; }
-        public virtual Securityfunction Function { get; set; }
-        public virtual Securityrole Role { get; set; }
+        public virtual SecurityFunction Function { get; set; }
+        public virtual SecurityRole Role { get; set; }
     }
 }

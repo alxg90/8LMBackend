@@ -7,12 +7,12 @@ namespace _8LMBackend.DataAccess.Models
     {
         public Company()
         {
-            Usercompany = new HashSet<Usercompany>();
+            UserCompany = new HashSet<UserCompany>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Usercompany> Usercompany { get; set; }
+        public virtual ICollection<UserCompany> UserCompany { get; set; }
     }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class Pagestatus
+    public partial class PageStatus
     {
-        public Pagestatus()
+        public PageStatus()
         {
             Pages = new HashSet<Pages>();
         }

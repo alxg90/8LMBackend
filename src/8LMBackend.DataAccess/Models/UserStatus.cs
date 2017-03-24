@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class Userstatus
+    public partial class UserStatus
     {
-        public Userstatus()
+        public UserStatus()
         {
             Users = new HashSet<Users>();
         }

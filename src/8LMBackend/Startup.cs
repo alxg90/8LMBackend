@@ -44,6 +44,8 @@ namespace _8LMBackend
             services.AddScoped(typeof(ICampaignService), typeof(CampaignService));
             services.AddScoped(typeof(ICampaignsRepository), typeof(CampaignsRepository));
 			services.AddScoped(typeof(IAccountManagementService), typeof(AccountManagementService));
+            services.AddScoped(typeof(IProxyService), typeof(ProxyService));
+            services.AddScoped(typeof(IPagesService), typeof(PagesService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

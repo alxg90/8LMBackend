@@ -7,9 +7,10 @@ namespace _8LMBackend.DataAccess.Models
     {
         public Pages()
         {
-            Pagecampaign = new HashSet<Pagecampaign>();
-            Pagestatistic = new HashSet<Pagestatistic>();
-            Pagetag = new HashSet<Pagetag>();
+            ControlStat = new HashSet<ControlStat>();
+            PageCampaign = new HashSet<PageCampaign>();
+            PageStatistic = new HashSet<PageStatistic>();
+            PageTag = new HashSet<PageTag>();
         }
 
         public int Id { get; set; }
@@ -22,11 +23,12 @@ namespace _8LMBackend.DataAccess.Models
         public int StatusId { get; set; }
         public int TypeId { get; set; }
 
-        public virtual ICollection<Pagecampaign> Pagecampaign { get; set; }
-        public virtual ICollection<Pagestatistic> Pagestatistic { get; set; }
-        public virtual ICollection<Pagetag> Pagetag { get; set; }
+        public virtual ICollection<ControlStat> ControlStat { get; set; }
+        public virtual ICollection<PageCampaign> PageCampaign { get; set; }
+        public virtual ICollection<PageStatistic> PageStatistic { get; set; }
+        public virtual ICollection<PageTag> PageTag { get; set; }
         public virtual Users CreatedByNavigation { get; set; }
-        public virtual Pagestatus Status { get; set; }
-        public virtual Pagetype Type { get; set; }
+        public virtual PageStatus Status { get; set; }
+        public virtual PageType Type { get; set; }
     }
 }

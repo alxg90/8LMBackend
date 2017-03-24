@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class Securityrole
+    public partial class SecurityRole
     {
-        public Securityrole()
+        public SecurityRole()
         {
-            Rolefunction = new HashSet<Rolefunction>();
-            Userrole = new HashSet<Userrole>();
+            RoleFunction = new HashSet<RoleFunction>();
+            UserRole = new HashSet<UserRole>();
         }
 
         public int Id { get; set; }
@@ -18,8 +18,8 @@ namespace _8LMBackend.DataAccess.Models
         public bool IsActual { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Rolefunction> Rolefunction { get; set; }
-        public virtual ICollection<Userrole> Userrole { get; set; }
+        public virtual ICollection<RoleFunction> RoleFunction { get; set; }
+        public virtual ICollection<UserRole> UserRole { get; set; }
         public virtual Users CreatedByNavigation { get; set; }
     }
 }

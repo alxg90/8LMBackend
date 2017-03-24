@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class Controlgroup
+    public partial class ControlGroup
     {
-        public Controlgroup()
+        public ControlGroup()
         {
-            Controltype = new HashSet<Controltype>();
+            ControlType = new HashSet<ControlType>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Controltype> Controltype { get; set; }
+        public virtual ICollection<ControlType> ControlType { get; set; }
     }
 }

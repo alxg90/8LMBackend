@@ -10,9 +10,9 @@ namespace _8LMBackend.Service
 		void AssignFunction(int FunctionID, int RoleID, string access_token);
 		void DeassignFunction(int FunctionID, int RoleID, string access_token);
         void UpdateCode(int yyyy, int mm, string Code, string access_token);
-        List<Promocode> GetCodes(string access_token);
+        List<PromoCode> GetCodes(string access_token);
         void DeletePromoCode(int yyyy, int mm, string access_token);
-        void CodesBulkUpdate(List<Promocode> codes, string access_token);
+        void CodesBulkUpdate(List<PromoCode> codes, string access_token);
         List<PromoUserViewModel> GetPromoSuppliers(string access_token);
         void UpdatePromoUser(PromoUserViewModel u, string access_token);
         List<int> GetFunctionsForUser(string access_token);

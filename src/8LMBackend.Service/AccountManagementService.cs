@@ -21,7 +21,7 @@ namespace _8LMBackend.Service
 
 			AccountManagementViewModel result = new AccountManagementViewModel();
 			
-			foreach (var u in DbContext.Users.Include(r => r.UserroleUser).Include(t => t.Type).ToList())
+			foreach (var u in DbContext.Users.Include(r => r.UserRoleUser).Include(t => t.Type).ToList())
 			{
 				AccountViewModel account = new AccountViewModel()
 				{
@@ -36,11 +36,11 @@ namespace _8LMBackend.Service
                     Icon = u.Icon
 				};
 
-				account.roles = u.UserroleUser.Select(p => p.RoleId).ToList();
+				account.roles = u.UserRoleUser.Select(p => p.RoleId).ToList();
 				result.accounts.Add(account);
 			}
 
-			foreach (var r in DbContext.Securityrole.Include(f => f.Rolefunction).ToList())
+			foreach (var r in DbContext.SecurityRole.Include(f => f.RoleFunction).ToList())
 			{
 				RoleViewModel role = new RoleViewModel()
 				{
@@ -48,12 +48,12 @@ namespace _8LMBackend.Service
 					name = r.Name
 				};
 
-				role.functions = r.Rolefunction.Select(p => p.FunctionId).ToList();
+				role.functions = r.RoleFunction.Select(p => p.FunctionId).ToList();
 				result.roles.Add(role); 
 			}
 
 			result.securityFunctions = new List<SecurityFunctionViewModel>();
-			foreach (var f in DbContext.Securityfunction.ToList())
+			foreach (var f in DbContext.SecurityFunction.ToList())
 			{
 				SecurityFunctionViewModel function = new SecurityFunctionViewModel()
 				{
@@ -94,10 +94,10 @@ namespace _8LMBackend.Service
 		{
             VerifyFunction(10, access_token);
 
-            var rf = DbContext.Rolefunction.Where(p => p.RoleId == RoleID && p.FunctionId == FunctionID).FirstOrDefault();
-			if (rf == default(Rolefunction))
+            var rf = DbContext.RoleFunction.Where(p => p.RoleId == RoleID && p.FunctionId == FunctionID).FirstOrDefault();
+			if (rf == default(RoleFunction))
 			{
-				Rolefunction item = new Rolefunction()
+				RoleFunction item = new RoleFunction()
 				{
 					RoleId = RoleID,
 					FunctionId = FunctionID,
@@ -105,7 +105,7 @@ namespace _8LMBackend.Service
 					CreatedDate = DateTime.UtcNow
 				};
 
-				DbContext.Set<Rolefunction>().Add(item);
+				DbContext.Set<RoleFunction>().Add(item);
 				DbContext.SaveChanges();
 			}
 		}
@@ -114,10 +114,10 @@ namespace _8LMBackend.Service
 		{
             VerifyFunction(10, access_token);
 
-            var rf = DbContext.Rolefunction.Where(p => p.RoleId == RoleID && p.FunctionId == FunctionID).FirstOrDefault();
+            var rf = DbContext.RoleFunction.Where(p => p.RoleId == RoleID && p.FunctionId == FunctionID).FirstOrDefault();
             if (rf != null)
             {
-                DbContext.Rolefunction.Remove(rf);
+                DbContext.RoleFunction.Remove(rf);
                 DbContext.SaveChanges();
             }
         }
@@ -126,18 +126,18 @@ namespace _8LMBackend.Service
         {
             VerifyFunction(12, access_token);
 
-            if (!DbContext.Promocode.Where(p => p.Code == Code).Any())
+            if (!DbContext.PromoCode.Where(p => p.Code == Code).Any())
             {
-                var item = DbContext.Promocode.Where(p => p.Yyyy == yyyy && p.Mm == mm).FirstOrDefault();
-                if (item == default(Promocode))
+                var item = DbContext.PromoCode.Where(p => p.Yyyy == yyyy && p.Mm == mm).FirstOrDefault();
+                if (item == default(PromoCode))
                 {
-                    Promocode pc = new Promocode()
+                    PromoCode pc = new PromoCode()
                     {
                         Yyyy = yyyy,
                         Mm = mm,
                         Code = Code
                     };
-                    DbContext.Set<Promocode>().Add(pc);
+                    DbContext.Set<PromoCode>().Add(pc);
                 }
                 else
                 {
@@ -152,28 +152,28 @@ namespace _8LMBackend.Service
             }
         }
 
-        public List<Promocode> GetCodes(string access_token)
+        public List<PromoCode> GetCodes(string access_token)
         {
             VerifyFunction(11, access_token);
 
-            return DbContext.Promocode.OrderBy(y => y.Yyyy).OrderBy(m => m.Mm).ToList();
+            return DbContext.PromoCode.OrderBy(y => y.Yyyy).OrderBy(m => m.Mm).ToList();
         }
 
         public void DeletePromoCode(int yyyy, int mm, string access_token)
         {
             VerifyFunction(12, access_token);
 
-            var item = DbContext.Promocode.Where(p => p.Yyyy == yyyy && p.Mm == mm).FirstOrDefault();
-            if (item != default(Promocode))
+            var item = DbContext.PromoCode.Where(p => p.Yyyy == yyyy && p.Mm == mm).FirstOrDefault();
+            if (item != default(PromoCode))
             {
-                DbContext.Set<Promocode>().Remove(item);
+                DbContext.Set<PromoCode>().Remove(item);
                 DbContext.SaveChanges();
             }
             else
                 throw new Exception("Promocode not found");
         }
 
-        public void CodesBulkUpdate(List<Promocode> codes, string access_token)
+        public void CodesBulkUpdate(List<PromoCode> codes, string access_token)
         {
             foreach (var c in codes)
                 UpdateCode(c.Yyyy, c.Mm, c.Code, access_token);
@@ -184,7 +184,7 @@ namespace _8LMBackend.Service
             //VerifyFunction(11, access_token);
 
             List<PromoUserViewModel> result = new List<PromoUserViewModel>();
-            foreach (var u in DbContext.Promosupplier.OrderBy(p => p.Id).ToList())
+            foreach (var u in DbContext.PromoSupplier.OrderBy(p => p.Id).ToList())
             {
                 PromoUserViewModel item = new PromoUserViewModel()
                 {
@@ -205,7 +205,7 @@ namespace _8LMBackend.Service
             }
 
             foreach (var u in result)
-                foreach (var pp in DbContext.Promoproduct.Where(p => p.SupplierId == u.id).ToList())
+                foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == u.id).ToList())
                     u.products.Add(pp.Name);
 
             return result;
@@ -216,10 +216,10 @@ namespace _8LMBackend.Service
             VerifyFunction(12, access_token);
 
             bool isNew = false;
-            var item = DbContext.Promosupplier.Where(p => p.Id == u.id).FirstOrDefault();
-            if (item == default(Promosupplier))
+            var item = DbContext.PromoSupplier.Where(p => p.Id == u.id).FirstOrDefault();
+            if (item == default(PromoSupplier))
             {
-                item = new Promosupplier();
+                item = new PromoSupplier();
                 isNew = true;
             }
 
@@ -236,20 +236,20 @@ namespace _8LMBackend.Service
             item.CustomCode = u.customCode;
 
             if (isNew)
-                DbContext.Set<Promosupplier>().Add(item);
+                DbContext.Set<PromoSupplier>().Add(item);
 
             if (!isNew)
-                foreach (var pp in DbContext.Promoproduct.Where(p => p.SupplierId == u.id).ToList())
-                    DbContext.Set<Promoproduct>().Remove(pp);
+                foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == u.id).ToList())
+                    DbContext.Set<PromoProduct>().Remove(pp);
 
             foreach (var pp in u.products)
             {
-                Promoproduct npp = new Promoproduct()
+                PromoProduct npp = new PromoProduct()
                 {
                     SupplierId = u.id,
                     Name = pp
                 };
-                DbContext.Set<Promoproduct>().Add(npp);
+                DbContext.Set<PromoProduct>().Add(npp);
             }
 
             DbContext.SaveChanges();
@@ -258,9 +258,9 @@ namespace _8LMBackend.Service
         public List<int> GetFunctionsForUser(string access_token)
         {
             var userId = GetUserID(access_token);
-            return DbContext.Userrole.Where(p => p.UserId == userId)
+            return DbContext.UserRole.Where(p => p.UserId == userId)
                 .Include(p => p.Role)
-                .Join(DbContext.Rolefunction, p => p.RoleId, rf => rf.RoleId, (p, rf) => rf.FunctionId)
+                .Join(DbContext.RoleFunction, p => p.RoleId, rf => rf.RoleId, (p, rf) => rf.FunctionId)
                 .Distinct().ToList();
         }
 
@@ -268,10 +268,10 @@ namespace _8LMBackend.Service
         {
             VerifyFunction(10, access_token);
 
-            var item = DbContext.Securityrole.Where(p => p.Name.ToUpper() == Name.ToUpper()).FirstOrDefault();
-            if (item == default(Securityrole))
+            var item = DbContext.SecurityRole.Where(p => p.Name.ToUpper() == Name.ToUpper()).FirstOrDefault();
+            if (item == default(SecurityRole))
             {
-                Securityrole sr = new Securityrole()
+                SecurityRole sr = new SecurityRole()
                 {
                     Name = Name,
                     Description = Description,
@@ -279,7 +279,7 @@ namespace _8LMBackend.Service
                     CreatedDate = DateTime.UtcNow,
                     CreatedBy = 1
                 };
-                DbContext.Set<Securityrole>().Add(sr);
+                DbContext.Set<SecurityRole>().Add(sr);
             }
             else
                 item.IsActual = true;
@@ -292,12 +292,12 @@ namespace _8LMBackend.Service
         {
             VerifyFunction(10, access_token);
 
-            var item = DbContext.Securityrole.Where(p => p.Id == ID).FirstOrDefault();
-            if (item == default(Securityrole))
+            var item = DbContext.SecurityRole.Where(p => p.Id == ID).FirstOrDefault();
+            if (item == default(SecurityRole))
                 throw new Exception("Role with ID = " + ID.ToString() + " not found");
 
-            var r = DbContext.Securityrole.Where(p => p.Id != ID && p.Name.ToUpper() == Name.ToUpper()).FirstOrDefault();
-            if (r != default(Securityrole))
+            var r = DbContext.SecurityRole.Where(p => p.Id != ID && p.Name.ToUpper() == Name.ToUpper()).FirstOrDefault();
+            if (r != default(SecurityRole))
                 throw new Exception("Role with Name = '" + Name.ToString() + "' already exists");
 
             item.Name = Name;
@@ -310,11 +310,11 @@ namespace _8LMBackend.Service
             VerifyFunction(10, access_token);
 
             //var item = DbContext.Securityrole.Where(p => p.Id == ID).Include(p => p.Rolefunction).Include(p => p.Userrole).FirstOrDefault();
-            var item = DbContext.Securityrole.FirstOrDefault(p => p.Id == ID);
-            if (item == default(Securityrole))
+            var item = DbContext.SecurityRole.FirstOrDefault(p => p.Id == ID);
+            if (item == default(SecurityRole))
                 throw new Exception("Role with ID = " + ID.ToString() + " not found");
 
-            DbContext.Securityrole.Remove(item);
+            DbContext.SecurityRole.Remove(item);
 
             //if ((item.Rolefunction.Count == 0) && (item.Userrole.Count == 0))
             //    DbContext.Securityrole.Remove(item);
@@ -328,15 +328,15 @@ namespace _8LMBackend.Service
         {
             VerifyFunction(10, access_token);
 
-            var item = DbContext.Userrole.Where(p => p.UserId == UserID && p.RoleId == RoleID).FirstOrDefault();
-            if (item == default(Userrole))
+            var item = DbContext.UserRole.Where(p => p.UserId == UserID && p.RoleId == RoleID).FirstOrDefault();
+            if (item == default(UserRole))
             {
-                var ur = new Userrole()
+                var ur = new UserRole()
                 {
                     UserId = UserID,
                     RoleId = RoleID
                 };
-                DbContext.Set<Userrole>().Add(ur);
+                DbContext.Set<UserRole>().Add(ur);
                 DbContext.SaveChanges();
             }
         }
@@ -345,18 +345,18 @@ namespace _8LMBackend.Service
         {
             VerifyFunction(10, access_token);
 
-            var item = DbContext.Userrole.Where(p => p.UserId == UserID && p.RoleId == RoleID).FirstOrDefault();
-            if (item != default(Userrole))
+            var item = DbContext.UserRole.Where(p => p.UserId == UserID && p.RoleId == RoleID).FirstOrDefault();
+            if (item != default(UserRole))
             {
-                DbContext.Set<Userrole>().Remove(item);
+                DbContext.Set<UserRole>().Remove(item);
                 DbContext.SaveChanges();
             }
         }
 
         public int GetUserID(string access_token)
         {
-            var u = DbContext.Usertoken.Where(p => p.Token == access_token).FirstOrDefault();
-            if (u == default(Usertoken))
+            var u = DbContext.UserToken.Where(p => p.Token == access_token).FirstOrDefault();
+            if (u == default(UserToken))
                 throw new Exception("Not authorized");
 
             return u.UserId;
@@ -373,13 +373,13 @@ namespace _8LMBackend.Service
         {
             VerifyFunction(12, token);
 
-            foreach (var pp in DbContext.Promoproduct.Where(p => p.SupplierId == ID).ToList())
-                DbContext.Set<Promoproduct>().Remove(pp);
+            foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == ID).ToList())
+                DbContext.Set<PromoProduct>().Remove(pp);
 
-            var item = DbContext.Promosupplier.Where(p => p.Id == ID).FirstOrDefault();
-            if (item != default(Promosupplier))
+            var item = DbContext.PromoSupplier.Where(p => p.Id == ID).FirstOrDefault();
+            if (item != default(PromoSupplier))
             {
-                DbContext.Set<Promosupplier>().Remove(item);
+                DbContext.Set<PromoSupplier>().Remove(item);
                 DbContext.SaveChanges();
             }
         }

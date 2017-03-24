@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class Contacttype
+    public partial class ContactType
     {
-        public Contacttype()
+        public ContactType()
         {
-            Usercontact = new HashSet<Usercontact>();
+            UserContact = new HashSet<UserContact>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Usercontact> Usercontact { get; set; }
+        public virtual ICollection<UserContact> UserContact { get; set; }
     }
 }

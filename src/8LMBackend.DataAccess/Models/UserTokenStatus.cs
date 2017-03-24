@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class Usertokenstatus
+    public partial class UserTokenStatus
     {
-        public Usertokenstatus()
+        public UserTokenStatus()
         {
-            Usertoken = new HashSet<Usertoken>();
+            UserToken = new HashSet<UserToken>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Usertoken> Usertoken { get; set; }
+        public virtual ICollection<UserToken> UserToken { get; set; }
     }
 }
