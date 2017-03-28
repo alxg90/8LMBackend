@@ -8,6 +8,7 @@ namespace _8LMBackend.DataAccess.Models
         public SecurityFunction()
         {
             RoleFunction = new HashSet<RoleFunction>();
+            ServiceFunction = new HashSet<ServiceFunction>();
         }
 
         public int Id { get; set; }
@@ -16,5 +17,6 @@ namespace _8LMBackend.DataAccess.Models
         public string Name { get; set; }
 
         public virtual ICollection<RoleFunction> RoleFunction { get; set; }
+        public virtual ICollection<ServiceFunction> ServiceFunction { get; set; }
     }
 }

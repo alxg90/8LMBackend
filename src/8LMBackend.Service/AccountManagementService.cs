@@ -33,7 +33,11 @@ namespace _8LMBackend.Service
                     // Email = u.Email,
 					typeID = u.TypeId,
                     typeName = u.Type.Name,
+<<<<<<< Updated upstream
                     // Icon = u.Icon
+=======
+                    //Icon = u.Icon
+>>>>>>> Stashed changes
 				};
 
 				account.roles = u.UserRoleUser.Select(p => p.RoleId).ToList();
@@ -80,12 +84,21 @@ namespace _8LMBackend.Service
             {
                 id = account.Id,
                 login = account.Login,
+<<<<<<< Updated upstream
                 // FirstName = account.FirstName,
                 // LastName = account.LastName,
                 // ClearPassword = account.ClearPassword,
                 // Email = account.Email,
                 typeID = account.TypeId,
                 // Icon = account.Icon
+=======
+                //FirstName = account.FirstName,
+                //LastName = account.LastName,
+                //ClearPassword = account.ClearPassword,
+                //Email = account.Email,
+                typeID = account.TypeId,
+                //Icon = account.Icon
+>>>>>>> Stashed changes
             };
             return accountVM;
         }
@@ -184,26 +197,25 @@ namespace _8LMBackend.Service
             //VerifyFunction(11, access_token);
 
             List<PromoUserViewModel> result = new List<PromoUserViewModel>();
-            // foreach (var u in DbContext.PromoSupplier.OrderBy(p => p.Id).ToList())
-            // {
-            //     PromoUserViewModel item = new PromoUserViewModel()
-            //     {
-            //         id = u.Id,
-            //         name = u.Name,
-            //         address = u.Address,
-            //         tollFree = u.Tollfree,
-            //         fax = u.Fax,
-            //         ordersFax = u.OrdersFax,
-            //         email = u.Email,
-            //         ordersEmail = u.OrdersEmail,
-            //         artworkEmail = u.ArtworkEmail,
-            //         web = u.Web,
-            //         discountPolicy = u.DiscountPolicy,
-            //         customCode = u.CustomCode
-            //     };
-            //     result.Add(item);
-            // }
-
+            foreach (var u in DbContext.PromoSupplier.OrderBy(p => p.Id).ToList())
+            {
+                PromoUserViewModel item = new PromoUserViewModel()
+                {
+                    id = u.Id,
+                    name = u.Name,
+                    address = u.Address,
+                    tollFree = u.Tollfree,
+                    fax = u.Fax,
+                    ordersFax = u.OrdersFax,
+                    email = u.Email,
+                    ordersEmail = u.OrdersEmail,
+                    artworkEmail = u.ArtworkEmail,
+                    web = u.Web,
+                    discountPolicy = u.DiscountPolicy,
+                    customCode = u.CustomCode
+                };
+                result.Add(item);
+            }
             // foreach (var u in result)
             //     foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == u.id).ToList())
             //         u.products.Add(pp.Name);
@@ -216,41 +228,41 @@ namespace _8LMBackend.Service
             VerifyFunction(12, access_token);
 
             bool isNew = false;
-            // var item = DbContext.PromoSupplier.Where(p => p.Id == u.id).FirstOrDefault();
-            // if (item == default(PromoSupplier))
-            // {
-            //     item = new PromoSupplier();
-            //     isNew = true;
-            // }
+            var item = DbContext.PromoSupplier.Where(p => p.Id == u.id).FirstOrDefault();
+            if (item == default(PromoSupplier))
+            {
+                item = new PromoSupplier();
+                isNew = true;
+            }
 
-            // item.Name = u.name;
-            // item.Address = u.address;
-            // item.Tollfree = u.tollFree;
-            // item.Fax = u.fax;
-            // item.OrdersFax = u.ordersFax;
-            // item.Email = u.email;
-            // item.OrdersEmail = u.ordersEmail;
-            // item.ArtworkEmail = u.artworkEmail;
-            // item.Web = u.web;
-            // item.DiscountPolicy = u.discountPolicy;
-            // item.CustomCode = u.customCode;
+            item.Name = u.name;
+            item.Address = u.address;
+            item.Tollfree = u.tollFree;
+            item.Fax = u.fax;
+            item.OrdersFax = u.ordersFax;
+            item.Email = u.email;
+            item.OrdersEmail = u.ordersEmail;
+            item.ArtworkEmail = u.artworkEmail;
+            item.Web = u.web;
+            item.DiscountPolicy = u.discountPolicy;
+            item.CustomCode = u.customCode;
 
-            // if (isNew)
-            //     DbContext.Set<PromoSupplier>().Add(item);
+            if (isNew)
+                DbContext.Set<PromoSupplier>().Add(item);
 
             // if (!isNew)
             //     foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == u.id).ToList())
             //         DbContext.Set<PromoProduct>().Remove(pp);
 
-            // foreach (var pp in u.products)
-            // {
-            //     PromoProduct npp = new PromoProduct()
-            //     {
-            //         SupplierId = u.id,
-            //         Name = pp
-            //     };
-            //     DbContext.Set<PromoProduct>().Add(npp);
-            // }
+            foreach (var pp in u.products)
+            {
+                PromoProduct npp = new PromoProduct()
+                {
+                    //SupplierId = u.id,
+                    Name = pp
+                };
+                DbContext.Set<PromoProduct>().Add(npp);
+            }
 
             DbContext.SaveChanges();
         }

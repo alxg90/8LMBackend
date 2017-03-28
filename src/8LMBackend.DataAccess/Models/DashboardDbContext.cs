@@ -16,6 +16,13 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<ControlGroup> ControlGroup { get; set; }
         public virtual DbSet<ControlStat> ControlStat { get; set; }
         public virtual DbSet<ControlType> ControlType { get; set; }
+        public virtual DbSet<Currency> Currency { get; set; }
+        public virtual DbSet<Package> Package { get; set; }
+        public virtual DbSet<PackagePrice> PackagePrice { get; set; }
+        public virtual DbSet<PackageReferenceCode> PackageReferenceCode { get; set; }
+        public virtual DbSet<PackageReferenceExtendCode> PackageReferenceExtendCode { get; set; }
+        public virtual DbSet<PackageReferenceServiceCode> PackageReferenceServiceCode { get; set; }
+        public virtual DbSet<PackageService> PackageService { get; set; }
         public virtual DbSet<PageCampaign> PageCampaign { get; set; }
         public virtual DbSet<PageStatistic> PageStatistic { get; set; }
         public virtual DbSet<PageStatus> PageStatus { get; set; }
@@ -25,9 +32,12 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<Pages> Pages { get; set; }
         public virtual DbSet<PromoCode> PromoCode { get; set; }
         public virtual DbSet<PromoProduct> PromoProduct { get; set; }
+        public virtual DbSet<PromoSupplier> PromoSupplier { get; set; }
         public virtual DbSet<RoleFunction> RoleFunction { get; set; }
         public virtual DbSet<SecurityFunction> SecurityFunction { get; set; }
         public virtual DbSet<SecurityRole> SecurityRole { get; set; }
+        public virtual DbSet<Service> Service { get; set; }
+        public virtual DbSet<ServiceFunction> ServiceFunction { get; set; }
         public virtual DbSet<Tags> Tags { get; set; }
         public virtual DbSet<UserCompany> UserCompany { get; set; }
         public virtual DbSet<UserContact> UserContact { get; set; }
@@ -326,6 +336,245 @@ namespace _8LMBackend.DataAccess.Models
                     .HasConstraintName("FK_CT_GroupID");
             });
 
+            modelBuilder.Entity<Currency>(entity =>
+            {
+                entity.HasIndex(e => e.Code)
+                    .HasName("Code")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Mark)
+                    .HasName("Mark")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasColumnType("char(3)");
+
+                entity.Property(e => e.Mark)
+                    .IsRequired()
+                    .HasColumnType("char(2)");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+            });
+
+            modelBuilder.Entity<Package>(entity =>
+            {
+                entity.HasIndex(e => e.CreatedBy)
+                    .HasName("FK_Package_CreatedBy");
+
+                entity.HasIndex(e => e.CurrencyId)
+                    .HasName("FK_Package_CurrencyID");
+
+                entity.HasIndex(e => e.Name)
+                    .HasName("Name")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.UserTypeId)
+                    .HasName("FK_Package_UserTypeID");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.CreatedBy).HasColumnType("int(11)");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CurrencyId)
+                    .HasColumnName("CurrencyID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasColumnType("varchar(4096)");
+
+                entity.Property(e => e.DurationInMonth).HasColumnType("int(11)");
+
+                entity.Property(e => e.IsActual).HasColumnType("int(11)");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.PaletteId)
+                    .HasColumnName("PaletteID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Price).HasColumnType("int(11)");
+
+                entity.Property(e => e.UserTypeId)
+                    .HasColumnName("UserTypeID")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.Package)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Package_CreatedBy");
+
+                entity.HasOne(d => d.Currency)
+                    .WithMany(p => p.Package)
+                    .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Package_CurrencyID");
+
+                entity.HasOne(d => d.UserType)
+                    .WithMany(p => p.Package)
+                    .HasForeignKey(d => d.UserTypeId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Package_UserTypeID");
+            });
+
+            modelBuilder.Entity<PackagePrice>(entity =>
+            {
+                entity.HasKey(e => new { e.PackageId, e.CurrencyId, e.DurationInMonth })
+                    .HasName("PK_PackagePrice");
+
+                entity.HasIndex(e => e.CreatedBy)
+                    .HasName("FK_PackagePrice_CreatedBy");
+
+                entity.HasIndex(e => e.CurrencyId)
+                    .HasName("FK_PackagePrice_CurrencyID");
+
+                entity.Property(e => e.PackageId)
+                    .HasColumnName("PackageID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.CurrencyId)
+                    .HasColumnName("CurrencyID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.DurationInMonth).HasColumnType("int(11)");
+
+                entity.Property(e => e.CreatedBy).HasColumnType("int(11)");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActual).HasColumnType("int(11)");
+
+                entity.Property(e => e.Price).HasColumnType("int(11)");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.PackagePrice)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_PackagePrice_CreatedBy");
+
+                entity.HasOne(d => d.Currency)
+                    .WithMany(p => p.PackagePrice)
+                    .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_PackagePrice_CurrencyID");
+            });
+
+            modelBuilder.Entity<PackageReferenceCode>(entity =>
+            {
+                entity.HasKey(e => new { e.PackageId, e.ReferenceCode })
+                    .HasName("PK_PackageReferenceCode");
+
+                entity.Property(e => e.PackageId)
+                    .HasColumnName("PackageID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ReferenceCode).HasColumnType("varchar(32)");
+
+                entity.Property(e => e.IsFixed).HasColumnType("bit(1)");
+
+                entity.Property(e => e.Value).HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Package)
+                    .WithMany(p => p.PackageReferenceCode)
+                    .HasForeignKey(d => d.PackageId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_PackageReferenceCode_PackageID");
+            });
+
+            modelBuilder.Entity<PackageReferenceExtendCode>(entity =>
+            {
+                entity.HasKey(e => new { e.PackageId, e.ReferenceCode })
+                    .HasName("PK_PackageReferenceExtendCode");
+
+                entity.Property(e => e.PackageId)
+                    .HasColumnName("PackageID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ReferenceCode).HasColumnType("varchar(32)");
+
+                entity.Property(e => e.Months).HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Package)
+                    .WithMany(p => p.PackageReferenceExtendCode)
+                    .HasForeignKey(d => d.PackageId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_PackageReferenceExtendCode_PackageID");
+            });
+
+            modelBuilder.Entity<PackageReferenceServiceCode>(entity =>
+            {
+                entity.HasKey(e => new { e.PackageId, e.ReferenceCode })
+                    .HasName("PK_PackageReferenceServiceCode");
+
+                entity.HasIndex(e => e.ServiceId)
+                    .HasName("FK_PackageReferenceServiceCode_ServiceID");
+
+                entity.Property(e => e.PackageId)
+                    .HasColumnName("PackageID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ReferenceCode).HasColumnType("varchar(32)");
+
+                entity.Property(e => e.ServiceId)
+                    .HasColumnName("ServiceID")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Package)
+                    .WithMany(p => p.PackageReferenceServiceCode)
+                    .HasForeignKey(d => d.PackageId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_PackageReferenceServiceCode_PackageID");
+
+                entity.HasOne(d => d.Service)
+                    .WithMany(p => p.PackageReferenceServiceCode)
+                    .HasForeignKey(d => d.ServiceId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_PackageReferenceServiceCode_ServiceID");
+            });
+
+            modelBuilder.Entity<PackageService>(entity =>
+            {
+                entity.HasKey(e => new { e.PackageId, e.ServiceId })
+                    .HasName("PK_PackageService");
+
+                entity.HasIndex(e => e.ServiceId)
+                    .HasName("FK_PackageService_ServiceID");
+
+                entity.Property(e => e.PackageId)
+                    .HasColumnName("PackageID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ServiceId)
+                    .HasColumnName("ServiceID")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Package)
+                    .WithMany(p => p.PackageService)
+                    .HasForeignKey(d => d.PackageId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_PackageService_PackageID");
+
+                entity.HasOne(d => d.Service)
+                    .WithMany(p => p.PackageService)
+                    .HasForeignKey(d => d.ServiceId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_PackageService_ServiceID");
+            });
+
             modelBuilder.Entity<PageCampaign>(entity =>
             {
                 entity.HasKey(e => new { e.CampaignId, e.PageId })
@@ -590,6 +839,57 @@ namespace _8LMBackend.DataAccess.Models
                     .HasConstraintName("FK_PromoProduct_UserID");
             });
 
+            modelBuilder.Entity<PromoSupplier>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Address)
+                    .HasColumnName("address")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.ArtworkEmail)
+                    .HasColumnName("artworkEmail")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.CustomCode)
+                    .HasColumnName("customCode")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.DiscountPolicy)
+                    .HasColumnName("discountPolicy")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("email")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Fax)
+                    .HasColumnName("fax")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.OrdersEmail)
+                    .HasColumnName("ordersEmail")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.OrdersFax)
+                    .HasColumnName("ordersFax")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Tollfree)
+                    .HasColumnName("tollfree")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Web)
+                    .HasColumnName("web")
+                    .HasColumnType("varchar(255)");
+            });
+
             modelBuilder.Entity<RoleFunction>(entity =>
             {
                 entity.HasKey(e => new { e.RoleId, e.FunctionId })
@@ -681,6 +981,46 @@ namespace _8LMBackend.DataAccess.Models
                     .HasForeignKey(d => d.CreatedBy)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_SR_CreatedBy");
+            });
+
+            modelBuilder.Entity<Service>(entity =>
+            {
+                entity.HasIndex(e => e.Name)
+                    .HasName("Name")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.IsActual).HasColumnType("bit(1)");
+            });
+
+            modelBuilder.Entity<ServiceFunction>(entity =>
+            {
+                entity.HasKey(e => new { e.ServiceId, e.SecurityFunctionId })
+                    .HasName("PK_ServiceFunction");
+
+                entity.HasIndex(e => e.SecurityFunctionId)
+                    .HasName("FK_ServiceFunction_SFID");
+
+                entity.Property(e => e.ServiceId)
+                    .HasColumnName("ServiceID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.SecurityFunctionId)
+                    .HasColumnName("SecurityFunctionID")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.SecurityFunction)
+                    .WithMany(p => p.ServiceFunction)
+                    .HasForeignKey(d => d.SecurityFunctionId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_ServiceFunction_SFID");
             });
 
             modelBuilder.Entity<Tags>(entity =>
