@@ -33,11 +33,7 @@ namespace _8LMBackend.Service
                     // Email = u.Email,
 					typeID = u.TypeId,
                     typeName = u.Type.Name,
-<<<<<<< Updated upstream
-                    // Icon = u.Icon
-=======
                     //Icon = u.Icon
->>>>>>> Stashed changes
 				};
 
 				account.roles = u.UserRoleUser.Select(p => p.RoleId).ToList();
@@ -84,21 +80,12 @@ namespace _8LMBackend.Service
             {
                 id = account.Id,
                 login = account.Login,
-<<<<<<< Updated upstream
-                // FirstName = account.FirstName,
-                // LastName = account.LastName,
-                // ClearPassword = account.ClearPassword,
-                // Email = account.Email,
-                typeID = account.TypeId,
-                // Icon = account.Icon
-=======
                 //FirstName = account.FirstName,
                 //LastName = account.LastName,
                 //ClearPassword = account.ClearPassword,
                 //Email = account.Email,
                 typeID = account.TypeId,
                 //Icon = account.Icon
->>>>>>> Stashed changes
             };
             return accountVM;
         }
@@ -194,7 +181,7 @@ namespace _8LMBackend.Service
 
         public List<PromoUserViewModel> GetPromoSuppliers(string access_token)
         {
-            //VerifyFunction(11, access_token);
+            VerifyFunction(11, access_token);
 
             List<PromoUserViewModel> result = new List<PromoUserViewModel>();
             foreach (var u in DbContext.PromoSupplier.OrderBy(p => p.Id).ToList())
@@ -216,9 +203,9 @@ namespace _8LMBackend.Service
                 };
                 result.Add(item);
             }
-            // foreach (var u in result)
-            //     foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == u.id).ToList())
-            //         u.products.Add(pp.Name);
+            foreach (var u in result)
+                foreach (var pp in DbContext.PromoProduct.Where(p => p.Id == u.id).ToList())
+                    u.products.Add(pp.Name);
 
             return result;
         }
@@ -250,15 +237,15 @@ namespace _8LMBackend.Service
             if (isNew)
                 DbContext.Set<PromoSupplier>().Add(item);
 
-            // if (!isNew)
-            //     foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == u.id).ToList())
-            //         DbContext.Set<PromoProduct>().Remove(pp);
+            if (!isNew)
+                foreach (var pp in DbContext.PromoProduct.Where(p => p.Id == u.id).ToList())
+                    DbContext.Set<PromoProduct>().Remove(pp);
 
             foreach (var pp in u.products)
             {
                 PromoProduct npp = new PromoProduct()
                 {
-                    //SupplierId = u.id,
+                    Id = u.id,
                     Name = pp
                 };
                 DbContext.Set<PromoProduct>().Add(npp);
@@ -321,17 +308,17 @@ namespace _8LMBackend.Service
         {
             VerifyFunction(10, access_token);
 
-            //var item = DbContext.Securityrole.Where(p => p.Id == ID).Include(p => p.Rolefunction).Include(p => p.Userrole).FirstOrDefault();
-            var item = DbContext.SecurityRole.FirstOrDefault(p => p.Id == ID);
+            var item = DbContext.SecurityRole.Where(p => p.Id == ID).Include(p => p.RoleFunction).Include(p => p.UserRole).FirstOrDefault();
+            // var item = DbContext.SecurityRole.FirstOrDefault(p => p.Id == ID);
             if (item == default(SecurityRole))
                 throw new Exception("Role with ID = " + ID.ToString() + " not found");
 
             DbContext.SecurityRole.Remove(item);
 
-            //if ((item.Rolefunction.Count == 0) && (item.Userrole.Count == 0))
-            //    DbContext.Securityrole.Remove(item);
-            //else
-            //    item.IsActual = false;
+            if ((item.RoleFunction.Count == 0) && (item.UserRole.Count == 0))
+               DbContext.SecurityRole.Remove(item);
+            else
+               item.IsActual = false;
 
             DbContext.SaveChanges();
         }
@@ -385,15 +372,15 @@ namespace _8LMBackend.Service
         {
             VerifyFunction(12, token);
 
-            // foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == ID).ToList())
-            //     DbContext.Set<PromoProduct>().Remove(pp);
+            foreach (var pp in DbContext.PromoProduct.Where(p => p.Id == ID).ToList())
+                DbContext.Set<PromoProduct>().Remove(pp);
 
-            // var item = DbContext.PromoSupplier.Where(p => p.Id == ID).FirstOrDefault();
-            // if (item != default(PromoSupplier))
-            // {
-            //     DbContext.Set<PromoSupplier>().Remove(item);
-            //     DbContext.SaveChanges();
-            // }
+            var item = DbContext.PromoSupplier.Where(p => p.Id == ID).FirstOrDefault();
+            if (item != default(PromoSupplier))
+            {
+                DbContext.Set<PromoSupplier>().Remove(item);
+                DbContext.SaveChanges();
+            }
         }
 
         public void UpdateUser(Users u, string token)
