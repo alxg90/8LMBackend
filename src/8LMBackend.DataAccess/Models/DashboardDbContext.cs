@@ -17,6 +17,7 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<ControlStat> ControlStat { get; set; }
         public virtual DbSet<ControlType> ControlType { get; set; }
         public virtual DbSet<Currency> Currency { get; set; }
+        public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<Package> Package { get; set; }
         public virtual DbSet<PackagePrice> PackagePrice { get; set; }
         public virtual DbSet<PackageReferenceCode> PackageReferenceCode { get; set; }
@@ -33,11 +34,14 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<PromoCode> PromoCode { get; set; }
         public virtual DbSet<PromoProduct> PromoProduct { get; set; }
         public virtual DbSet<PromoSupplier> PromoSupplier { get; set; }
+        public virtual DbSet<RelayAuthorizeNetresponse> RelayAuthorizeNetresponse { get; set; }
         public virtual DbSet<RoleFunction> RoleFunction { get; set; }
         public virtual DbSet<SecurityFunction> SecurityFunction { get; set; }
         public virtual DbSet<SecurityRole> SecurityRole { get; set; }
         public virtual DbSet<Service> Service { get; set; }
         public virtual DbSet<ServiceFunction> ServiceFunction { get; set; }
+        public virtual DbSet<Subscription> Subscription { get; set; }
+        public virtual DbSet<SubscriptionStatus> SubscriptionStatus { get; set; }
         public virtual DbSet<Tags> Tags { get; set; }
         public virtual DbSet<UserCompany> UserCompany { get; set; }
         public virtual DbSet<UserContact> UserContact { get; set; }
@@ -361,6 +365,55 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("varchar(255)");
+            });
+
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.HasIndex(e => e.PackageId)
+                    .HasName("FK_Invoice_PackageID");
+
+                entity.HasIndex(e => e.UserId)
+                    .HasName("FK_Invoice_UserID");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Amount).HasColumnType("int(11)");
+
+                entity.Property(e => e.AmountDue).HasColumnType("int(11)");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Discount).HasColumnType("int(11)");
+
+                entity.Property(e => e.PackageId)
+                    .HasColumnName("PackageID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ReferenceCode).HasColumnType("varchar(255)");
+
+                entity.Property(e => e.StatusId)
+                    .HasColumnName("StatusID")
+                    .HasColumnType("bit(1)");
+
+                entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Package)
+                    .WithMany(p => p.Invoice)
+                    .HasForeignKey(d => d.PackageId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Invoice_PackageID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Invoice)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Invoice_UserID");
             });
 
             modelBuilder.Entity<Package>(entity =>
@@ -890,6 +943,207 @@ namespace _8LMBackend.DataAccess.Models
                     .HasColumnType("varchar(255)");
             });
 
+            modelBuilder.Entity<RelayAuthorizeNetresponse>(entity =>
+            {
+                entity.ToTable("RelayAuthorizeNETResponse");
+
+                entity.HasIndex(e => e.InvoiceId)
+                    .HasName("FK_Invoice_InvoiceID");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.InvoiceId)
+                    .HasColumnName("InvoiceID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.XAccountNumber)
+                    .IsRequired()
+                    .HasColumnName("x_account_number")
+                    .HasColumnType("varchar(16)");
+
+                entity.Property(e => e.XAddress)
+                    .HasColumnName("x_address")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XAmount)
+                    .HasColumnName("x_amount")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XAuthCode)
+                    .HasColumnName("x_auth_code")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.XAvsCode)
+                    .IsRequired()
+                    .HasColumnName("x_avs_code")
+                    .HasColumnType("char(1)");
+
+                entity.Property(e => e.XCardType)
+                    .IsRequired()
+                    .HasColumnName("x_card_type")
+                    .HasColumnType("varchar(32)");
+
+                entity.Property(e => e.XCavvResponse)
+                    .HasColumnName("x_cavv_response")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XCity)
+                    .HasColumnName("x_city")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XCompany)
+                    .HasColumnName("x_company")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XCountry)
+                    .HasColumnName("x_country")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XCustId)
+                    .HasColumnName("x_cust_id")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XCvv2RespCode)
+                    .HasColumnName("x_cvv2_resp_code")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XDescription)
+                    .HasColumnName("x_description")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XDuty)
+                    .HasColumnName("x_duty")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XEmail)
+                    .HasColumnName("x_email")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XFax)
+                    .HasColumnName("x_fax")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XFirstName)
+                    .HasColumnName("x_first_name")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XFreight)
+                    .HasColumnName("x_freight")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XInvoiceNum)
+                    .HasColumnName("x_invoice_num")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XLastName)
+                    .HasColumnName("x_last_name")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XMd5Hash)
+                    .HasColumnName("x_MD5_Hash")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XMethod)
+                    .IsRequired()
+                    .HasColumnName("x_method")
+                    .HasColumnType("char(2)");
+
+                entity.Property(e => e.XPhone)
+                    .HasColumnName("x_phone")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XPoNum)
+                    .HasColumnName("x_po_num")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XResponseCode)
+                    .HasColumnName("x_response_code")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.XResponseReasonCode)
+                    .HasColumnName("x_response_reason_code")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.XResponseReasonText)
+                    .IsRequired()
+                    .HasColumnName("x_response_reason_text")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XSha2Hash)
+                    .HasColumnName("x_SHA2_Hash")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XShipToAddress)
+                    .HasColumnName("x_ship_to_address")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XShipToCity)
+                    .HasColumnName("x_ship_to_city")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XShipToCompany)
+                    .HasColumnName("x_ship_to_company")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XShipToCountry)
+                    .HasColumnName("x_ship_to_country")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XShipToFirstName)
+                    .HasColumnName("x_ship_to_first_name")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XShipToLastName)
+                    .HasColumnName("x_ship_to_last_name")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XShipToState)
+                    .HasColumnName("x_ship_to_state")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XShipToZip)
+                    .HasColumnName("x_ship_to_zip")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XState)
+                    .HasColumnName("x_state")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XTax)
+                    .HasColumnName("x_tax")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XTaxExempt)
+                    .HasColumnName("x_tax_exempt")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XTestRequest)
+                    .HasColumnName("x_test_request")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XTransId)
+                    .HasColumnName("x_trans_id")
+                    .HasColumnType("bigint(20)");
+
+                entity.Property(e => e.XType)
+                    .HasColumnName("x_type")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.XZip)
+                    .HasColumnName("x_zip")
+                    .HasColumnType("varchar(255)");
+
+                entity.HasOne(d => d.Invoice)
+                    .WithMany(p => p.RelayAuthorizeNetresponse)
+                    .HasForeignKey(d => d.InvoiceId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Invoice_InvoiceID");
+            });
+
             modelBuilder.Entity<RoleFunction>(entity =>
             {
                 entity.HasKey(e => new { e.RoleId, e.FunctionId })
@@ -993,17 +1247,20 @@ namespace _8LMBackend.DataAccess.Models
                     .HasColumnName("ID")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.IsActual).HasColumnType("bit(1)");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("varchar(255)");
-
-                entity.Property(e => e.IsActual).HasColumnType("bit(1)");
             });
 
             modelBuilder.Entity<ServiceFunction>(entity =>
             {
                 entity.HasKey(e => new { e.ServiceId, e.SecurityFunctionId })
                     .HasName("PK_ServiceFunction");
+
+                entity.HasIndex(e => e.CreatedBy)
+                    .HasName("FK_ServiceFunction_CreatedBy");
 
                 entity.HasIndex(e => e.SecurityFunctionId)
                     .HasName("FK_ServiceFunction_SFID");
@@ -1016,11 +1273,90 @@ namespace _8LMBackend.DataAccess.Models
                     .HasColumnName("SecurityFunctionID")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.CreatedBy).HasColumnType("int(11)");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.ServiceFunction)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_ServiceFunction_CreatedBy");
+
                 entity.HasOne(d => d.SecurityFunction)
                     .WithMany(p => p.ServiceFunction)
                     .HasForeignKey(d => d.SecurityFunctionId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_ServiceFunction_SFID");
+            });
+
+            modelBuilder.Entity<Subscription>(entity =>
+            {
+                entity.HasIndex(e => e.PackageId)
+                    .HasName("FK_Subscription_PackageID");
+
+                entity.HasIndex(e => e.StatusId)
+                    .HasName("FK_Subscription_StatusID");
+
+                entity.HasIndex(e => e.UserId)
+                    .HasName("FK_Subscription_UserID");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.EffectiveDate).HasColumnType("datetime");
+
+                entity.Property(e => e.ExpirationDate).HasColumnType("datetime");
+
+                entity.Property(e => e.PackageId)
+                    .HasColumnName("PackageID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.RelayAuthorizeNetresponse)
+                    .HasColumnName("RelayAuthorizeNETResponse")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.StatusId)
+                    .HasColumnName("StatusID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Package)
+                    .WithMany(p => p.Subscription)
+                    .HasForeignKey(d => d.PackageId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Subscription_PackageID");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.Subscription)
+                    .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Subscription_StatusID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Subscription)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Subscription_UserID");
+            });
+
+            modelBuilder.Entity<SubscriptionStatus>(entity =>
+            {
+                entity.HasIndex(e => e.Name)
+                    .HasName("Name")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
             });
 
             modelBuilder.Entity<Tags>(entity =>

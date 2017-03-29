@@ -11,5 +11,9 @@ namespace _8LMBackend.Service
         void DeletePackage(int id);
         void UpdatePackage(Package package);
         _8LMBackend.DataAccess.Models.Service[] GetAllServices();
+        Invoice PrepareInvoice(int PackageID, string token, string ReferenceCode = null);
+        void AcceptPayment(RelayAuthorizeNetresponse rel);
+        Package GetPackageById(int Id);
+        Package[] GetAllPackages();
     }
 }

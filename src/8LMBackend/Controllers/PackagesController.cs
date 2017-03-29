@@ -1,4 +1,5 @@
 using _8LMBackend.DataAccess.Models;
+using _8LMBackend.DataAccess.DtoModels;
 using _8LMBackend.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -14,7 +15,8 @@ namespace _8LMCore.Controllers
         {
             _subscribeService = subscribeService;
         }
-        public JsonResult SavePackage(Package package){
+        [HttpPost]
+        public JsonResult SavePackage([FromBody]Package package){
             if(package.Id == null){
                 Package pack = new Package();
                 pack.IsActual = null;
@@ -51,6 +53,18 @@ namespace _8LMCore.Controllers
 
         public Service[] GetAllServices(){
             return _subscribeService.GetAllServices();
+        }
+
+        public JsonResult PrepareInvoice(int PackageID, string token, string ReferenceCode = null){
+            var invoice = _subscribeService.PrepareInvoice(PackageID, token, ReferenceCode);
+            return Json(new {InvoiceId = invoice.Id, Field1 = "", HashCode = ""});
+        }
+
+        public Package GetPackageById(int id){
+            return _subscribeService.GetPackageById(id);
+        }
+        public Package[] GetAllPackages(){
+            return _subscribeService.GetAllPackages();
         }
     }
 }

@@ -11,12 +11,15 @@ namespace _8LMBackend.DataAccess.Models
             CampaignCategory = new HashSet<CampaignCategory>();
             CampaignShareCreatedByNavigation = new HashSet<CampaignShare>();
             CampaignShareUser = new HashSet<CampaignShare>();
+            Invoice = new HashSet<Invoice>();
             Package = new HashSet<Package>();
             PackagePrice = new HashSet<PackagePrice>();
             Pages = new HashSet<Pages>();
             PromoProduct = new HashSet<PromoProduct>();
             RoleFunction = new HashSet<RoleFunction>();
             SecurityRole = new HashSet<SecurityRole>();
+            ServiceFunction = new HashSet<ServiceFunction>();
+            Subscription = new HashSet<Subscription>();
             UserCompany = new HashSet<UserCompany>();
             UserContact = new HashSet<UserContact>();
             UserPromoCodeCreatedByNavigation = new HashSet<UserPromoCode>();
@@ -38,12 +41,15 @@ namespace _8LMBackend.DataAccess.Models
         public virtual ICollection<CampaignCategory> CampaignCategory { get; set; }
         public virtual ICollection<CampaignShare> CampaignShareCreatedByNavigation { get; set; }
         public virtual ICollection<CampaignShare> CampaignShareUser { get; set; }
+        public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<Package> Package { get; set; }
         public virtual ICollection<PackagePrice> PackagePrice { get; set; }
         public virtual ICollection<Pages> Pages { get; set; }
         public virtual ICollection<PromoProduct> PromoProduct { get; set; }
         public virtual ICollection<RoleFunction> RoleFunction { get; set; }
         public virtual ICollection<SecurityRole> SecurityRole { get; set; }
+        public virtual ICollection<ServiceFunction> ServiceFunction { get; set; }
+        public virtual ICollection<Subscription> Subscription { get; set; }
         public virtual ICollection<UserCompany> UserCompany { get; set; }
         public virtual ICollection<UserContact> UserContact { get; set; }
         public virtual ICollection<UserPromoCode> UserPromoCodeCreatedByNavigation { get; set; }
