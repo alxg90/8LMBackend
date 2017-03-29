@@ -16,7 +16,7 @@ namespace _8LMCore.Controllers
             _subscribeService = subscribeService;
         }
         [HttpPost]
-        public JsonResult SavePackage([FromBody]Package package){
+        public JsonResult SavePackage([FromBody]PackageDto package, string token){
             if(package.Id == null){
                 Package pack = new Package();
                 pack.IsActual = null;
