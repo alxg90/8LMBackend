@@ -15,5 +15,7 @@ namespace _8LMBackend.Service
         void AcceptPayment(RelayAuthorizeNetresponse rel);
         Package GetPackageById(int Id);
         Package[] GetAllPackages();
+        Users GetUserByToken(string token);
+        bool CheckPackageNameValid(string name);
     }
 }

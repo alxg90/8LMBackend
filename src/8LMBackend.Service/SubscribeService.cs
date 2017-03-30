@@ -57,11 +57,20 @@ namespace _8LMBackend.Service
             DbContext.SaveChanges();
         }
 
+        public Users GetUserByToken(string token){
+            var userToken = DbContext.UserToken.Where(p => p.Token == token).FirstOrDefault();
+            var user = DbContext.Users.FirstOrDefault(x => x.Id == userToken.UserId);
+            return user;
+        }
+
         public Package GetPackageById(int id){
             return DbContext.Package.FirstOrDefault(x => x.Id == id);
         }
         public Package[] GetAllPackages(){
             return DbContext.Package.ToArray();
+        }
+        public bool CheckPackageNameValid(string name){
+           return DbContext.Package.FirstOrDefault(x=>x.Name == name) == null;
         }
     }
 }

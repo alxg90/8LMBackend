@@ -4,7 +4,7 @@ using _8LMBackend.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Newtonsoft.Json;
-
+using System;
 namespace _8LMCore.Controllers
 {
     public class PackagesController : Controller
@@ -17,10 +17,56 @@ namespace _8LMCore.Controllers
         }
         [HttpPost]
         public JsonResult SavePackage([FromBody]PackageDto package, string token){
-            if(package.Id == null){
+            if(!_subscribeService.CheckPackageNameValid(package.Name)){
+                return Json(new{status = "fail", message = "Package name is already exist."});
+            }
+            if(package.Id == 0){
+                var user = _subscribeService.GetUserByToken(token);
                 Package pack = new Package();
+
+                pack.Name = package.Name;
+                pack.CreatedBy = user.Id;
+                pack.CreatedDate = DateTime.Now;
+                pack.CurrencyId = package.Currency;
+                pack.Description = "empty";
+                pack.DurationInMonth = package.Duration;                
                 pack.IsActual = null;
+                pack.PaletteId = package.PaletteId;
+                pack.Price = package.Price;
+                pack.UserTypeId = user.TypeId; 
+
                 _subscribeService.SavePackage(pack);
+
+                foreach(int serviceId in package.Services){
+                    pack.PackageService.Add(new PackageService(){
+                        PackageId = pack.Id,
+                        ServiceId = serviceId
+                    });
+                }   
+                foreach(PackageReferenceCodeDto refCode in package.PackageReferenceCode){
+                    pack.PackageReferenceCode.Add(new PackageReferenceCode(){
+                        PackageId = refCode.PackageId,
+                        ReferenceCode = refCode.ReferenceCode,
+                        IsFixed = refCode.IsFixed,
+                        Value = refCode.Value
+                    });
+                }
+                foreach(PackageReferenceExtendCodeDto refExtendCode in package.PackageReferenceExtendCode){
+                    pack.PackageReferenceExtendCode.Add(new PackageReferenceExtendCode(){
+                        PackageId = refExtendCode.PackageId,
+                        ReferenceCode = refExtendCode.ReferenceCode,
+                        Months = refExtendCode.Months
+                    });
+                }
+                foreach(PackageReferenceServiceCodeDto refServiceCode in package.PackageReferenceServiceCode){
+                    pack.PackageReferenceServiceCode.Add(new PackageReferenceServiceCode(){
+                        PackageId = refServiceCode.PackageId,
+                        ReferenceCode = refServiceCode.ReferenceCode,
+                        ServiceId = refServiceCode.ServiceId
+                    });
+                }
+                UpdatePackage(pack);
+
                 return Json(new{status = "ok", id = pack.Id});
             }else{
                 return Json(new{status = "fail", message = "Package is actual, so not saved"});
@@ -58,6 +104,18 @@ namespace _8LMCore.Controllers
         public JsonResult PrepareInvoice(int PackageID, string token, string ReferenceCode = null){
             var invoice = _subscribeService.PrepareInvoice(PackageID, token, ReferenceCode);
             return Json(new {InvoiceId = invoice.Id, Field1 = "", HashCode = ""});
+        }
+
+        public JsonResult AcceptPayment(RelayAuthorizeNetresponse rel){
+            try
+            {
+                _subscribeService.AcceptPayment(rel);
+                return Json(new{status = "ok", message = "Payment was done"});
+            }
+            catch(Exception ex)
+            {
+                return Json(new{status = "fail", message = ex.Message});
+            }            
         }
 
         public Package GetPackageById(int id){
