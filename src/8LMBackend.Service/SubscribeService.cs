@@ -70,7 +70,13 @@ namespace _8LMBackend.Service
             return DbContext.Package.ToArray();
         }
         public bool CheckPackageNameValid(string name){
-           return DbContext.Package.FirstOrDefault(x=>x.Name == name) == null;
+           return DbContext.Package.FirstOrDefault(x => x.Name == name) == null;
         }
+        public void SetActive(int id, int isActual){
+            var package = DbContext.Package.FirstOrDefault(x => x.Id == id);
+            package.IsActual = isActual;
+            DbContext.Package.Update(package);
+            DbContext.SaveChanges();
+        }        
     }
 }

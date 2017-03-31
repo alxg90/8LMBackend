@@ -17,5 +17,6 @@ namespace _8LMBackend.Service
         Package[] GetAllPackages();
         Users GetUserByToken(string token);
         bool CheckPackageNameValid(string name);
+        void SetActive(int id, int isActual);
     }
 }

@@ -57,7 +57,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                throw new Exception();
+                throw new Exception(ex.Message);
             }
         }
 
@@ -79,7 +79,7 @@ namespace _8LMCore.Controllers
             }
             catch (System.Exception ex)
             {
-                throw new Exception();
+                throw new Exception(ex.Message);
             }
         }
     }

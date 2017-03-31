@@ -68,11 +68,12 @@ namespace _8LMCore.Controllers
                 UpdatePackage(pack);
 
                 return Json(new{status = "ok", id = pack.Id});
-            }else{
+            }
+            else
+            {
                 return Json(new{status = "fail", message = "Package is actual, so not saved"});
             }
         }
-
         public JsonResult DeletePackage(int id){
             try
             {
@@ -84,7 +85,6 @@ namespace _8LMCore.Controllers
                 return Json(new{status = "fail", message = ex.Message});
             }
         }
-
         public JsonResult UpdatePackage(Package package){            
             try
             {
@@ -96,16 +96,24 @@ namespace _8LMCore.Controllers
                 return Json(new{status = "fail", message = ex.Message});
             }
         }
-
         public Service[] GetAllServices(){
             return _subscribeService.GetAllServices();
         }
-
         public JsonResult PrepareInvoice(int PackageID, string token, string ReferenceCode = null){
             var invoice = _subscribeService.PrepareInvoice(PackageID, token, ReferenceCode);
             return Json(new {InvoiceId = invoice.Id, Field1 = "", HashCode = ""});
         }
-
+        public JsonResult SetActive(int id, int isActual){
+            try
+            {
+                _subscribeService.SetActive(id, isActual);
+                return Json(new{status = "ok", message = "Package isActual was seted to" + isActual});
+            }
+            catch(Exception ex)
+            {
+                return Json(new{status = "fail", message = ex.Message});
+            }
+        }
         public JsonResult AcceptPayment(RelayAuthorizeNetresponse rel){
             try
             {
@@ -117,12 +125,26 @@ namespace _8LMCore.Controllers
                 return Json(new{status = "fail", message = ex.Message});
             }            
         }
-
         public Package GetPackageById(int id){
-            return _subscribeService.GetPackageById(id);
+            try
+            {
+                return _subscribeService.GetPackageById(id);
+            }
+            catch (System.Exception ex)
+            {                
+                throw new Exception(ex.Message);
+            }
+            
         }
         public Package[] GetAllPackages(){
-            return _subscribeService.GetAllPackages();
+            try
+            {
+                return _subscribeService.GetAllPackages();
+            }
+            catch (System.Exception ex)
+            {                
+                throw new Exception(ex.Message);
+            }            
         }
     }
 }
