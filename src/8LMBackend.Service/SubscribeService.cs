@@ -22,6 +22,11 @@ namespace _8LMBackend.Service
             var package = DbContext.Package.FirstOrDefault(x => x.Id == id);
             if(package.IsActual==null){
                 DbContext.PackageService.RemoveRange(DbContext.PackageService.Where(x=>x.PackageId==package.Id));
+                DbContext.Invoice.RemoveRange(DbContext.Invoice.Where(x => x.PackageId == package.Id));
+                DbContext.Subscription.RemoveRange(DbContext.Subscription.Where(x => x.PackageId == package.Id));
+                DbContext.PackageReferenceCode.RemoveRange(DbContext.PackageReferenceCode.Where(x => x.PackageId == package.Id));
+                DbContext.PackageReferenceExtendCode.RemoveRange(DbContext.PackageReferenceExtendCode.Where(x => x.PackageId == package.Id));
+                DbContext.PackageReferenceServiceCode.RemoveRange(DbContext.PackageReferenceServiceCode.Where(x => x.PackageId == package.Id));
                 DbContext.Package.Remove(package);
                 DbContext.SaveChanges();
             }
