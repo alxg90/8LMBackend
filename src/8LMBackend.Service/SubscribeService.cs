@@ -71,14 +71,37 @@ namespace _8LMBackend.Service
             Package[] packages = DbContext.Package.ToArray();
             return packages;
         }
-        public bool CheckPackageNameValid(string name){
-           return DbContext.Package.FirstOrDefault(x => x.Name == name) == null;
+        public bool CheckPackageNameValid(string name, int? packageId){
+            var pack = DbContext.Package.FirstOrDefault(x => x.Name == name);
+            if(packageId==0)
+            {
+                return pack == null;
+            }
+            else
+            {
+                if(pack == null || pack.Id == packageId){
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
         public void SetActive(int id, int setActual){
             var package = DbContext.Package.FirstOrDefault(x => x.Id == id);
             package.IsActual = setActual;
             DbContext.Package.Update(package);
             DbContext.SaveChanges();
-        }        
+        }
+        public List<PackageReferenceCode> GetPackageReferenceCodeById(int packageId){
+            return DbContext.PackageReferenceCode.Where(x=>x.PackageId == packageId).ToList();
+        }
+        public List<PackageReferenceExtendCode> GetPackageReferenceExtendCodeById(int packageId){
+            return DbContext.PackageReferenceExtendCode.Where(x=>x.PackageId == packageId).ToList();
+        }  
+        public List<PackageReferenceServiceCode> GetPackageReferenceServiceCodeById(int packageId){
+            return DbContext.PackageReferenceServiceCode.Where(x=>x.PackageId == packageId).ToList();
+        }          
     }
 }

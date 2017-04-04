@@ -18,10 +18,9 @@ namespace _8LMCore.Controllers
         }
         [HttpPost]
         public JsonResult SavePackage([FromBody]PackageDto package, string token){
-            if(!_subscribeService.CheckPackageNameValid(package.Name)){
+            if(!_subscribeService.CheckPackageNameValid(package.Name, package.Id)){
                 return Json(new{status = "fail", message = "Package name is already exist."});
             }
-            if(package.Id == 0){
                 var user = _subscribeService.GetUserByToken(token);
                 Package pack = new Package();
 
@@ -36,7 +35,8 @@ namespace _8LMCore.Controllers
                 pack.Price = package.Price;
                 pack.UserTypeId = user.TypeId; 
 
-                _subscribeService.SavePackage(pack);
+                if(package.Id == 0)
+                    _subscribeService.SavePackage(pack);
 
                 foreach(ServicesDto serviceId in package.Services){
                     pack.PackageService.Add(new PackageService(){
@@ -69,11 +69,6 @@ namespace _8LMCore.Controllers
                 UpdatePackage(pack);
 
                 return Json(new{status = "ok", id = pack.Id});
-            }
-            else
-            {
-                return Json(new{status = "fail", message = "Package is actual, so not saved"});
-            }
         }
         public JsonResult DeletePackage(int id){
             try
@@ -148,10 +143,14 @@ namespace _8LMCore.Controllers
             {
                 var packages = _subscribeService.GetAllPackages();
                 var services = GetAllServices();
+                
                 var packageDto = new List<PackageDto>();
                 foreach (var item in packages)
                 {
                     var tempServ = services.Where(x=>x.Id == item.Id);
+                    var dbPackageReferenceCodes = _subscribeService.GetPackageReferenceCodeById(item.Id);
+                    var dbPackageReferenceExtendCodes = _subscribeService.GetPackageReferenceExtendCodeById(item.Id);
+                    var dbPackageReferenceServiceCodes = _subscribeService.GetPackageReferenceServiceCodeById(item.Id);
                     PackageDto pack = new PackageDto();
                     pack.Id = item.Id;
                     pack.Name = item.Name;
@@ -170,7 +169,7 @@ namespace _8LMCore.Controllers
                     pack.Currency = item.CurrencyId;
                     pack.IsActual = item.IsActual;
                     var tempRefCode = new List<PackageReferenceCodeDto>();
-                    foreach (var packageReferenceCode in item.PackageReferenceCode)
+                    foreach (var packageReferenceCode in dbPackageReferenceCodes)
                     {
                         tempRefCode.Add(new PackageReferenceCodeDto(){
                             PackageId = packageReferenceCode.PackageId,
@@ -191,7 +190,7 @@ namespace _8LMCore.Controllers
                     }
                     pack.PackageReferenceServiceCode = tempRefServCode.ToArray();
                     var tempRefExtCode = new List<PackageReferenceExtendCodeDto>();
-                    foreach (var packageReferenceExtendCode in item.PackageReferenceExtendCode)
+                    foreach (PackageReferenceExtendCode packageReferenceExtendCode in dbPackageReferenceExtendCodes)
                     {
                         tempRefExtCode.Add(new PackageReferenceExtendCodeDto(){
                             PackageId = packageReferenceExtendCode.PackageId,

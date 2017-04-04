@@ -16,7 +16,10 @@ namespace _8LMBackend.Service
         Package GetPackageById(int Id);
         Package[] GetAllPackages();
         Users GetUserByToken(string token);
-        bool CheckPackageNameValid(string name);
+        bool CheckPackageNameValid(string name, int? id);
         void SetActive(int id, int setActual);
+        List<PackageReferenceCode> GetPackageReferenceCodeById(int packageId);
+        List<PackageReferenceExtendCode> GetPackageReferenceExtendCodeById(int packageId);
+        List<PackageReferenceServiceCode> GetPackageReferenceServiceCodeById(int packageId);
     }
 }
