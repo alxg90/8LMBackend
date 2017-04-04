@@ -30,6 +30,10 @@ namespace _8LMBackend.Service
                 DbContext.Package.Remove(package);
                 DbContext.SaveChanges();
             }
+            else
+            {
+                throw new Exception();
+            }
         }
         public void UpdatePackage(Package package){
             DbContext.Package.Update(package);
