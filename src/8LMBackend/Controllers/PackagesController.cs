@@ -1,5 +1,6 @@
 using _8LMBackend.DataAccess.Models;
 using _8LMBackend.DataAccess.DtoModels;
+using System.Collections.Generic;
 using _8LMBackend.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -37,10 +38,10 @@ namespace _8LMCore.Controllers
 
                 _subscribeService.SavePackage(pack);
 
-                foreach(int serviceId in package.Services){
+                foreach(ServicesDto serviceId in package.Services){
                     pack.PackageService.Add(new PackageService(){
                         PackageId = pack.Id,
-                        ServiceId = serviceId
+                        ServiceId = serviceId.Id
                     });
                 }   
                 foreach(PackageReferenceCodeDto refCode in package.PackageReferenceCode){
@@ -97,17 +98,24 @@ namespace _8LMCore.Controllers
             }
         }
         public Service[] GetAllServices(){
-            return _subscribeService.GetAllServices();
+            try
+            {
+               return _subscribeService.GetAllServices();
+            }
+            catch (System.Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }            
         }
         public JsonResult PrepareInvoice(int PackageID, string token, string ReferenceCode = null){
             var invoice = _subscribeService.PrepareInvoice(PackageID, token, ReferenceCode);
             return Json(new {InvoiceId = invoice.Id, Field1 = "", HashCode = ""});
         }
-        public JsonResult SetActive(int id, int isActual){
+        public JsonResult SetActive(int id, int setActual){
             try
             {
-                _subscribeService.SetActive(id, isActual);
-                return Json(new{status = "ok", message = "Package isActual was seted to" + isActual});
+                _subscribeService.SetActive(id, setActual);
+                return Json(new{status = "ok", message = "Package isActual was seted to" + setActual});
             }
             catch(Exception ex)
             {
@@ -133,13 +141,66 @@ namespace _8LMCore.Controllers
             catch (System.Exception ex)
             {                
                 throw new Exception(ex.Message);
-            }
-            
+            }            
         }
-        public Package[] GetAllPackages(){
+        public PackageDto[] GetAllPackages(){
             try
             {
-                return _subscribeService.GetAllPackages();
+                var packages = _subscribeService.GetAllPackages();
+                var services = GetAllServices();
+                PackageDto[] packageDto = new PackageDto[0];
+                foreach (var item in packages)
+                {
+                    var tempServ = services.Where(x=>x.Id == item.Id);
+                    PackageDto pack = new PackageDto();
+                    pack.Id = item.Id;
+                    pack.Name = item.Name;
+                    var servDto = new List<ServicesDto>();
+                    foreach (var s in tempServ)
+                    {
+                        servDto.Add(new ServicesDto(){
+                            Id = s.Id,
+                            Name = s.Name
+                        });
+                    }
+                    pack.Services = servDto.ToArray();
+                    pack.PaletteId = item.PaletteId;
+                    pack.Duration = item.DurationInMonth;
+                    pack.Price = item.Price;
+                    pack.Currency = item.CurrencyId;
+                    var tempRefCode = new List<PackageReferenceCodeDto>();
+                    foreach (var packageReferenceCode in item.PackageReferenceCode)
+                    {
+                        tempRefCode.Add(new PackageReferenceCodeDto(){
+                            PackageId = packageReferenceCode.PackageId,
+                            ReferenceCode = packageReferenceCode.ReferenceCode,
+                            IsFixed = packageReferenceCode.IsFixed,
+                            Value = packageReferenceCode.Value
+                        });
+                    }
+                    pack.PackageReferenceCode = tempRefCode.ToArray();
+                    var tempRefServCode = new List<PackageReferenceServiceCodeDto>();
+                    foreach (var packageReferenceServiceCode in item.PackageReferenceServiceCode)
+                    {
+                        tempRefServCode.Add(new PackageReferenceServiceCodeDto(){
+                            PackageId = packageReferenceServiceCode.PackageId,
+                            ReferenceCode = packageReferenceServiceCode.ReferenceCode,
+                            ServiceId = packageReferenceServiceCode.ServiceId
+                        });
+                    }
+                    pack.PackageReferenceServiceCode = tempRefServCode.ToArray();
+                    var tempRefExtCode = new List<PackageReferenceExtendCodeDto>();
+                    foreach (var packageReferenceExtendCode in item.PackageReferenceExtendCode)
+                    {
+                        tempRefExtCode.Add(new PackageReferenceExtendCodeDto(){
+                            PackageId = packageReferenceExtendCode.PackageId,
+                            ReferenceCode = packageReferenceExtendCode.ReferenceCode,
+                            Months = packageReferenceExtendCode.Months
+                        });
+                    }
+                    pack.PackageReferenceExtendCode = tempRefExtCode.ToArray();
+                }
+                return packageDto;
             }
             catch (System.Exception ex)
             {                

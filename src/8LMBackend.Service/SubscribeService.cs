@@ -31,7 +31,8 @@ namespace _8LMBackend.Service
         }
 
         public _8LMBackend.DataAccess.Models.Service[] GetAllServices(){
-            return DbContext.Service.ToArray();
+            var services = DbContext.Service.ToArray();
+            return (services.Length > 0) ? services : new _8LMBackend.DataAccess.Models.Service[0];
         } 
         public Invoice PrepareInvoice(int PackageID, string token, string ReferenceCode = null){
             var user = DbContext.UserToken.Where(p => p.Token == token).FirstOrDefault();
@@ -67,14 +68,15 @@ namespace _8LMBackend.Service
             return DbContext.Package.FirstOrDefault(x => x.Id == id);
         }
         public Package[] GetAllPackages(){
-            return DbContext.Package.ToArray();
+            Package[] packages = DbContext.Package.ToArray();
+            return packages;
         }
         public bool CheckPackageNameValid(string name){
            return DbContext.Package.FirstOrDefault(x => x.Name == name) == null;
         }
-        public void SetActive(int id, int isActual){
+        public void SetActive(int id, int setActual){
             var package = DbContext.Package.FirstOrDefault(x => x.Id == id);
-            package.IsActual = isActual;
+            package.IsActual = setActual;
             DbContext.Package.Update(package);
             DbContext.SaveChanges();
         }        

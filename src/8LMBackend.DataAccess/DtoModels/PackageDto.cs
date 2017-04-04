@@ -12,7 +12,7 @@ namespace _8LMBackend.DataAccess.DtoModels
         }
         public int Id { get; set; }
         public string Name { get; set; }
-        public int[] Services { get; set; }
+        public ServicesDto[] Services { get; set; }
         public int PaletteId { get; set; }
         public int Duration { get; set; }
         public int Price { get; set; }
@@ -20,6 +20,10 @@ namespace _8LMBackend.DataAccess.DtoModels
         public PackageReferenceCodeDto[] PackageReferenceCode { get; set; }
         public PackageReferenceExtendCodeDto[] PackageReferenceExtendCode { get; set; }
         public PackageReferenceServiceCodeDto[]  PackageReferenceServiceCode { get; set; }
+    }
+    public class ServicesDto{
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
     public class PackageReferenceCodeDto
