@@ -168,6 +168,7 @@ namespace _8LMCore.Controllers
                     pack.Duration = item.DurationInMonth;
                     pack.Price = item.Price;
                     pack.Currency = item.CurrencyId;
+                    pack.IsActual = item.IsActual;
                     var tempRefCode = new List<PackageReferenceCodeDto>();
                     foreach (var packageReferenceCode in item.PackageReferenceCode)
                     {
