@@ -21,5 +21,6 @@ namespace _8LMBackend.Service
         List<PackageReferenceCode> GetPackageReferenceCodeById(int packageId);
         List<PackageReferenceExtendCode> GetPackageReferenceExtendCodeById(int packageId);
         List<PackageReferenceServiceCode> GetPackageReferenceServiceCodeById(int packageId);
+        List<PackageService> GetPackageServicesById(int packageId);
     }
 }

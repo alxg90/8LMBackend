@@ -143,23 +143,22 @@ namespace _8LMCore.Controllers
             {
                 var packages = _subscribeService.GetAllPackages();
                 var services = GetAllServices();
-                
                 var packageDto = new List<PackageDto>();
                 foreach (var item in packages)
                 {
-                    var tempServ = services.Where(x=>x.Id == item.Id);
                     var dbPackageReferenceCodes = _subscribeService.GetPackageReferenceCodeById(item.Id);
                     var dbPackageReferenceExtendCodes = _subscribeService.GetPackageReferenceExtendCodeById(item.Id);
                     var dbPackageReferenceServiceCodes = _subscribeService.GetPackageReferenceServiceCodeById(item.Id);
+                    var packageServices = _subscribeService.GetPackageServicesById(item.Id);
                     PackageDto pack = new PackageDto();
                     pack.Id = item.Id;
                     pack.Name = item.Name;
                     var servDto = new List<ServicesDto>();
-                    foreach (var s in tempServ)
+                    foreach (var s in packageServices)
                     {
                         servDto.Add(new ServicesDto(){
-                            Id = s.Id,
-                            Name = s.Name
+                            Id = s.ServiceId,
+                            Name = services.FirstOrDefault(x => x.Id == s.ServiceId).Name
                         });
                     }
                     pack.Services = servDto.ToArray();

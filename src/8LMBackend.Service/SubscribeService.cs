@@ -71,6 +71,10 @@ namespace _8LMBackend.Service
             Package[] packages = DbContext.Package.ToArray();
             return packages;
         }
+        public List<PackageService> GetPackageServicesById(int packageId){
+            return DbContext.PackageService.Where(x => x.PackageId == packageId).ToList();
+        }
+
         public bool CheckPackageNameValid(string name, int? packageId){
             var pack = DbContext.Package.FirstOrDefault(x => x.Name == name);
             if(packageId==0)
