@@ -143,12 +143,12 @@ namespace _8LMCore.Controllers
                 throw new Exception(ex.Message);
             }            
         }
-        public PackageDto[] GetAllPackages(){
+        public List<PackageDto> GetAllPackages(){
             try
             {
                 var packages = _subscribeService.GetAllPackages();
                 var services = GetAllServices();
-                PackageDto[] packageDto = new PackageDto[0];
+                var packageDto = new List<PackageDto>();
                 foreach (var item in packages)
                 {
                     var tempServ = services.Where(x=>x.Id == item.Id);
@@ -199,6 +199,7 @@ namespace _8LMCore.Controllers
                         });
                     }
                     pack.PackageReferenceExtendCode = tempRefExtCode.ToArray();
+                    packageDto.Add(pack);
                 }
                 return packageDto;
             }
