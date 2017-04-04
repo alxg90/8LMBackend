@@ -39,6 +39,7 @@ namespace _8LMBackend.DataAccess.DtoModels
         public int PackageId { get; set; }
         public string ReferenceCode { get; set; }
         public int ServiceId { get; set; }
+        public string ServiceName { get; set; }
     }
     public partial class PackageReferenceExtendCodeDto
     {

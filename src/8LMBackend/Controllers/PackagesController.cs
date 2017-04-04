@@ -184,7 +184,8 @@ namespace _8LMCore.Controllers
                         tempRefServCode.Add(new PackageReferenceServiceCodeDto(){
                             PackageId = packageReferenceServiceCode.PackageId,
                             ReferenceCode = packageReferenceServiceCode.ReferenceCode,
-                            ServiceId = packageReferenceServiceCode.ServiceId
+                            ServiceId = packageReferenceServiceCode.ServiceId,
+                            ServiceName = services.FirstOrDefault(x => x.Id == packageReferenceServiceCode.ServiceId).Name
                         });
                     }
                     pack.PackageReferenceServiceCode = tempRefServCode.ToArray();
