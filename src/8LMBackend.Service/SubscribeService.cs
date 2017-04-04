@@ -21,6 +21,7 @@ namespace _8LMBackend.Service
         public void DeletePackage(int id){
             var package = DbContext.Package.FirstOrDefault(x => x.Id == id);
             if(package.IsActual==null){
+                DbContext.PackageService.RemoveRange(DbContext.PackageService.Where(x=>x.PackageId==package.Id));
                 DbContext.Package.Remove(package);
                 DbContext.SaveChanges();
             }
