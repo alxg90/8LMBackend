@@ -157,18 +157,24 @@ namespace _8LMCore.Controllers
         }
         public List<PackageDto> GetUserPackages(string token){
             var user = _subscribeService.GetUserByToken(token);
-            var packages = _subscribeService.GetUserPackages(user.Id);
+            var packages = _subscribeService.GetAllPackages();
             var packageDto = new List<PackageDto>();            
             var services = GetAllServices();
             foreach (var item in packages)
-            {              
-            var pack = ToDtoPackage(item, services, true);
-            var subscription = _subscribeService.GetSubscriptionForPackage(item.Id, user.Id);
-            if(subscription!=null){
-                pack.ValidTo = subscription.ExpirationDate;
-            }
-                
-            packageDto.Add(pack);   
+            {      
+                var pack = ToDtoPackage(item, services, true);   
+                var subscription = _subscribeService.GetSubscriptionForPackage(item.Id, user.Id);     
+                if(item.IsActual == 1){          
+                    if(subscription != null){
+                        pack.ValidTo = subscription.ExpirationDate;
+                    }                
+                    packageDto.Add(pack);  
+                } else {
+                    if(subscription != null){
+                        pack.ValidTo = subscription.ExpirationDate;
+                        packageDto.Add(pack);
+                    }                
+                }
             }
             
             return packageDto;

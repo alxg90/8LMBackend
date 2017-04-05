@@ -118,8 +118,10 @@ namespace _8LMBackend.Service
             return DbContext.PackageReferenceServiceCode.Where(x=>x.PackageId == packageId).ToList();
         }    
         public List<Package> GetUserPackages(int UserId){
+            List<Package> packageList =  new List<Package>();
             var subsr = DbContext.Subscription.Where(x=>x.UserId == UserId && x.EffectiveDate < DateTime.Now);
             var packages = DbContext.Package.Where(x=>x.Subscription.Any(a => a.UserId == UserId));
+            
             return packages.ToList();
         }
         public Subscription GetSubscriptionForPackage(int packageId, int userId){
