@@ -131,7 +131,7 @@ namespace _8LMCore.Controllers
         public PackageDto GetPackageById(int id){
             try
             {
-                return ToDtoPackage(_subscribeService.GetPackageById(id), _subscribeService.GetAllServices());
+                return ToDtoPackage(_subscribeService.GetPackageById(id), _subscribeService.GetAllServices(), false);
             }
             catch (System.Exception ex)
             {                
@@ -146,7 +146,7 @@ namespace _8LMCore.Controllers
                 var packageDto = new List<PackageDto>();
                 foreach (var item in packages)
                 {
-                    packageDto.Add(ToDtoPackage(item, services));
+                    packageDto.Add(ToDtoPackage(item, services, false));
                 }
                 return packageDto;
             }
@@ -155,7 +155,24 @@ namespace _8LMCore.Controllers
                 throw new Exception(ex.Message);
             }            
         }
-        private PackageDto ToDtoPackage(Package item, Service[] services){
+        public List<PackageDto> GetUserPackages(int UserId){
+            var packages = _subscribeService.GetUserPackages(UserId);
+            var packageDto = new List<PackageDto>();            
+            var services = GetAllServices();
+            foreach (var item in packages)
+            {              
+            var pack = ToDtoPackage(item, services, true);
+            var subscription = _subscribeService.GetSubscriptionForPackage(item.Id, UserId);
+            if(subscription!=null){
+                pack.ValidTo = subscription.ExpirationDate;
+            }
+                
+            packageDto.Add(pack);   
+            }
+            
+            return packageDto;
+        }
+        private PackageDto ToDtoPackage(Package item, Service[] services, bool isUser){
             var dbPackageReferenceCodes = _subscribeService.GetPackageReferenceCodeById(item.Id);
             var dbPackageReferenceExtendCodes = _subscribeService.GetPackageReferenceExtendCodeById(item.Id);
             var dbPackageReferenceServiceCodes = _subscribeService.GetPackageReferenceServiceCodeById(item.Id);
@@ -177,38 +194,41 @@ namespace _8LMCore.Controllers
             pack.Price = item.Price;
             pack.Currency = item.CurrencyId;
             pack.IsActual = item.IsActual;
-            var tempRefCode = new List<PackageReferenceCodeDto>();
-            foreach (var packageReferenceCode in dbPackageReferenceCodes)
-            {
-                tempRefCode.Add(new PackageReferenceCodeDto(){
-                    PackageId = packageReferenceCode.PackageId,
-                    ReferenceCode = packageReferenceCode.ReferenceCode,
-                    IsFixed = packageReferenceCode.IsFixed,
-                    Value = packageReferenceCode.Value
-                });
+
+            if(!isUser){
+                var tempRefCode = new List<PackageReferenceCodeDto>();
+                foreach (var packageReferenceCode in dbPackageReferenceCodes)
+                {
+                    tempRefCode.Add(new PackageReferenceCodeDto(){
+                        PackageId = packageReferenceCode.PackageId,
+                        ReferenceCode = packageReferenceCode.ReferenceCode,
+                        IsFixed = packageReferenceCode.IsFixed,
+                        Value = packageReferenceCode.Value
+                    });
+                }
+                pack.PackageReferenceCode = tempRefCode.ToArray();
+                var tempRefServCode = new List<PackageReferenceServiceCodeDto>();
+                foreach (var packageReferenceServiceCode in item.PackageReferenceServiceCode)
+                {
+                    tempRefServCode.Add(new PackageReferenceServiceCodeDto(){
+                        PackageId = packageReferenceServiceCode.PackageId,
+                        ReferenceCode = packageReferenceServiceCode.ReferenceCode,
+                        ServiceId = packageReferenceServiceCode.ServiceId,
+                        ServiceName = services.FirstOrDefault(x => x.Id == packageReferenceServiceCode.ServiceId).Name
+                    });
+                }
+                pack.PackageReferenceServiceCode = tempRefServCode.ToArray();
+                var tempRefExtCode = new List<PackageReferenceExtendCodeDto>();
+                foreach (PackageReferenceExtendCode packageReferenceExtendCode in dbPackageReferenceExtendCodes)
+                {
+                    tempRefExtCode.Add(new PackageReferenceExtendCodeDto(){
+                        PackageId = packageReferenceExtendCode.PackageId,
+                        ReferenceCode = packageReferenceExtendCode.ReferenceCode,
+                        Months = packageReferenceExtendCode.Months
+                    });
+                }
+                pack.PackageReferenceExtendCode = tempRefExtCode.ToArray();
             }
-            pack.PackageReferenceCode = tempRefCode.ToArray();
-            var tempRefServCode = new List<PackageReferenceServiceCodeDto>();
-            foreach (var packageReferenceServiceCode in item.PackageReferenceServiceCode)
-            {
-                tempRefServCode.Add(new PackageReferenceServiceCodeDto(){
-                    PackageId = packageReferenceServiceCode.PackageId,
-                    ReferenceCode = packageReferenceServiceCode.ReferenceCode,
-                    ServiceId = packageReferenceServiceCode.ServiceId,
-                    ServiceName = services.FirstOrDefault(x => x.Id == packageReferenceServiceCode.ServiceId).Name
-                });
-            }
-            pack.PackageReferenceServiceCode = tempRefServCode.ToArray();
-            var tempRefExtCode = new List<PackageReferenceExtendCodeDto>();
-            foreach (PackageReferenceExtendCode packageReferenceExtendCode in dbPackageReferenceExtendCodes)
-            {
-                tempRefExtCode.Add(new PackageReferenceExtendCodeDto(){
-                    PackageId = packageReferenceExtendCode.PackageId,
-                    ReferenceCode = packageReferenceExtendCode.ReferenceCode,
-                    Months = packageReferenceExtendCode.Months
-                });
-            }
-            pack.PackageReferenceExtendCode = tempRefExtCode.ToArray();
             return pack;
         }
     }

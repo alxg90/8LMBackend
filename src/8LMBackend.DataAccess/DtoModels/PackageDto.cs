@@ -21,6 +21,7 @@ namespace _8LMBackend.DataAccess.DtoModels
         public PackageReferenceCodeDto[] PackageReferenceCode { get; set; }
         public PackageReferenceExtendCodeDto[] PackageReferenceExtendCode { get; set; }
         public PackageReferenceServiceCodeDto[]  PackageReferenceServiceCode { get; set; }
+        public DateTime ValidTo { get; set; }
     }
     public class ServicesDto{
         public int Id { get; set; }

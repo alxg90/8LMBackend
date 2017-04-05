@@ -116,6 +116,14 @@ namespace _8LMBackend.Service
         }  
         public List<PackageReferenceServiceCode> GetPackageReferenceServiceCodeById(int packageId){
             return DbContext.PackageReferenceServiceCode.Where(x=>x.PackageId == packageId).ToList();
-        }          
+        }    
+        public List<Package> GetUserPackages(int UserId){
+            var subsr = DbContext.Subscription.Where(x=>x.UserId == UserId && x.EffectiveDate < DateTime.Now);
+            var packages = DbContext.Package.Where(x=>x.Subscription.Any(a => a.UserId == UserId));
+            return packages.ToList();
+        }
+        public Subscription GetSubscriptionForPackage(int packageId, int userId){
+            return DbContext.Subscription.FirstOrDefault(x => x.PackageId == packageId && x.UserId == userId);
+        }      
     }
 }
