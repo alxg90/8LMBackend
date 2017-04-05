@@ -155,14 +155,15 @@ namespace _8LMCore.Controllers
                 throw new Exception(ex.Message);
             }            
         }
-        public List<PackageDto> GetUserPackages(int UserId){
-            var packages = _subscribeService.GetUserPackages(UserId);
+        public List<PackageDto> GetUserPackages(string token){
+            var user = _subscribeService.GetUserByToken(token);
+            var packages = _subscribeService.GetUserPackages(user.Id);
             var packageDto = new List<PackageDto>();            
             var services = GetAllServices();
             foreach (var item in packages)
             {              
             var pack = ToDtoPackage(item, services, true);
-            var subscription = _subscribeService.GetSubscriptionForPackage(item.Id, UserId);
+            var subscription = _subscribeService.GetSubscriptionForPackage(item.Id, user.Id);
             if(subscription!=null){
                 pack.ValidTo = subscription.ExpirationDate;
             }
