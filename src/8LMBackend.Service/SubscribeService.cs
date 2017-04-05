@@ -54,7 +54,7 @@ namespace _8LMBackend.Service
             invoice.UserId = user.Id;
             invoice.Amount = package.Price;
             
-            var tempDiscount = DbContext.PackageReferenceCode.FirstOrDefault(x => x.PackageId == PackageID);
+            var tempDiscount = DbContext.PackageReferenceCode.FirstOrDefault(x => x.PackageId == PackageID && x.ReferenceCode == ReferenceCode);
             invoice.Discount = tempDiscount.IsFixed ? tempDiscount.Value : invoice.Amount * tempDiscount.Value / 100;
             
             invoice.AmountDue = invoice.Amount - invoice.Discount ;

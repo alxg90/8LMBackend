@@ -104,7 +104,10 @@ namespace _8LMCore.Controllers
         }
         public JsonResult PrepareInvoice(int PackageID, string token, string ReferenceCode = null){
             var invoice = _subscribeService.PrepareInvoice(PackageID, token, ReferenceCode);
-            return Json(new {InvoiceId = invoice.Id, Field1 = "", HashCode = ""});
+            var package = _subscribeService.GetPackageById(PackageID);
+            var customHash = new CustomHash();
+            
+            return Json(new {InvoiceId = invoice.Id, invoice.AmountDue, HashCode = customHash.GetHashedString(package.Price.ToString(), invoice.Id.ToString()), TimeStamp = customHash.ConvertToUnixTimestamp(DateTime.UtcNow).ToString()});
         }
         public JsonResult SetActive(int id, int setActual){
             try
