@@ -61,6 +61,8 @@ namespace _8LMBackend.Service
             invoice.StatusId = null;
             invoice.CreatedDate = DateTime.UtcNow;
             invoice.UpdatedDate = null;
+            DbContext.Invoice.Add(invoice);
+            DbContext.SaveChanges();
             return invoice;
         }
         public void AcceptPayment(RelayAuthorizeNetresponse rel){
