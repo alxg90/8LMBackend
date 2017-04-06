@@ -257,10 +257,32 @@ namespace _8LMBackend.Service
         public List<int> GetFunctionsForUser(string access_token)
         {
             var userId = GetUserID(access_token);
-            return DbContext.UserRole.Where(p => p.UserId == userId)
+            var result = DbContext.UserRole.Where(p => p.UserId == userId)
                 .Include(p => p.Role)
                 .Join(DbContext.RoleFunction, p => p.RoleId, rf => rf.RoleId, (p, rf) => rf.FunctionId)
                 .Distinct().ToList();
+
+            var res = DbContext.Subscription
+                        .Where(p => p.UserId == userId 
+                            && p.StatusId == 1 
+                            && p.EffectiveDate <= DateTime.UtcNow
+                            && p.ExpirationDate >= DateTime.UtcNow)
+                        .Join(DbContext.PackageService, s => s.PackageId, ps => ps.PackageId, (s, ps) => ps)
+                        .Join(DbContext.ServiceFunction, ps => ps.ServiceId, sf => sf.ServiceId, (ps, sf) => sf)
+                        .Select(sf => sf.SecurityFunctionId).ToList();
+
+            var subList = DbContext.Subscription.Where(p => p.UserId == userId && 
+                                                            p.StatusId == 1 && 
+                                                            p.EffectiveDate <= DateTime.UtcNow && 
+                                                            p.ExpirationDate >= DateTime.UtcNow);
+            foreach (var item in subList)
+            {
+
+                
+
+            }   
+
+            return result;
         }
 
         public int CreateSecurityRole(string Name, string Description, string access_token)

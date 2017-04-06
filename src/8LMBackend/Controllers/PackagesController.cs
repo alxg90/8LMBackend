@@ -106,7 +106,7 @@ namespace _8LMCore.Controllers
             var invoice = _subscribeService.PrepareInvoice(PackageID, token, ReferenceCode);
             var package = _subscribeService.GetPackageById(PackageID);
             var customHash = new CustomHash();
-            
+
             return Json(new {InvoiceId = invoice.Id, invoice.AmountDue, HashCode = customHash.GetHashedString(package.Price.ToString(), invoice.Id.ToString()), TimeStamp = customHash.ConvertToUnixTimestamp(DateTime.UtcNow).ToString()});
         }
         public JsonResult SetActive(int id, int setActual){
@@ -120,9 +120,56 @@ namespace _8LMCore.Controllers
                 return Json(new{status = "fail", message = ex.Message});
             }
         }
-        public JsonResult AcceptPayment(RelayAuthorizeNetresponse rel){
+        public JsonResult AcceptPayment(RelayAuthorizeNetresponseDto relDto){
             try
             {
+                RelayAuthorizeNetresponse rel = new RelayAuthorizeNetresponse();
+                rel.CreatedDate = DateTime.UtcNow;
+                rel.InvoiceId = Convert.ToInt32(relDto.x_invoice_num);
+                rel.XAccountNumber = relDto.x_account_number;
+                rel.XAddress = relDto.x_address;
+                rel.XAmount = relDto.x_amount;
+                rel.XAuthCode = relDto.x_auth_code;
+                rel.XAvsCode = relDto.x_avs_code;
+                rel.XCardType = relDto.x_card_type;
+                rel.XCavvResponse = relDto.x_cavv_response;
+                rel.XCity = relDto.x_city;
+                rel.XCompany = relDto.x_company;
+                rel.XCountry = relDto.x_country;
+                rel.XCustId = relDto.x_cust_id;
+                rel.XCvv2RespCode = relDto.x_cvv2_resp_code;
+                rel.XDescription = relDto.x_description;
+                rel.XDuty = relDto.x_duty;
+                rel.XEmail = relDto.x_email;
+                rel.XFax = relDto.x_fax;
+                rel.XFirstName = relDto.x_first_Name;
+                rel.XFreight = relDto.x_freight;
+                rel.XInvoiceNum = relDto.x_invoice_num;
+                rel.XLastName = relDto.x_last_name;
+                rel.XMd5Hash = relDto.x_MD5_Hash;
+                rel.XMethod = relDto.x_method;
+                rel.XPhone = relDto.x_phone;
+                rel.XPoNum = relDto.x_po_num;
+                rel.XResponseCode = relDto.x_response_code;
+                rel.XResponseReasonCode = relDto.x_response_reason_code;
+                rel.XResponseReasonText = relDto.x_response_reason_text;
+                rel.XSha2Hash = relDto.x_SHA2_Hash;
+                rel.XShipToAddress = relDto.x_ship_to_address;
+                rel.XShipToCity = relDto.x_ship_to_city;
+                rel.XShipToCompany = relDto.x_ship_to_company;
+                rel.XShipToCountry = relDto.x_ship_to_country;
+                rel.XShipToFirstName = relDto.x_ship_to_first_name;
+                rel.XShipToLastName = relDto.x_ship_to_last_name;
+                rel.XShipToState = relDto.x_ship_to_state;
+                rel.XShipToZip  = relDto.x_ship_to_zip;
+                rel.XState  = relDto.x_state;
+                rel.XTax = relDto.x_tax;
+                rel.XTaxExempt = relDto.x_tax_exempt;
+                rel.XTestRequest = relDto.x_test_request;
+                rel.XTransId = relDto.x_trans_id;
+                rel.XType = relDto.x_type;
+                rel.XZip = relDto.x_zip;
+
                 _subscribeService.AcceptPayment(rel);
                 return Json(new{status = "ok", message = "Payment was done"});
             }

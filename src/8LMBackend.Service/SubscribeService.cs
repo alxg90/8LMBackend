@@ -51,7 +51,7 @@ namespace _8LMBackend.Service
 
             var invoice = new Invoice();
             var package = DbContext.Package.FirstOrDefault(x => x.Id == PackageID);
-            invoice.UserId = user.Id;
+            invoice.UserId = user.UserId;
             invoice.Amount = package.Price;
             invoice.PackageId = PackageID;
             
@@ -67,7 +67,22 @@ namespace _8LMBackend.Service
             return invoice;
         }
         public void AcceptPayment(RelayAuthorizeNetresponse rel){
+
             DbContext.RelayAuthorizeNetresponse.Add(rel);
+            DbContext.SaveChanges();
+
+            var invoice = DbContext.Invoice.FirstOrDefault(x=>x.Id == rel.InvoiceId);
+            var package = DbContext.Package.FirstOrDefault(x=>x.Id == invoice.PackageId);
+            var subsr = new Subscription();
+            subsr.UserId = invoice.UserId;
+            subsr.CreatedDate = DateTime.UtcNow;
+            subsr.EffectiveDate = DateTime.UtcNow;
+            subsr.ExpirationDate = subsr.EffectiveDate.AddMonths(package.DurationInMonth);
+            subsr.PackageId = package.Id;
+            subsr.RelayAuthorizeNetresponse = rel.Id;
+            subsr.StatusId = 1;
+
+            DbContext.Subscription.Add(subsr);
             DbContext.SaveChanges();
         }
 
