@@ -53,6 +53,7 @@ namespace _8LMBackend.Service
             var package = DbContext.Package.FirstOrDefault(x => x.Id == PackageID);
             invoice.UserId = user.Id;
             invoice.Amount = package.Price;
+            invoice.PackageId = PackageID;
             
             var tempDiscount = DbContext.PackageReferenceCode.FirstOrDefault(x => x.PackageId == PackageID && x.ReferenceCode == ReferenceCode);
             invoice.Discount = tempDiscount == null ? 0 : tempDiscount.IsFixed ? tempDiscount.Value : invoice.Amount * tempDiscount.Value / 100;
