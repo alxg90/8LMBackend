@@ -120,7 +120,7 @@ namespace _8LMCore.Controllers
                 return Json(new{status = "fail", message = ex.Message});
             }
         }
-        public JsonResult AcceptPayment(RelayAuthorizeNetresponseDto relDto){
+        public ActionResult AcceptPayment(RelayAuthorizeNetresponseDto relDto){
             try
             {
                 RelayAuthorizeNetresponse rel = new RelayAuthorizeNetresponse();
@@ -171,7 +171,7 @@ namespace _8LMCore.Controllers
                 rel.XZip = relDto.x_zip;
 
                 _subscribeService.AcceptPayment(rel);
-                return Json(new{status = "ok", message = "Payment was done"});
+                return View();
             }
             catch(Exception ex)
             {
