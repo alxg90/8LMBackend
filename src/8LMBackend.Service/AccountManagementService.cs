@@ -154,7 +154,7 @@ namespace _8LMBackend.Service
 
         public List<PromoCode> GetCodes(string access_token)
         {
-            VerifyFunction(11, access_token);
+            VerifyFunction(16, access_token);
 
             return DbContext.PromoCode.OrderBy(y => y.Yyyy).OrderBy(m => m.Mm).ToList();
         }
@@ -181,7 +181,7 @@ namespace _8LMBackend.Service
 
         public List<PromoUserViewModel> GetPromoSuppliers(string access_token)
         {
-            VerifyFunction(11, access_token);
+            VerifyFunction(16, access_token);
 
             List<PromoUserViewModel> result = new List<PromoUserViewModel>();
             foreach (var u in DbContext.PromoSupplier.OrderBy(p => p.Id).ToList())
