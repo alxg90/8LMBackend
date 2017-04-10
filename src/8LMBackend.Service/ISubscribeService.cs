@@ -24,5 +24,6 @@ namespace _8LMBackend.Service
         List<PackageService> GetPackageServicesById(int packageId);
         List<Package> GetUserPackages(int UserId);
         Subscription GetSubscriptionForPackage(int packageId, int userId);
+        string GetTokenByInvoice(Invoice invoice);
     }
 }

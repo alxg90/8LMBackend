@@ -144,5 +144,8 @@ namespace _8LMBackend.Service
         public Subscription GetSubscriptionForPackage(int packageId, int userId){
             return DbContext.Subscription.FirstOrDefault(x => x.PackageId == packageId && x.UserId == userId);
         }      
+        public string GetTokenByInvoice(Invoice invoice){
+            return DbContext.UserToken.FirstOrDefault(x=>x.UserId == invoice.UserId).Token;
+        }
     }
 }

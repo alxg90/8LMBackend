@@ -171,6 +171,7 @@ namespace _8LMCore.Controllers
                 rel.XZip = relDto.x_zip;
 
                 _subscribeService.AcceptPayment(rel);
+                var userToken = _subscribeService.GetTokenByInvoice(rel.Invoice);
                 return View();
             }
             catch(Exception ex)
