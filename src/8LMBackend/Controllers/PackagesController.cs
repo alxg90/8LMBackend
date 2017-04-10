@@ -107,7 +107,7 @@ namespace _8LMCore.Controllers
             var package = _subscribeService.GetPackageById(PackageID);
             var customHash = new CustomHash();
 
-            return Json(new {InvoiceId = invoice.Id, invoice.AmountDue, HashCode = customHash.GetHashedString((package.Price / 100).ToString(), invoice.Id.ToString()), TimeStamp = customHash.ConvertToUnixTimestamp(DateTime.UtcNow).ToString()});
+            return Json(new {InvoiceId = invoice.Id, invoice.AmountDue, HashCode = customHash.GetHashedString(((decimal)invoice.AmountDue / 100).ToString(), invoice.Id.ToString()), TimeStamp = customHash.ConvertToUnixTimestamp(DateTime.UtcNow).ToString()});
         }
         public JsonResult SetActive(int id, int setActual){
             try
