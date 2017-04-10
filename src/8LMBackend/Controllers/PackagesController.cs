@@ -123,6 +123,9 @@ namespace _8LMCore.Controllers
         public ActionResult AcceptPayment(RelayAuthorizeNetresponseDto relDto){
             try
             {
+                if(relDto.x_response_code != 1){
+                    return Json(new{status = "fail", message = relDto.x_response_reason_text});
+                }
                 RelayAuthorizeNetresponse rel = new RelayAuthorizeNetresponse();
                 rel.CreatedDate = DateTime.UtcNow;
                 rel.InvoiceId = Convert.ToInt32(relDto.x_invoice_num);
