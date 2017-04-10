@@ -271,18 +271,9 @@ namespace _8LMBackend.Service
                         .Join(DbContext.ServiceFunction, ps => ps.ServiceId, sf => sf.ServiceId, (ps, sf) => sf)
                         .Select(sf => sf.SecurityFunctionId).ToList();
 
-            var subList = DbContext.Subscription.Where(p => p.UserId == userId && 
-                                                            p.StatusId == 1 && 
-                                                            p.EffectiveDate <= DateTime.UtcNow && 
-                                                            p.ExpirationDate >= DateTime.UtcNow);
-            foreach (var item in subList)
-            {
+            result.AddRange(res);
 
-                
-
-            }   
-
-            return result;
+            return result.Distinct().ToList();
         }
 
         public int CreateSecurityRole(string Name, string Description, string access_token)
