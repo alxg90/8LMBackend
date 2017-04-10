@@ -870,7 +870,7 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<PromoProduct>(entity =>
             {
-                entity.HasIndex(e => e.UserId)
+                entity.HasIndex(e => e.SupplierId)
                     .HasName("FK_PromoProduct_UserID");
 
                 entity.Property(e => e.Id)
@@ -881,14 +881,13 @@ namespace _8LMBackend.DataAccess.Models
                     .IsRequired()
                     .HasColumnType("varchar(255)");
 
-                entity.Property(e => e.UserId)
-                    .HasColumnName("UserID")
+                entity.Property(e => e.SupplierId)
+                    .HasColumnName("SupplierID")
                     .HasColumnType("int(11)");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Supplier)
                     .WithMany(p => p.PromoProduct)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasForeignKey(d => d.SupplierId)
                     .HasConstraintName("FK_PromoProduct_UserID");
             });
 
