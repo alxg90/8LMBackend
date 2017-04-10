@@ -188,6 +188,7 @@ namespace _8LMCore.Controllers
 
                 _subscribeService.AcceptPayment(rel);
                 var userToken = _subscribeService.GetTokenByInvoice(rel.Invoice);
+                ViewBag.userToken = userToken;
                 return View();
             }
             catch(Exception ex)
