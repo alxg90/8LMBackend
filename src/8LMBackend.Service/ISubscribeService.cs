@@ -11,7 +11,7 @@ namespace _8LMBackend.Service
         void DeletePackage(int id);
         void UpdatePackage(Package package);
         _8LMBackend.DataAccess.Models.Service[] GetAllServices();
-        Invoice PrepareInvoice(int PackageID, string token, string ReferenceCode = null);
+        Invoice PrepareInvoice(int PackageID, string token = null, string ReferenceCode = null);
         void AcceptPayment(RelayAuthorizeNetresponse rel);
         Package GetPackageById(int Id);
         Package[] GetAllPackages();
@@ -25,5 +25,7 @@ namespace _8LMBackend.Service
         List<Package> GetUserPackages(int UserId);
         Subscription GetSubscriptionForPackage(int packageId, int userId);
         string GetTokenByInvoice(Invoice invoice);
+        List<Package> GetActivePackages();
+        Invoice AcceptGuestPayment(RelayAuthorizeNetresponse rel);
     }
 }

@@ -449,8 +449,6 @@ namespace _8LMBackend.DataAccess.Models
 
                 entity.Property(e => e.DurationInMonth).HasColumnType("int(11)");
 
-                entity.Property(e => e.IsActual).HasColumnType("int(11)");
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("varchar(255)");
@@ -460,6 +458,10 @@ namespace _8LMBackend.DataAccess.Models
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.Price).HasColumnType("int(11)");
+
+                entity.Property(e => e.StatusId)
+                    .HasColumnName("StatusID")
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.UserTypeId)
                     .HasColumnName("UserTypeID")

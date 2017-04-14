@@ -20,7 +20,7 @@ namespace _8LMBackend.Service
         }
         public void DeletePackage(int id){
             var package = DbContext.Package.FirstOrDefault(x => x.Id == id);
-            if(package.IsActual==null){
+            if(package.StatusId==1){
                 DbContext.PackageService.RemoveRange(DbContext.PackageService.Where(x=>x.PackageId==package.Id));
                 DbContext.Invoice.RemoveRange(DbContext.Invoice.Where(x => x.PackageId == package.Id));
                 DbContext.Subscription.RemoveRange(DbContext.Subscription.Where(x => x.PackageId == package.Id));
@@ -46,8 +46,8 @@ namespace _8LMBackend.Service
         } 
         public Invoice PrepareInvoice(int PackageID, string token, string ReferenceCode = null){
             var user = DbContext.UserToken.Where(p => p.Token == token).FirstOrDefault();
-            if (user == default(UserToken))
-                throw new Exception("Not authorized");
+            // if (user == default(UserToken))
+            //     throw new Exception("Not authorized");
 
             var invoice = new Invoice();
             var package = DbContext.Package.FirstOrDefault(x => x.Id == PackageID);
@@ -84,6 +84,19 @@ namespace _8LMBackend.Service
 
             DbContext.Subscription.Add(subsr);
             DbContext.SaveChanges();
+        }
+        public Invoice AcceptGuestPayment(RelayAuthorizeNetresponse rel){
+            var invoice = DbContext.Invoice.FirstOrDefault(x=>x.Id == rel.InvoiceId);
+            var user = new Users();
+            user.Login = rel.XEmail;
+            DbContext.Users.Add(user);     
+            DbContext.SaveChanges();
+
+            invoice.UserId = user.Id;
+            DbContext.Invoice.Update(invoice);
+            DbContext.SaveChanges();
+
+            return invoice;
         }
 
         public Users GetUserByToken(string token){
@@ -122,7 +135,7 @@ namespace _8LMBackend.Service
         }
         public void SetActive(int id, int setActual){
             var package = DbContext.Package.FirstOrDefault(x => x.Id == id);
-            package.IsActual = setActual;
+            package.StatusId = setActual;
             DbContext.Package.Update(package);
             DbContext.SaveChanges();
         }
@@ -146,6 +159,9 @@ namespace _8LMBackend.Service
         }      
         public string GetTokenByInvoice(Invoice invoice){
             return DbContext.UserToken.FirstOrDefault(x=>x.UserId == invoice.UserId).Token;
+        }
+        public List<Package> GetActivePackages(){
+            return DbContext.Package.Where(x=>x.StatusId == 2).ToList();
         }
     }
 }

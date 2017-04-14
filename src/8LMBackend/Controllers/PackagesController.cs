@@ -31,7 +31,7 @@ namespace _8LMCore.Controllers
                 pack.CurrencyId = package.Currency;
                 pack.Description = "empty";
                 pack.DurationInMonth = package.Duration;                
-                pack.IsActual = null;
+                pack.StatusId = 1;
                 pack.PaletteId = package.PaletteId;
                 pack.Price = package.Price;
                 pack.UserTypeId = user.TypeId; 
@@ -120,11 +120,25 @@ namespace _8LMCore.Controllers
                 throw ex;
             }
         }
+        public JsonResult PrepareGuestInvoice(int PackageID, string ReferenceCode = null){
+            try{
+                var invoice = _subscribeService.PrepareInvoice(PackageID, null, ReferenceCode);
+                var package = _subscribeService.GetPackageById(PackageID);
+                var customHash = new CustomHash();
+
+                return Json(new {InvoiceId = invoice.Id, invoice.AmountDue, HashCode = customHash.GetHashedString(((decimal)invoice.AmountDue / 100).ToString(), invoice.Id.ToString()), TimeStamp = customHash.ConvertToUnixTimestamp(DateTime.UtcNow).ToString()});
+            }
+            catch(Exception ex)
+            {
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);
+                throw ex;
+            }
+        }
         public JsonResult SetActive(int id, int setActual){
             try
             {
                 _subscribeService.SetActive(id, setActual);
-                return Json(new{status = "ok", message = "Package isActual was seted to" + setActual});
+                return Json(new{status = "ok", message = "Package StatusId was seted to" + setActual});
             }
             catch(Exception ex)
             {
@@ -139,7 +153,191 @@ namespace _8LMCore.Controllers
                     _8LMBackend.Logger.SaveLog(relDto.x_response_reason_text);
                     return Json(new{status = "fail", message = relDto.x_response_reason_text});
                 }
-                RelayAuthorizeNetresponse rel = new RelayAuthorizeNetresponse();
+                var rel = RelayDtoToNormal(relDto);
+                _subscribeService.AcceptPayment(rel);
+                var userToken = _subscribeService.GetTokenByInvoice(rel.Invoice);
+<<<<<<< Updated upstream
+                ViewBag.userToken = userToken;
+=======
+                
+                return View();
+            }
+            catch(Exception ex)
+            {
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);
+                return Json(new{status = "fail", message = ex.Message});
+            }            
+        }
+        public ActionResult AcceptGuestPayment(RelayAuthorizeNetresponseDto relDto){
+            try
+            {
+                if(relDto.x_response_code != 1){
+                    _8LMBackend.Logger.SaveLog(relDto.x_response_reason_text);
+                    return Json(new{status = "fail", message = relDto.x_response_reason_text});
+                }               
+
+                _subscribeService.AcceptGuestPayment(RelayDtoToNormal(relDto));
+>>>>>>> Stashed changes
+                return View();
+            }
+            catch(Exception ex)
+            {
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);
+                return Json(new{status = "fail", message = ex.Message});
+            }            
+        }
+        public PackageDto GetPackageById(int id){
+            try
+            {
+                return ToDtoPackage(_subscribeService.GetPackageById(id), _subscribeService.GetAllServices(), false);
+            }
+            catch (System.Exception ex)
+            {                
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);
+                throw new Exception(ex.Message);
+            }            
+        }
+        public List<PackageDto> GetAllPackages(string token){
+            try
+            {
+                var user = _subscribeService.GetUserByToken(token);
+                if(user!=null){
+                    var packages = _subscribeService.GetAllPackages();
+                    var services = GetAllServices();
+                    var packageDto = new List<PackageDto>();
+                    foreach (var item in packages)
+                    {
+                        packageDto.Add(ToDtoPackage(item, services, false));
+                    }
+                    return packageDto;
+                } else {
+                    throw new Exception("Invalid user");
+                }
+            }
+            catch (System.Exception ex)
+            {     
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);           
+                throw new Exception(ex.Message);
+            }            
+        }
+        public List<PackageDto> GetActivePackages(){
+            try
+            {
+                var packages = _subscribeService.GetActivePackages();
+                var services = GetAllServices();
+                var packageDto = new List<PackageDto>();        
+                foreach (var item in packages)
+                {      
+                    var pack = ToDtoPackage(item, services, true);
+                    packageDto.Add(pack);                  
+                }
+            return packageDto;
+            }
+            catch (System.Exception ex)
+            {
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);  
+                throw new Exception(ex.Message);
+            }
+        }
+        public List<PackageDto> GetUserPackages(string token){
+            try{
+            var user = _subscribeService.GetUserByToken(token);
+            var packages = _subscribeService.GetAllPackages();
+            var packageDto = new List<PackageDto>();            
+            var services = GetAllServices();
+            foreach (var item in packages)
+            {      
+                var pack = ToDtoPackage(item, services, true);   
+                var subscription = _subscribeService.GetSubscriptionForPackage(item.Id, user.Id);     
+                if(item.StatusId == 1){          
+                    if(subscription != null){
+                        pack.ValidTo = subscription.ExpirationDate;
+                    }                
+                    packageDto.Add(pack);  
+                } else {
+                    if(subscription != null){
+                        pack.ValidTo = subscription.ExpirationDate;
+                        packageDto.Add(pack);
+                    }                
+                }
+            }
+            
+            return packageDto;
+            }
+            catch(Exception ex)
+            {
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);
+                throw ex;
+            }
+        }
+        private PackageDto ToDtoPackage(Package item, Service[] services, bool isUser){
+            try{    
+                var dbPackageReferenceCodes = _subscribeService.GetPackageReferenceCodeById(item.Id);
+                var dbPackageReferenceExtendCodes = _subscribeService.GetPackageReferenceExtendCodeById(item.Id);
+                var dbPackageReferenceServiceCodes = _subscribeService.GetPackageReferenceServiceCodeById(item.Id);
+                var packageServices = _subscribeService.GetPackageServicesById(item.Id);
+                PackageDto pack = new PackageDto();
+                pack.Id = item.Id;
+                pack.Name = item.Name;
+                var servDto = new List<ServicesDto>();
+                foreach (var s in packageServices)
+                {
+                    servDto.Add(new ServicesDto(){
+                        Id = s.ServiceId,
+                        Name = services.FirstOrDefault(x => x.Id == s.ServiceId).Name
+                    });
+                }
+                pack.Services = servDto.ToArray();
+                pack.PaletteId = item.PaletteId;
+                pack.Duration = item.DurationInMonth;
+                pack.Price = item.Price;
+                pack.Currency = item.CurrencyId;
+                pack.StatusId = item.StatusId;
+
+                if(!isUser){
+                    var tempRefCode = new List<PackageReferenceCodeDto>();
+                    foreach (var packageReferenceCode in dbPackageReferenceCodes)
+                    {
+                        tempRefCode.Add(new PackageReferenceCodeDto(){
+                            PackageId = packageReferenceCode.PackageId,
+                            ReferenceCode = packageReferenceCode.ReferenceCode,
+                            IsFixed = packageReferenceCode.IsFixed,
+                            Value = packageReferenceCode.Value
+                        });
+                    }
+                    pack.PackageReferenceCode = tempRefCode.ToArray();
+                    var tempRefServCode = new List<PackageReferenceServiceCodeDto>();
+                    foreach (var packageReferenceServiceCode in item.PackageReferenceServiceCode)
+                    {
+                        tempRefServCode.Add(new PackageReferenceServiceCodeDto(){
+                            PackageId = packageReferenceServiceCode.PackageId,
+                            ReferenceCode = packageReferenceServiceCode.ReferenceCode,
+                            ServiceId = packageReferenceServiceCode.ServiceId,
+                            ServiceName = services.FirstOrDefault(x => x.Id == packageReferenceServiceCode.ServiceId).Name
+                        });
+                    }
+                    pack.PackageReferenceServiceCode = tempRefServCode.ToArray();
+                    var tempRefExtCode = new List<PackageReferenceExtendCodeDto>();
+                    foreach (PackageReferenceExtendCode packageReferenceExtendCode in dbPackageReferenceExtendCodes)
+                    {
+                        tempRefExtCode.Add(new PackageReferenceExtendCodeDto(){
+                            PackageId = packageReferenceExtendCode.PackageId,
+                            ReferenceCode = packageReferenceExtendCode.ReferenceCode,
+                            Months = packageReferenceExtendCode.Months
+                        });
+                    }
+                    pack.PackageReferenceExtendCode = tempRefExtCode.ToArray();
+                }
+                return pack;
+            }
+            catch(Exception ex)
+            {
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);
+                throw ex;
+            }
+        }
+        private RelayAuthorizeNetresponse RelayDtoToNormal(RelayAuthorizeNetresponseDto relDto){
+            RelayAuthorizeNetresponse rel = new RelayAuthorizeNetresponse();
                 rel.CreatedDate = DateTime.UtcNow;
                 rel.InvoiceId = Convert.ToInt32(relDto.x_invoice_num);
                 rel.XAccountNumber = relDto.x_account_number;
@@ -185,143 +383,7 @@ namespace _8LMCore.Controllers
                 rel.XTransId = relDto.x_trans_id;
                 rel.XType = relDto.x_type;
                 rel.XZip = relDto.x_zip;
-
-                _subscribeService.AcceptPayment(rel);
-                var userToken = _subscribeService.GetTokenByInvoice(rel.Invoice);
-                ViewBag.userToken = userToken;
-                return View();
-            }
-            catch(Exception ex)
-            {
-                _8LMBackend.Logger.SaveLog(ex.StackTrace);
-                return Json(new{status = "fail", message = ex.Message});
-            }            
-        }
-        public PackageDto GetPackageById(int id){
-            try
-            {
-                return ToDtoPackage(_subscribeService.GetPackageById(id), _subscribeService.GetAllServices(), false);
-            }
-            catch (System.Exception ex)
-            {                
-                _8LMBackend.Logger.SaveLog(ex.StackTrace);
-                throw new Exception(ex.Message);
-            }            
-        }
-        public List<PackageDto> GetAllPackages(){
-            try
-            {
-                var packages = _subscribeService.GetAllPackages();
-                var services = GetAllServices();
-                var packageDto = new List<PackageDto>();
-                foreach (var item in packages)
-                {
-                    packageDto.Add(ToDtoPackage(item, services, false));
-                }
-                return packageDto;
-            }
-            catch (System.Exception ex)
-            {     
-                _8LMBackend.Logger.SaveLog(ex.StackTrace);           
-                throw new Exception(ex.Message);
-            }            
-        }
-        public List<PackageDto> GetUserPackages(string token){
-            try{
-            var user = _subscribeService.GetUserByToken(token);
-            var packages = _subscribeService.GetAllPackages();
-            var packageDto = new List<PackageDto>();            
-            var services = GetAllServices();
-            foreach (var item in packages)
-            {      
-                var pack = ToDtoPackage(item, services, true);   
-                var subscription = _subscribeService.GetSubscriptionForPackage(item.Id, user.Id);     
-                if(item.IsActual == 1){          
-                    if(subscription != null){
-                        pack.ValidTo = subscription.ExpirationDate;
-                    }                
-                    packageDto.Add(pack);  
-                } else {
-                    if(subscription != null){
-                        pack.ValidTo = subscription.ExpirationDate;
-                        packageDto.Add(pack);
-                    }                
-                }
-            }
-            
-            return packageDto;
-            }
-            catch(Exception ex)
-            {
-                _8LMBackend.Logger.SaveLog(ex.StackTrace);
-                throw ex;
-            }
-        }
-        private PackageDto ToDtoPackage(Package item, Service[] services, bool isUser){
-            try{    
-                var dbPackageReferenceCodes = _subscribeService.GetPackageReferenceCodeById(item.Id);
-                var dbPackageReferenceExtendCodes = _subscribeService.GetPackageReferenceExtendCodeById(item.Id);
-                var dbPackageReferenceServiceCodes = _subscribeService.GetPackageReferenceServiceCodeById(item.Id);
-                var packageServices = _subscribeService.GetPackageServicesById(item.Id);
-                PackageDto pack = new PackageDto();
-                pack.Id = item.Id;
-                pack.Name = item.Name;
-                var servDto = new List<ServicesDto>();
-                foreach (var s in packageServices)
-                {
-                    servDto.Add(new ServicesDto(){
-                        Id = s.ServiceId,
-                        Name = services.FirstOrDefault(x => x.Id == s.ServiceId).Name
-                    });
-                }
-                pack.Services = servDto.ToArray();
-                pack.PaletteId = item.PaletteId;
-                pack.Duration = item.DurationInMonth;
-                pack.Price = item.Price;
-                pack.Currency = item.CurrencyId;
-                pack.IsActual = item.IsActual;
-
-                if(!isUser){
-                    var tempRefCode = new List<PackageReferenceCodeDto>();
-                    foreach (var packageReferenceCode in dbPackageReferenceCodes)
-                    {
-                        tempRefCode.Add(new PackageReferenceCodeDto(){
-                            PackageId = packageReferenceCode.PackageId,
-                            ReferenceCode = packageReferenceCode.ReferenceCode,
-                            IsFixed = packageReferenceCode.IsFixed,
-                            Value = packageReferenceCode.Value
-                        });
-                    }
-                    pack.PackageReferenceCode = tempRefCode.ToArray();
-                    var tempRefServCode = new List<PackageReferenceServiceCodeDto>();
-                    foreach (var packageReferenceServiceCode in item.PackageReferenceServiceCode)
-                    {
-                        tempRefServCode.Add(new PackageReferenceServiceCodeDto(){
-                            PackageId = packageReferenceServiceCode.PackageId,
-                            ReferenceCode = packageReferenceServiceCode.ReferenceCode,
-                            ServiceId = packageReferenceServiceCode.ServiceId,
-                            ServiceName = services.FirstOrDefault(x => x.Id == packageReferenceServiceCode.ServiceId).Name
-                        });
-                    }
-                    pack.PackageReferenceServiceCode = tempRefServCode.ToArray();
-                    var tempRefExtCode = new List<PackageReferenceExtendCodeDto>();
-                    foreach (PackageReferenceExtendCode packageReferenceExtendCode in dbPackageReferenceExtendCodes)
-                    {
-                        tempRefExtCode.Add(new PackageReferenceExtendCodeDto(){
-                            PackageId = packageReferenceExtendCode.PackageId,
-                            ReferenceCode = packageReferenceExtendCode.ReferenceCode,
-                            Months = packageReferenceExtendCode.Months
-                        });
-                    }
-                    pack.PackageReferenceExtendCode = tempRefExtCode.ToArray();
-                }
-                return pack;
-            }
-            catch(Exception ex)
-            {
-                _8LMBackend.Logger.SaveLog(ex.StackTrace);
-                throw ex;
-            }
+                return rel;
         }
     }
 }

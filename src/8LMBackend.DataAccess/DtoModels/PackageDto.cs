@@ -17,7 +17,7 @@ namespace _8LMBackend.DataAccess.DtoModels
         public int Duration { get; set; }
         public int Price { get; set; }
         public int Currency { get; set; }
-        public int? IsActual { get; set; }
+        public int? StatusId { get; set; }
         public PackageReferenceCodeDto[] PackageReferenceCode { get; set; }
         public PackageReferenceExtendCodeDto[] PackageReferenceExtendCode { get; set; }
         public PackageReferenceServiceCodeDto[]  PackageReferenceServiceCode { get; set; }

@@ -21,10 +21,10 @@ namespace _8LMBackend.DataAccess.Models
         public int CurrencyId { get; set; }
         public string Description { get; set; }
         public int DurationInMonth { get; set; }
-        public int? IsActual { get; set; }
         public string Name { get; set; }
         public int PaletteId { get; set; }
         public int Price { get; set; }
+        public int StatusId { get; set; }
         public int UserTypeId { get; set; }
 
         public virtual ICollection<Invoice> Invoice { get; set; }
