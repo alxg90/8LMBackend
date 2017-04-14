@@ -156,9 +156,7 @@ namespace _8LMCore.Controllers
                 var rel = RelayDtoToNormal(relDto);
                 _subscribeService.AcceptPayment(rel);
                 var userToken = _subscribeService.GetTokenByInvoice(rel.Invoice);
-<<<<<<< Updated upstream
                 ViewBag.userToken = userToken;
-=======
                 
                 return View();
             }
@@ -177,7 +175,6 @@ namespace _8LMCore.Controllers
                 }               
 
                 _subscribeService.AcceptGuestPayment(RelayDtoToNormal(relDto));
->>>>>>> Stashed changes
                 return View();
             }
             catch(Exception ex)
