@@ -404,16 +404,17 @@ namespace _8LMCore.Controllers
         // 3. Create record in AuthprizeNETCustomerProfile table
             await _subscribeService.SaveCustomerProfile(userId, transactionID);
         }
-        // void CreateTransaction(Invoice invoiceID)
-        // {
+        public void CreateTransaction(int invoiceId)
+         {
         // 1. GET customerProfileId, customerPaymentProfileId, Amount based on Invoice
-
+            var authProfile = _subscribeService.GetAuthProfileByInvoice(invoiceId);
         // 2. SEND POST REQUEST TO createTransactionRequest
+            _subscribeService.СreateTransactionRequest(authProfile.CustomerProfileId, authProfile.PaymentProfileId, invoiceId);
 
         // 3. Insert record into AuthorizeNETTransaction table
 
         // 4. Update Invoice table
-        // }
+        }
 
         // void CaptureTransaction(Invoice invoiceID)
         // {

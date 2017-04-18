@@ -30,5 +30,7 @@ namespace _8LMBackend.Service
         List<Package> GetActivePackages();
         Invoice AcceptGuestPayment(RelayAuthorizeNetresponse rel);
         Task SaveCustomerProfile(int? userId, long transactionID);
+        Task СreateTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId);
+        AuthorizeNetcustomerProfile GetAuthProfileByInvoice(int invoiceId);
     }
 }

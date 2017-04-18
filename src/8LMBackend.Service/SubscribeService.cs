@@ -179,7 +179,7 @@ namespace _8LMBackend.Service
             return DbContext.Package.Where(x=>x.StatusId == 2).ToList();
         }
         public async Task SaveCustomerProfile(int? userId, long transactionID){
-            var content = new JsonContent(new{createCustomerProfileFromTransactionRequest = new{merchantAuthentication = new{ name = "6k39MQtr", transactionKey = "76b2k9F8P55nWmHt"}, transId = "60022131960"}});
+            var content = new JsonContent(new{createCustomerProfileFromTransactionRequest = new{merchantAuthentication = new{ name = "6k39MQtr", transactionKey = "76b2k9F8P55nWmHt"}, transId = transactionID.ToString()}});
 
             var requestTask = client.PostAsync("https://apitest.authorize.net/xml/v1/request.api", content);
 
@@ -191,7 +191,7 @@ namespace _8LMBackend.Service
                     CustomerProfileResponseDto responseFromApi = JsonConvert.DeserializeObject<CustomerProfileResponseDto>(responseString);
 
                     AuthorizeNetcustomerProfile authProfile = new AuthorizeNetcustomerProfile();
-                    authProfile.CreatedDate = DateTime.Now;
+                    authProfile.CreatedDate = DateTime.UtcNow;
                     authProfile.CustomerProfileId = responseFromApi.customerProfileId;
                     authProfile.UserId = userId.Value;
                     authProfile.PaymentProfileId = responseFromApi.customerPaymentProfileIdList[0] != null ? responseFromApi.customerPaymentProfileIdList[0] : 0;
@@ -199,6 +199,59 @@ namespace _8LMBackend.Service
                     context.SaveChanges();
                 }
             });
+        }
+        public async Task СreateTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId){
+            var amountDue = DbContext.Invoice.FirstOrDefault(x => x.Id == invoiceId).AmountDue;
+            var content = new JsonContent(
+                new{createTransactionRequest = 
+                    new{merchantAuthentication = 
+                        new{ name = "6k39MQtr",
+                             transactionKey = "76b2k9F8P55nWmHt"}, 
+                    transactionRequest = new{
+                        transactionType = "authCaptureTransaction",
+                        amount = amountDue,
+                        profile = new{
+                            customerProfileId = customerProfileId.ToString(),
+                            paymentProfile = new{
+                                paymentProfileId = paymentProfileId.ToString()
+                            }
+                        },
+                        order = new{
+                            invoiceNumber = invoiceId.ToString()
+                        }
+                    }
+                    }});
+
+            var requestTask = client.PostAsync("https://apitest.authorize.net/xml/v1/request.api", content);
+
+            await requestTask.ContinueWith(t =>
+            {
+                using(var context = new DashboardDbContext())
+                {
+                    var responseString = t.Result.Content.ReadAsStringAsync().Result;
+                    CreateTransactionResponseDto responseFromApi = JsonConvert.DeserializeObject<CreateTransactionResponseDto>(responseString);
+
+                    AuthorizeNettransaction authNet = new AuthorizeNettransaction();
+                    authNet.InvoiceId = invoiceId;
+                    authNet.MerchantName = "6k39MQtr";
+                    authNet.MerchantTransactionKey = "76b2k9F8P55nWmHt";
+                    authNet.CustomerProfileId = customerProfileId;
+                    authNet.PaymentProfileId = paymentProfileId;
+                    authNet.TransactionType = "hz";
+                    authNet.Amount = amountDue;
+                    authNet.Description = responseFromApi.transactionResponse.messages.description;
+                    authNet.CreatedDate = DateTime.UtcNow;
+                    authNet.ResponseResultCode = responseFromApi.messages.resultCode;
+                    // authNet.ResponseCode = responseFromApi.transactionResponse.responseCode;
+                    //authNet.ResponseText = responseFromApi.messages.message.Contains("text").ToString();
+                    context.AuthorizeNettransaction.Add(authNet);
+                    context.SaveChanges();
+                }
+            });
+        }
+        public AuthorizeNetcustomerProfile GetAuthProfileByInvoice(int invoiceId){
+            var invoice = DbContext.Invoice.FirstOrDefault( y=> y.Id == invoiceId);
+            return DbContext.AuthorizeNetcustomerProfile.FirstOrDefault(x => x.UserId == invoice.UserId);
         }
     }
 }
