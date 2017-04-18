@@ -7,6 +7,7 @@ namespace _8LMBackend.DataAccess.Models
     {
         public Invoice()
         {
+            AuthorizeNettransaction = new HashSet<AuthorizeNettransaction>();
             RelayAuthorizeNetresponse = new HashSet<RelayAuthorizeNetresponse>();
         }
 
@@ -19,10 +20,10 @@ namespace _8LMBackend.DataAccess.Models
         public string ReferenceCode { get; set; }
         public bool? StatusId { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
 
+        public virtual ICollection<AuthorizeNettransaction> AuthorizeNettransaction { get; set; }
         public virtual ICollection<RelayAuthorizeNetresponse> RelayAuthorizeNetresponse { get; set; }
         public virtual Package Package { get; set; }
-        public virtual Users User { get; set; }
     }
 }

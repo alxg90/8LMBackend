@@ -5,6 +5,12 @@ using _8LMBackend.Service.ViewModels;
 using _8LMBackend.DataAccess.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using _8LMBackend.DataAccess.Models;
+using _8LMBackend.DataAccess.DtoModels;
+using System.Net.Http;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace _8LMBackend.Service
 {
@@ -14,6 +20,7 @@ namespace _8LMBackend.Service
 			: base(dbFactory) 
 		{
 		}
+        private static readonly HttpClient client = new HttpClient();
         public void SavePackage(Package package){
             DbContext.Package.Add(package);
             DbContext.SaveChanges();
@@ -51,7 +58,11 @@ namespace _8LMBackend.Service
 
             var invoice = new Invoice();
             var package = DbContext.Package.FirstOrDefault(x => x.Id == PackageID);
-            invoice.UserId = user.UserId;
+            if(user == null){
+                invoice.UserId = null;
+            }else{
+                invoice.UserId = user.UserId;
+            }            
             invoice.Amount = package.Price;
             invoice.PackageId = PackageID;
             
@@ -74,7 +85,7 @@ namespace _8LMBackend.Service
             var invoice = DbContext.Invoice.FirstOrDefault(x=>x.Id == rel.InvoiceId);
             var package = DbContext.Package.FirstOrDefault(x=>x.Id == invoice.PackageId);
             var subsr = new Subscription();
-            subsr.UserId = invoice.UserId;
+            subsr.UserId = invoice.UserId.Value;
             subsr.CreatedDate = DateTime.UtcNow;
             subsr.EffectiveDate = DateTime.UtcNow;
             subsr.ExpirationDate = subsr.EffectiveDate.AddMonths(package.DurationInMonth);
@@ -89,6 +100,10 @@ namespace _8LMBackend.Service
             var invoice = DbContext.Invoice.FirstOrDefault(x=>x.Id == rel.InvoiceId);
             var user = new Users();
             user.Login = rel.XEmail;
+            user.TypeId = 1;
+            user.StatusId = 1;
+            user.CreatedDate = DateTime.UtcNow;
+            user.CreatedBy = 1;
             DbContext.Users.Add(user);     
             DbContext.SaveChanges();
 
@@ -162,6 +177,28 @@ namespace _8LMBackend.Service
         }
         public List<Package> GetActivePackages(){
             return DbContext.Package.Where(x=>x.StatusId == 2).ToList();
+        }
+        public async Task SaveCustomerProfile(int? userId, long transactionID){
+            var content = new JsonContent(new{createCustomerProfileFromTransactionRequest = new{merchantAuthentication = new{ name = "6k39MQtr", transactionKey = "76b2k9F8P55nWmHt"}, transId = "60022131960"}});
+
+            var requestTask = client.PostAsync("https://apitest.authorize.net/xml/v1/request.api", content);
+
+            await requestTask.ContinueWith(t =>
+            {
+                using(var context = new DashboardDbContext())
+                {
+                    var responseString = t.Result.Content.ReadAsStringAsync().Result;
+                    CustomerProfileResponseDto responseFromApi = JsonConvert.DeserializeObject<CustomerProfileResponseDto>(responseString);
+
+                    AuthorizeNetcustomerProfile authProfile = new AuthorizeNetcustomerProfile();
+                    authProfile.CreatedDate = DateTime.Now;
+                    authProfile.CustomerProfileId = responseFromApi.customerProfileId;
+                    authProfile.UserId = userId.Value;
+                    authProfile.PaymentProfileId = responseFromApi.customerPaymentProfileIdList[0] != null ? responseFromApi.customerPaymentProfileIdList[0] : 0;
+                    context.AuthorizeNetcustomerProfile.Add(authProfile);
+                    context.SaveChanges();
+                }
+            });
         }
     }
 }

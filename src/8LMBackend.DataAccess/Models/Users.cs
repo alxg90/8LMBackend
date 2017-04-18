@@ -7,11 +7,11 @@ namespace _8LMBackend.DataAccess.Models
     {
         public Users()
         {
+            AuthorizeNetcustomerProfile = new HashSet<AuthorizeNetcustomerProfile>();
             Campaign = new HashSet<Campaign>();
             CampaignCategory = new HashSet<CampaignCategory>();
             CampaignShareCreatedByNavigation = new HashSet<CampaignShare>();
             CampaignShareUser = new HashSet<CampaignShare>();
-            Invoice = new HashSet<Invoice>();
             Package = new HashSet<Package>();
             PackagePrice = new HashSet<PackagePrice>();
             Pages = new HashSet<Pages>();
@@ -37,11 +37,11 @@ namespace _8LMBackend.DataAccess.Models
         public int StatusId { get; set; }
         public int TypeId { get; set; }
 
+        public virtual ICollection<AuthorizeNetcustomerProfile> AuthorizeNetcustomerProfile { get; set; }
         public virtual ICollection<Campaign> Campaign { get; set; }
         public virtual ICollection<CampaignCategory> CampaignCategory { get; set; }
         public virtual ICollection<CampaignShare> CampaignShareCreatedByNavigation { get; set; }
         public virtual ICollection<CampaignShare> CampaignShareUser { get; set; }
-        public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<Package> Package { get; set; }
         public virtual ICollection<PackagePrice> PackagePrice { get; set; }
         public virtual ICollection<Pages> Pages { get; set; }

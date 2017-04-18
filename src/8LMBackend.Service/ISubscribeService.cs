@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using _8LMBackend.Service.ViewModels;
 using _8LMBackend.DataAccess.Models;
+using _8LMBackend.DataAccess.DtoModels;
 using System;
+using System.Threading.Tasks;
 
 namespace _8LMBackend.Service
 {
@@ -27,5 +29,6 @@ namespace _8LMBackend.Service
         string GetTokenByInvoice(Invoice invoice);
         List<Package> GetActivePackages();
         Invoice AcceptGuestPayment(RelayAuthorizeNetresponse rel);
+        Task SaveCustomerProfile(int? userId, long transactionID);
     }
 }

@@ -6,6 +6,8 @@ namespace _8LMBackend.DataAccess.Models
 {
     public partial class DashboardDbContext : DbContext
     {
+        public virtual DbSet<AuthorizeNetcustomerProfile> AuthorizeNetcustomerProfile { get; set; }
+        public virtual DbSet<AuthorizeNettransaction> AuthorizeNettransaction { get; set; }
         public virtual DbSet<Campaign> Campaign { get; set; }
         public virtual DbSet<CampaignCategory> CampaignCategory { get; set; }
         public virtual DbSet<CampaignShare> CampaignShare { get; set; }
@@ -56,11 +58,161 @@ namespace _8LMBackend.DataAccess.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-            optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_development;sslmode=none;");
+            optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=cbyrjgf3/4;port=3306;database=ELMDev;sslmode=none;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AuthorizeNetcustomerProfile>(entity =>
+            {
+                entity.HasKey(e => e.CustomerProfileId)
+                    .HasName("PK_AuthorizeNETCustomerProfile");
+
+                entity.ToTable("AuthorizeNETCustomerProfile");
+
+                entity.HasIndex(e => e.UserId)
+                    .HasName("FK_AuthorizeNETCustomerProfile_UserID");
+
+                entity.Property(e => e.CustomerProfileId)
+                    .HasColumnName("CustomerProfileID")
+                    .HasColumnType("bigint(20)");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.PaymentProfileId)
+                    .HasColumnName("PaymentProfileID")
+                    .HasColumnType("bigint(20)");
+
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AuthorizeNetcustomerProfile)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_AuthorizeNETCustomerProfile_UserID");
+            });
+
+            modelBuilder.Entity<AuthorizeNettransaction>(entity =>
+            {
+                entity.ToTable("AuthorizeNETTransaction");
+
+                entity.HasIndex(e => e.CustomerProfileId)
+                    .HasName("FK_AuthorizeNETTransaction_CustomerProfileID");
+
+                entity.HasIndex(e => e.InvoiceId)
+                    .HasName("FK_AuthorizeNETTransaction_InvoiceID");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("bigint(20)");
+
+                entity.Property(e => e.Amount).HasColumnType("int(11)");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CustomerProfileId)
+                    .HasColumnName("CustomerProfileID")
+                    .HasColumnType("bigint(20)");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.InvoiceId)
+                    .HasColumnName("InvoiceID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.MerchantName)
+                    .IsRequired()
+                    .HasColumnType("varchar(32)");
+
+                entity.Property(e => e.MerchantTransactionKey)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.PaymentProfileId)
+                    .HasColumnName("PaymentProfileID")
+                    .HasColumnType("bigint(20)");
+
+                entity.Property(e => e.ResponseCode).HasColumnType("varchar(32)");
+
+                entity.Property(e => e.ResponseResultCode).HasColumnType("varchar(32)");
+
+                entity.Property(e => e.ResponseText).HasColumnType("varchar(32)");
+
+                entity.Property(e => e.TransactionResponseAccountNumber)
+                    .HasColumnName("transactionResponseAccountNumber")
+                    .HasColumnType("varchar(32)");
+
+                entity.Property(e => e.TransactionResponseAccountType)
+                    .HasColumnName("transactionResponseAccountType")
+                    .HasColumnType("varchar(32)");
+
+                entity.Property(e => e.TransactionResponseAuthCode)
+                    .HasColumnName("transactionResponseAuthCode")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.TransactionResponseAvsresultCode)
+                    .HasColumnName("transactionResponseAVSResultCode")
+                    .HasColumnType("varchar(32)");
+
+                entity.Property(e => e.TransactionResponseCavvresultCode)
+                    .HasColumnName("transactionResponseCAVVResultCode")
+                    .HasColumnType("varchar(32)");
+
+                entity.Property(e => e.TransactionResponseCvvresultCode)
+                    .HasColumnName("transactionResponseCVVResultCode")
+                    .HasColumnType("varchar(32)");
+
+                entity.Property(e => e.TransactionResponseMessageCode)
+                    .HasColumnName("transactionResponseMessageCode")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.TransactionResponseMessageDescription)
+                    .HasColumnName("transactionResponseMessageDescription")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.TransactionResponseRefTransId)
+                    .HasColumnName("transactionResponseRefTransID")
+                    .HasColumnType("varchar(32)");
+
+                entity.Property(e => e.TransactionResponseResponseCode)
+                    .HasColumnName("transactionResponseResponseCode")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.TransactionResponseTestRequest)
+                    .HasColumnName("transactionResponseTestRequest")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.TransactionResponseTransHash)
+                    .HasColumnName("transactionResponseTransHash")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.TransactionResponseTransId)
+                    .HasColumnName("transactionResponseTransID")
+                    .HasColumnType("mediumtext");
+
+                entity.Property(e => e.TransactionType)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.CustomerProfile)
+                    .WithMany(p => p.AuthorizeNettransaction)
+                    .HasForeignKey(d => d.CustomerProfileId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_AuthorizeNETTransaction_CustomerProfileID");
+
+                entity.HasOne(d => d.Invoice)
+                    .WithMany(p => p.AuthorizeNettransaction)
+                    .HasForeignKey(d => d.InvoiceId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_AuthorizeNETTransaction_InvoiceID");
+            });
+
             modelBuilder.Entity<Campaign>(entity =>
             {
                 entity.HasIndex(e => e.CategoryId)
@@ -372,9 +524,6 @@ namespace _8LMBackend.DataAccess.Models
                 entity.HasIndex(e => e.PackageId)
                     .HasName("FK_Invoice_PackageID");
 
-                entity.HasIndex(e => e.UserId)
-                    .HasName("FK_Invoice_UserID");
-
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .HasColumnType("int(11)");
@@ -408,12 +557,6 @@ namespace _8LMBackend.DataAccess.Models
                     .HasForeignKey(d => d.PackageId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_Invoice_PackageID");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Invoice)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_Invoice_UserID");
             });
 
             modelBuilder.Entity<Package>(entity =>

@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Newtonsoft.Json;
 using System;
+using System.Net.Http;
+using System.Net;
+using System.Text;
+
 namespace _8LMCore.Controllers
 {
     public class PackagesController : Controller
@@ -174,7 +178,8 @@ namespace _8LMCore.Controllers
                     return Json(new{status = "fail", message = relDto.x_response_reason_text});
                 }               
 
-                _subscribeService.AcceptGuestPayment(RelayDtoToNormal(relDto));
+                var invoice = _subscribeService.AcceptGuestPayment(RelayDtoToNormal(relDto));
+                CreateCustomerProfileFromTransaction( invoice.UserId.Value, relDto.x_trans_id);
                 return View();
             }
             catch(Exception ex)
@@ -382,5 +387,43 @@ namespace _8LMCore.Controllers
                 rel.XZip = relDto.x_zip;
                 return rel;
         }
+        public async void CreateCustomerProfileFromTransaction(int userId, long transactionID)
+        {
+        // 1. SEND POST REQUEST TO CreateCustomerProfileFromTransactionRequest
+        // <?xml version="1.0" encoding="utf-8"?>
+        // <createCustomerProfileFromTransactionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">
+        // <merchantAuthentication>
+        // <name>API_LOGIN_ID</name>
+        // <transactionKey>API_TRANSACTION_KEY</transactionKey>
+        // </merchantAuthentication>
+        // <transId>{{{transactionID}}}</transId>
+        // </createCustomerProfileFromTransactionRequest>
+
+
+        // 2. GET customerProfileId AND customerPaymentProfileId
+
+        // 3. Create record in AuthprizeNETCustomerProfile table
+            await _subscribeService.SaveCustomerProfile(userId, transactionID);
+        }
+        // void CreateTransaction(Invoice invoiceID)
+        // {
+        // 1. GET customerProfileId, customerPaymentProfileId, Amount based on Invoice
+
+        // 2. SEND POST REQUEST TO createTransactionRequest
+
+        // 3. Insert record into AuthorizeNETTransaction table
+
+        // 4. Update Invoice table
+        // }
+
+        // void CaptureTransaction(Invoice invoiceID)
+        // {
+        // 1. GET TransactionID and Amount based on Invoice //Check that transaction is not captured
+        // 2. SEND POST REQUEST TO createTransactionRequest
+        // 3. Update AuthorizeNETTransaction table
+        // 4. Update Invoice table
+
+        // }
+
     }
 }
