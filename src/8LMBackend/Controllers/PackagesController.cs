@@ -177,7 +177,6 @@ namespace _8LMCore.Controllers
                     _8LMBackend.Logger.SaveLog(relDto.x_response_reason_text);
                     return Json(new{status = "fail", message = relDto.x_response_reason_text});
                 }               
-
                 var invoice = _subscribeService.AcceptGuestPayment(RelayDtoToNormal(relDto));
                 CreateCustomerProfileFromTransaction( invoice.UserId.Value, relDto.x_trans_id);
                 return View();
@@ -424,6 +423,5 @@ namespace _8LMCore.Controllers
         // 4. Update Invoice table
 
         // }
-
     }
 }
