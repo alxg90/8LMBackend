@@ -171,21 +171,13 @@ namespace _8LMCore.Controllers
             }            
         }
         public ActionResult AcceptGuestPayment(RelayAuthorizeNetresponseDto relDto){
-            try
-            {
                 if(relDto.x_response_code != 1){
                     _8LMBackend.Logger.SaveLog(relDto.x_response_reason_text);
                     return Json(new{status = "fail", message = relDto.x_response_reason_text});
                 }               
                 var invoice = _subscribeService.AcceptGuestPayment(RelayDtoToNormal(relDto));
                 CreateCustomerProfileFromTransaction( invoice.UserId.Value, relDto.x_trans_id);
-                return View();
-            }
-            catch(Exception ex)
-            {
-                _8LMBackend.Logger.SaveLog(ex.StackTrace);
-                return Json(new{status = "fail", message = ex.Message});
-            }            
+                return View();          
         }
         public PackageDto GetPackageById(int id){
             try
