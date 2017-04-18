@@ -242,8 +242,22 @@ namespace _8LMBackend.Service
                     authNet.Description = responseFromApi.transactionResponse.messages.description;
                     authNet.CreatedDate = DateTime.UtcNow;
                     authNet.ResponseResultCode = responseFromApi.messages.resultCode;
-                    // authNet.ResponseCode = responseFromApi.transactionResponse.responseCode;
-                    //authNet.ResponseText = responseFromApi.messages.message.Contains("text").ToString();
+                    authNet.ResponseCode = null;
+                    authNet.ResponseText = responseFromApi.messages.message[0]["text"];
+                    authNet.TransactionResponseResponseCode = responseFromApi.transactionResponse.responseCode;
+                    authNet.TransactionResponseAuthCode = responseFromApi.transactionResponse.authCode;
+                    authNet.TransactionResponseAvsresultCode = responseFromApi.transactionResponse.avsResultCode;
+                    authNet.TransactionResponseCvvresultCode = responseFromApi.transactionResponse.cvvResultCode;
+                    authNet.TransactionResponseCavvresultCode = responseFromApi.transactionResponse.cavvResultCode;
+                    authNet.TransactionResponseTransId = responseFromApi.transactionResponse.transId;
+                    authNet.TransactionResponseRefTransId = responseFromApi.transactionResponse.refTransID;
+                    authNet.TransactionResponseTransHash = responseFromApi.transactionResponse.transHash;
+                    authNet.TransactionResponseTestRequest = responseFromApi.transactionResponse.testRequest;
+                    authNet.TransactionResponseAccountNumber = responseFromApi.transactionResponse.accountNumber;
+                    authNet.TransactionResponseAccountType = responseFromApi.transactionResponse.accountType;
+                    authNet.TransactionResponseMessageCode = responseFromApi.transactionResponse.messages.code;
+                    authNet.TransactionResponseMessageDescription = responseFromApi.transactionResponse.messages.description;
+                    
                     context.AuthorizeNettransaction.Add(authNet);
                     context.SaveChanges();
                 }

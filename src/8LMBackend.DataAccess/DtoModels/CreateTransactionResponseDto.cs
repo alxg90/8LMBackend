@@ -14,7 +14,7 @@ namespace _8LMBackend.DataAccess.DtoModels
         public MessagesDto messages { get; set; }
     }
     public class TransMessagesDto{
-        public string code { get; set; }
+        public int? code { get; set; }
         public string description { get; set; }                                       
     }
     public class TransProfileDto{
@@ -23,14 +23,14 @@ namespace _8LMBackend.DataAccess.DtoModels
     }
     public class TransResposneDto{
         public int? responseCode { get; set; }
-        public string authCode { get; set; }
+        public int? authCode { get; set; }
         public string avsResultCode { get; set; }
         public string cvvResultCode { get; set; }
         public string cavvResultCode { get; set; }
         public string transId { get; set; }
         public string refTransID { get; set; }
         public string transHash { get; set; }
-        public string testRequest { get; set; }
+        public int? testRequest { get; set; }
         public string accountNumber { get; set; }
         public string accountType { get; set; }
         public TransMessagesDto messages { get; set; }
