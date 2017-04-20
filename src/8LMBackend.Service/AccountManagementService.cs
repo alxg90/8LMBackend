@@ -5,6 +5,7 @@ using _8LMBackend.Service.ViewModels;
 using _8LMBackend.DataAccess.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using _8LMBackend.DataAccess.Models;
+using _8LMBackend.DataAccess.DtoModels;
 
 namespace _8LMBackend.Service
 {
@@ -257,6 +258,9 @@ namespace _8LMBackend.Service
         public List<int> GetFunctionsForUser(string access_token)
         {
             var userId = GetUserID(access_token);
+            if(DbContext.Users.FirstOrDefault(x => x.Id == userId).Type.Id == Types.Users.Admin){
+                return DbContext.SecurityFunction.Select(sf => sf.Id).ToList();
+            }
             var result = DbContext.UserRole.Where(p => p.UserId == userId)
                 .Include(p => p.Role)
                 .Join(DbContext.RoleFunction, p => p.RoleId, rf => rf.RoleId, (p, rf) => rf.FunctionId)
@@ -264,7 +268,7 @@ namespace _8LMBackend.Service
 
             var res = DbContext.Subscription
                         .Where(p => p.UserId == userId 
-                            && p.StatusId == 1 
+                            && p.StatusId == Statuses.Subscription.Active 
                             && p.EffectiveDate <= DateTime.UtcNow
                             && p.ExpirationDate >= DateTime.UtcNow)
                         .Join(DbContext.PackageService, s => s.PackageId, ps => ps.PackageId, (s, ps) => ps)

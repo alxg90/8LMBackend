@@ -33,5 +33,7 @@ namespace _8LMBackend.Service
         Task СreateTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId);
         Task СaptureTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId);
         AuthorizeNetcustomerProfile GetAuthProfileByInvoice(int invoiceId);
+        PackageRatePlan SavePackageRatePlan(PackageRatePlan packRatePlan);
+        PackageRatePlan GetPackageRatePlanByPackageID(int packageId);
     }
 }

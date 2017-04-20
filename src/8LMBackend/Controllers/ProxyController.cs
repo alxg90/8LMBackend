@@ -30,7 +30,7 @@ namespace _8LMCore.Controllers
                 stats.ControlId = controlId.Substring(0, 16);
                 stats.CreatedDate = DateTime.Now;
                 stats.PageId = pageId;
-                stats.Ip = remoteIpAddress.ToString();
+                //stats.Ip = remoteIpAddress.ToString();
                 _proxyService.UpdateStatistic(stats);
                 _proxyService.SaveDBChanges();
                 return Redirect(url);
@@ -51,7 +51,7 @@ namespace _8LMCore.Controllers
                 stats.PageId = pageId;
                 stats.IsLoad = isLoad;
                 stats.CreatedDate = DateTime.Now;
-                stats.Ip = remoteIpAddress.ToString();
+                //stats.Ip = remoteIpAddress.ToString();
                 _proxyService.UpdateStatistic(stats);
                 _proxyService.SaveDBChanges();
             }

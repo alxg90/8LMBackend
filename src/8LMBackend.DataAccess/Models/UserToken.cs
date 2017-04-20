@@ -14,7 +14,7 @@ namespace _8LMBackend.DataAccess.Models
         public int UserId { get; set; }
 
         public virtual Users CreatedByNavigation { get; set; }
-        public virtual UserTokenStatus Status { get; set; }
+        public virtual EntityStatus Status { get; set; }
         public virtual Users User { get; set; }
     }
 }

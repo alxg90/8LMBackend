@@ -7,8 +7,7 @@ namespace _8LMBackend.DataAccess.Models
     {
         public Currency()
         {
-            Package = new HashSet<Package>();
-            PackagePrice = new HashSet<PackagePrice>();
+            PackageRatePlan = new HashSet<PackageRatePlan>();
         }
 
         public int Id { get; set; }
@@ -16,7 +15,6 @@ namespace _8LMBackend.DataAccess.Models
         public string Mark { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Package> Package { get; set; }
-        public virtual ICollection<PackagePrice> PackagePrice { get; set; }
+        public virtual ICollection<PackageRatePlan> PackageRatePlan { get; set; }
     }
 }

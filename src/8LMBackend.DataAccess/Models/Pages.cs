@@ -28,7 +28,7 @@ namespace _8LMBackend.DataAccess.Models
         public virtual ICollection<PageStatistic> PageStatistic { get; set; }
         public virtual ICollection<PageTag> PageTag { get; set; }
         public virtual Users CreatedByNavigation { get; set; }
-        public virtual PageStatus Status { get; set; }
-        public virtual PageType Type { get; set; }
+        public virtual EntityStatus Status { get; set; }
+        public virtual EntityType Type { get; set; }
     }
 }

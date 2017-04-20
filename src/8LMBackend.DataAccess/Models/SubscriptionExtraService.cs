@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
-    public partial class ServiceFunction
+    public partial class SubscriptionExtraService
     {
+        public int SubscriptionId { get; set; }
         public int ServiceId { get; set; }
-        public int SecurityFunctionId { get; set; }
 
-        public virtual SecurityFunction SecurityFunction { get; set; }
         public virtual Service Service { get; set; }
+        public virtual Subscription Subscription { get; set; }
     }
 }

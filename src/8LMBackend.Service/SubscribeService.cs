@@ -27,13 +27,13 @@ namespace _8LMBackend.Service
         }
         public void DeletePackage(int id){
             var package = DbContext.Package.FirstOrDefault(x => x.Id == id);
-            if(package.StatusId==1){
+            if(package.StatusId==Statuses.Package.New){
                 DbContext.PackageService.RemoveRange(DbContext.PackageService.Where(x=>x.PackageId==package.Id));
                 DbContext.Invoice.RemoveRange(DbContext.Invoice.Where(x => x.PackageId == package.Id));
                 DbContext.Subscription.RemoveRange(DbContext.Subscription.Where(x => x.PackageId == package.Id));
-                DbContext.PackageReferenceCode.RemoveRange(DbContext.PackageReferenceCode.Where(x => x.PackageId == package.Id));
-                DbContext.PackageReferenceExtendCode.RemoveRange(DbContext.PackageReferenceExtendCode.Where(x => x.PackageId == package.Id));
-                DbContext.PackageReferenceServiceCode.RemoveRange(DbContext.PackageReferenceServiceCode.Where(x => x.PackageId == package.Id));
+                DbContext.PackageReferenceCode.RemoveRange(DbContext.PackageReferenceCode.Where(x => x.PackageRatePlan.PackageId == package.Id));
+                DbContext.PackageReferenceExtendCode.RemoveRange(DbContext.PackageReferenceExtendCode.Where(x => x.PackageRatePlan.PackageId == package.Id));
+                DbContext.PackageReferenceServiceCode.RemoveRange(DbContext.PackageReferenceServiceCode.Where(x => x.PackageRatePlan.PackageId == package.Id));
                 DbContext.Package.Remove(package);
                 DbContext.SaveChanges();
             }
@@ -57,22 +57,23 @@ namespace _8LMBackend.Service
             //     throw new Exception("Not authorized");
 
             var invoice = new Invoice();
-            var package = DbContext.Package.FirstOrDefault(x => x.Id == PackageID);
-            invoice.Amount = package.Price;
+            var packageRatePlan = DbContext.PackageRatePlan.FirstOrDefault(x => x.PackageId == PackageID);
+            invoice.Amount = packageRatePlan.Price;
             invoice.PackageId = PackageID;
             
-            var tempDiscount = DbContext.PackageReferenceCode.FirstOrDefault(x => x.PackageId == PackageID && x.ReferenceCode == ReferenceCode);
+            var tempDiscount = DbContext.PackageReferenceCode.FirstOrDefault(x => x.PackageRatePlanId == packageRatePlan.Id && x.ReferenceCode == ReferenceCode);
             invoice.Discount = tempDiscount == null ? 0 : tempDiscount.IsFixed ? tempDiscount.Value : invoice.Amount * tempDiscount.Value / 100;
             
             invoice.AmountDue = invoice.Amount - invoice.Discount ;
-           
-            if(user == null){
-                invoice.UserId = null;
-                invoice.AmountDue = 1;
-            }else{
+            var subscriptions = DbContext.Subscription.Where(x=>x.UserId==user.UserId).ToList();
+            if(subscriptions.Count == 0){
+                invoice.AmountDue = DbContext.PaymentSetting.First().WelcomePackagePrice;
+            }
+            else
+            {
                 invoice.UserId = user.UserId;
             }            
-             invoice.StatusId = null;
+            invoice.StatusId = Statuses.Invoice.New;
             invoice.CreatedDate = DateTime.UtcNow;
             invoice.UpdatedDate = null;
             DbContext.Invoice.Add(invoice);
@@ -85,15 +86,15 @@ namespace _8LMBackend.Service
             DbContext.SaveChanges();
 
             var invoice = DbContext.Invoice.FirstOrDefault(x=>x.Id == rel.InvoiceId);
-            var package = DbContext.Package.FirstOrDefault(x=>x.Id == invoice.PackageId);
+            var packageRatePlan = DbContext.PackageRatePlan.FirstOrDefault(x=>x.PackageId == invoice.PackageId);
             var subsr = new Subscription();
-            subsr.UserId = invoice.UserId.Value;
+            subsr.UserId = invoice.UserId;
             subsr.CreatedDate = DateTime.UtcNow;
             subsr.EffectiveDate = DateTime.UtcNow;
-            subsr.ExpirationDate = subsr.EffectiveDate.AddMonths(package.DurationInMonth);
-            subsr.PackageId = package.Id;
+            subsr.ExpirationDate = subsr.EffectiveDate.AddMonths(packageRatePlan.DurationInMonths);
+            subsr.PackageId = packageRatePlan.PackageId;
             subsr.RelayAuthorizeNetresponse = rel.Id;
-            subsr.StatusId = 1;
+            subsr.StatusId = Statuses.Subscription.Active;
 
             DbContext.Subscription.Add(subsr);
             DbContext.SaveChanges();
@@ -102,8 +103,8 @@ namespace _8LMBackend.Service
             var invoice = DbContext.Invoice.FirstOrDefault(x=>x.Id == rel.InvoiceId);
             var user = new Users();
             user.Login = rel.XEmail;
-            user.TypeId = 1;
-            user.StatusId = 1;
+            user.TypeId = Types.Users.User;
+            user.StatusId = Statuses.Users.PaymentIssue;
             user.CreatedDate = DateTime.UtcNow;
             user.CreatedBy = 1;
             DbContext.Users.Add(user);     
@@ -115,13 +116,11 @@ namespace _8LMBackend.Service
 
             return invoice;
         }
-
         public Users GetUserByToken(string token){
             var userToken = DbContext.UserToken.Where(p => p.Token == token).FirstOrDefault();
             var user = DbContext.Users.FirstOrDefault(x => x.Id == userToken.UserId);
             return user;
         }
-
         public Package GetPackageById(int id){
             return DbContext.Package.FirstOrDefault(x => x.Id == id);
         }
@@ -157,13 +156,13 @@ namespace _8LMBackend.Service
             DbContext.SaveChanges();
         }
         public List<PackageReferenceCode> GetPackageReferenceCodeById(int packageId){
-            return DbContext.PackageReferenceCode.Where(x=>x.PackageId == packageId).ToList();
+            return DbContext.PackageReferenceCode.Where(x=>x.PackageRatePlan.PackageId == packageId).ToList();
         }
         public List<PackageReferenceExtendCode> GetPackageReferenceExtendCodeById(int packageId){
-            return DbContext.PackageReferenceExtendCode.Where(x=>x.PackageId == packageId).ToList();
+            return DbContext.PackageReferenceExtendCode.Where(x=>x.PackageRatePlan.PackageId == packageId).ToList();
         }  
         public List<PackageReferenceServiceCode> GetPackageReferenceServiceCodeById(int packageId){
-            return DbContext.PackageReferenceServiceCode.Where(x=>x.PackageId == packageId).ToList();
+            return DbContext.PackageReferenceServiceCode.Where(x=>x.PackageRatePlan.PackageId == packageId).ToList();
         }    
         public List<Package> GetUserPackages(int UserId){
             List<Package> packageList =  new List<Package>();
@@ -178,7 +177,7 @@ namespace _8LMBackend.Service
             return DbContext.UserToken.FirstOrDefault(x=>x.UserId == invoice.UserId).Token;
         }
         public List<Package> GetActivePackages(){
-            return DbContext.Package.Where(x=>x.StatusId == 2).ToList();
+            return DbContext.Package.Where(x=>x.StatusId == Statuses.Package.Published).ToList();
         }
         public async Task SaveCustomerProfile(int? userId, long transactionID){
             var content = new JsonContent(new{createCustomerProfileFromTransactionRequest = new{merchantAuthentication = new{ name = "6k39MQtr", transactionKey = "76b2k9F8P55nWmHt"}, transId = transactionID.ToString()}});
@@ -262,7 +261,7 @@ namespace _8LMBackend.Service
                     
                     context.AuthorizeNettransaction.Add(authNet);
                     var invoice = DbContext.Invoice.FirstOrDefault(x => x.Id == invoiceId);
-                    invoice.StatusId = true;
+                    invoice.StatusId = Statuses.Invoice.New;
                     context.Invoice.Update(invoice);
                     context.SaveChanges();
                 }
@@ -326,11 +325,19 @@ namespace _8LMBackend.Service
                     
                     context.AuthorizeNettransaction.Add(authNet);
                     var invoice = DbContext.Invoice.FirstOrDefault(x => x.Id == invoiceId);
-                    invoice.StatusId = true;
+                    invoice.StatusId = Statuses.Invoice.Captured;
                     context.Invoice.Update(invoice);
                     context.SaveChanges();
                 }
             });
+        }
+        public PackageRatePlan SavePackageRatePlan(PackageRatePlan packRatePlan){
+            DbContext.PackageRatePlan.Add(packRatePlan);
+            DbContext.SaveChanges();
+            return packRatePlan;
+        }
+        public PackageRatePlan GetPackageRatePlanByPackageID(int packageId){
+            return DbContext.PackageRatePlan.FirstOrDefault(x => x.PackageId == packageId);
         }
     }
 }

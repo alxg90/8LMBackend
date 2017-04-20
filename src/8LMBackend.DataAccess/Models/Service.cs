@@ -9,6 +9,8 @@ namespace _8LMBackend.DataAccess.Models
         {
             PackageReferenceServiceCode = new HashSet<PackageReferenceServiceCode>();
             PackageService = new HashSet<PackageService>();
+            ServiceFunction = new HashSet<ServiceFunction>();
+            SubscriptionExtraService = new HashSet<SubscriptionExtraService>();
         }
 
         public int Id { get; set; }
@@ -17,5 +19,7 @@ namespace _8LMBackend.DataAccess.Models
 
         public virtual ICollection<PackageReferenceServiceCode> PackageReferenceServiceCode { get; set; }
         public virtual ICollection<PackageService> PackageService { get; set; }
+        public virtual ICollection<ServiceFunction> ServiceFunction { get; set; }
+        public virtual ICollection<SubscriptionExtraService> SubscriptionExtraService { get; set; }
     }
 }

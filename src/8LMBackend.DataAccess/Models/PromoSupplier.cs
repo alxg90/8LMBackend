@@ -5,6 +5,11 @@ namespace _8LMBackend.DataAccess.Models
 {
     public partial class PromoSupplier
     {
+        public PromoSupplier()
+        {
+            PromoProduct = new HashSet<PromoProduct>();
+        }
+
         public int Id { get; set; }
         public string Address { get; set; }
         public string ArtworkEmail { get; set; }
@@ -17,5 +22,7 @@ namespace _8LMBackend.DataAccess.Models
         public string OrdersFax { get; set; }
         public string Tollfree { get; set; }
         public string Web { get; set; }
+
+        public virtual ICollection<PromoProduct> PromoProduct { get; set; }
     }
 }

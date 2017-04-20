@@ -5,11 +5,11 @@ namespace _8LMBackend.DataAccess.Models
 {
     public partial class PackageReferenceCode
     {
-        public int PackageId { get; set; }
+        public int PackageRatePlanId { get; set; }
         public string ReferenceCode { get; set; }
         public bool IsFixed { get; set; }
         public int Value { get; set; }
 
-        public virtual Package Package { get; set; }
+        public virtual PackageRatePlan PackageRatePlan { get; set; }
     }
 }

@@ -32,16 +32,21 @@ namespace _8LMCore.Controllers
                 pack.Name = package.Name;
                 pack.CreatedBy = user.Id;
                 pack.CreatedDate = DateTime.Now;
-                pack.CurrencyId = package.Currency;
+                //pack.CurrencyId = package.Currency;
                 pack.Description = "empty";
-                pack.DurationInMonth = package.Duration;                
-                pack.StatusId = 1;
+                //pack.DurationInMonth = package.Duration;                
+                pack.StatusId = Statuses.Package.New;
                 pack.PaletteId = package.PaletteId;
-                pack.Price = package.Price;
+                //pack.Price = package.Price;
                 pack.UserTypeId = user.TypeId; 
 
                 if(package.Id == 0)
                     _subscribeService.SavePackage(pack);
+
+                var packRate = new PackageRatePlan();
+                packRate.DurationInMonths = package.Duration;
+                packRate.Price = package.Price;
+                packRate.PackageId = pack.Id;
 
                 foreach(ServicesDto serviceId in package.Services){
                     pack.PackageService.Add(new PackageService(){
@@ -50,23 +55,23 @@ namespace _8LMCore.Controllers
                     });
                 }   
                 foreach(PackageReferenceCodeDto refCode in package.PackageReferenceCode){
-                    pack.PackageReferenceCode.Add(new PackageReferenceCode(){
-                        PackageId = refCode.PackageId,
+                    packRate.PackageReferenceCode.Add(new PackageReferenceCode(){
+                        PackageRatePlanId = packRate.Id,
                         ReferenceCode = refCode.ReferenceCode,
                         IsFixed = refCode.IsFixed,
                         Value = refCode.Value
                     });
                 }
                 foreach(PackageReferenceExtendCodeDto refExtendCode in package.PackageReferenceExtendCode){
-                    pack.PackageReferenceExtendCode.Add(new PackageReferenceExtendCode(){
-                        PackageId = refExtendCode.PackageId,
+                    packRate.PackageReferenceExtendCode.Add(new PackageReferenceExtendCode(){
+                        PackageRatePlanId = packRate.Id,
                         ReferenceCode = refExtendCode.ReferenceCode,
                         Months = refExtendCode.Months
                     });
                 }
                 foreach(PackageReferenceServiceCodeDto refServiceCode in package.PackageReferenceServiceCode){
-                    pack.PackageReferenceServiceCode.Add(new PackageReferenceServiceCode(){
-                        PackageId = refServiceCode.PackageId,
+                    packRate.PackageReferenceServiceCode.Add(new PackageReferenceServiceCode(){
+                        PackageRatePlanId = packRate.Id,
                         ReferenceCode = refServiceCode.ReferenceCode,
                         ServiceId = refServiceCode.ServiceId
                     });
@@ -176,13 +181,13 @@ namespace _8LMCore.Controllers
                     return Json(new{status = "fail", message = relDto.x_response_reason_text});
                 }               
                 var invoice = _subscribeService.AcceptGuestPayment(RelayDtoToNormal(relDto));
-                CreateCustomerProfileFromTransaction( invoice.UserId.Value, relDto.x_trans_id);
+                CreateCustomerProfileFromTransaction(invoice.UserId, relDto.x_trans_id);
                 return View();          
         }
         public PackageDto GetPackageById(int id){
             try
             {
-                return ToDtoPackage(_subscribeService.GetPackageById(id), _subscribeService.GetAllServices(), false);
+                return ToDtoPackage(_subscribeService.GetPackageById(id), _subscribeService.GetPackageRatePlanByPackageID(id), _subscribeService.GetAllServices(), false);
             }
             catch (System.Exception ex)
             {                
@@ -200,7 +205,7 @@ namespace _8LMCore.Controllers
                     var packageDto = new List<PackageDto>();
                     foreach (var item in packages)
                     {
-                        packageDto.Add(ToDtoPackage(item, services, false));
+                        packageDto.Add(ToDtoPackage(item, _subscribeService.GetPackageRatePlanByPackageID(item.Id), services, false));
                     }
                     return packageDto;
                 } else {
@@ -221,7 +226,7 @@ namespace _8LMCore.Controllers
                 var packageDto = new List<PackageDto>();        
                 foreach (var item in packages)
                 {      
-                    var pack = ToDtoPackage(item, services, true);
+                    var pack = ToDtoPackage(item, _subscribeService.GetPackageRatePlanByPackageID(item.Id), services, true);
                     packageDto.Add(pack);                  
                 }
             return packageDto;
@@ -240,9 +245,9 @@ namespace _8LMCore.Controllers
             var services = GetAllServices();
             foreach (var item in packages)
             {      
-                var pack = ToDtoPackage(item, services, true);   
+                var pack = ToDtoPackage(item, _subscribeService.GetPackageRatePlanByPackageID(item.Id), services, true);   
                 var subscription = _subscribeService.GetSubscriptionForPackage(item.Id, user.Id);     
-                if(item.StatusId == 1){          
+                if(item.StatusId == Statuses.Package.New){          
                     if(subscription != null){
                         pack.ValidTo = subscription.ExpirationDate;
                     }                
@@ -263,7 +268,7 @@ namespace _8LMCore.Controllers
                 throw ex;
             }
         }
-        private PackageDto ToDtoPackage(Package item, Service[] services, bool isUser){
+        private PackageDto ToDtoPackage(Package item, PackageRatePlan ratePlan, Service[] services, bool isUser){
             try{    
                 var dbPackageReferenceCodes = _subscribeService.GetPackageReferenceCodeById(item.Id);
                 var dbPackageReferenceExtendCodes = _subscribeService.GetPackageReferenceExtendCodeById(item.Id);
@@ -282,9 +287,9 @@ namespace _8LMCore.Controllers
                 }
                 pack.Services = servDto.ToArray();
                 pack.PaletteId = item.PaletteId;
-                pack.Duration = item.DurationInMonth;
-                pack.Price = item.Price;
-                pack.Currency = item.CurrencyId;
+                pack.Duration = ratePlan.DurationInMonths;
+                pack.Price = ratePlan.Price;
+                //pack.Currency = item.CurrencyId;
                 pack.StatusId = item.StatusId;
 
                 if(!isUser){
@@ -292,7 +297,7 @@ namespace _8LMCore.Controllers
                     foreach (var packageReferenceCode in dbPackageReferenceCodes)
                     {
                         tempRefCode.Add(new PackageReferenceCodeDto(){
-                            PackageId = packageReferenceCode.PackageId,
+                            PackageId = ratePlan.PackageId,
                             ReferenceCode = packageReferenceCode.ReferenceCode,
                             IsFixed = packageReferenceCode.IsFixed,
                             Value = packageReferenceCode.Value
@@ -300,10 +305,10 @@ namespace _8LMCore.Controllers
                     }
                     pack.PackageReferenceCode = tempRefCode.ToArray();
                     var tempRefServCode = new List<PackageReferenceServiceCodeDto>();
-                    foreach (var packageReferenceServiceCode in item.PackageReferenceServiceCode)
+                    foreach (var packageReferenceServiceCode in ratePlan.PackageReferenceServiceCode)
                     {
                         tempRefServCode.Add(new PackageReferenceServiceCodeDto(){
-                            PackageId = packageReferenceServiceCode.PackageId,
+                            PackageId = ratePlan.PackageId,
                             ReferenceCode = packageReferenceServiceCode.ReferenceCode,
                             ServiceId = packageReferenceServiceCode.ServiceId,
                             ServiceName = services.FirstOrDefault(x => x.Id == packageReferenceServiceCode.ServiceId).Name
@@ -314,7 +319,7 @@ namespace _8LMCore.Controllers
                     foreach (PackageReferenceExtendCode packageReferenceExtendCode in dbPackageReferenceExtendCodes)
                     {
                         tempRefExtCode.Add(new PackageReferenceExtendCodeDto(){
-                            PackageId = packageReferenceExtendCode.PackageId,
+                            PackageId = ratePlan.PackageId,
                             ReferenceCode = packageReferenceExtendCode.ReferenceCode,
                             Months = packageReferenceExtendCode.Months
                         });

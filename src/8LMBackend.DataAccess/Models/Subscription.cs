@@ -5,6 +5,11 @@ namespace _8LMBackend.DataAccess.Models
 {
     public partial class Subscription
     {
+        public Subscription()
+        {
+            SubscriptionExtraService = new HashSet<SubscriptionExtraService>();
+        }
+
         public int Id { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime EffectiveDate { get; set; }
@@ -14,8 +19,9 @@ namespace _8LMBackend.DataAccess.Models
         public int StatusId { get; set; }
         public int UserId { get; set; }
 
+        public virtual ICollection<SubscriptionExtraService> SubscriptionExtraService { get; set; }
         public virtual Package Package { get; set; }
-        public virtual SubscriptionStatus Status { get; set; }
+        public virtual EntityStatus Status { get; set; }
         public virtual Users User { get; set; }
     }
 }
