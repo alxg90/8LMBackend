@@ -52,9 +52,7 @@ namespace _8LMBackend.Service
             return (services.Length > 0) ? services : new _8LMBackend.DataAccess.Models.Service[0];
         } 
         public Invoice PrepareInvoice(int PackageID, string token, string ReferenceCode = null){
-            var user = DbContext.UserToken.Where(p => p.Token == token).FirstOrDefault();
-            // if (user == default(UserToken))
-            //     throw new Exception("Not authorized");
+            var user = GetUserByToken(token);
 
             var invoice = new Invoice();
             var packageRatePlan = DbContext.PackageRatePlan.FirstOrDefault(x => x.PackageId == PackageID);
@@ -65,14 +63,11 @@ namespace _8LMBackend.Service
             invoice.Discount = tempDiscount == null ? 0 : tempDiscount.IsFixed ? tempDiscount.Value : invoice.Amount * tempDiscount.Value / 100;
             
             invoice.AmountDue = invoice.Amount - invoice.Discount ;
-            var subscriptions = DbContext.Subscription.Where(x=>x.UserId==user.UserId).ToList();
+            var subscriptions = DbContext.Subscription.Where(x => x.UserId == user.Id).ToList();
             if(subscriptions.Count == 0){
                 invoice.AmountDue = DbContext.PaymentSetting.First().WelcomePackagePrice;
             }
-            else
-            {
-                invoice.UserId = user.UserId;
-            }            
+            invoice.UserId = user.Id;                        
             invoice.StatusId = Statuses.Invoice.New;
             invoice.CreatedDate = DateTime.UtcNow;
             invoice.UpdatedDate = null;

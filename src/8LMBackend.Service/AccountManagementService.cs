@@ -28,13 +28,13 @@ namespace _8LMBackend.Service
 				{
 					id = u.Id,
 					login = u.Login,
-                    // FirstName = u.FirstName,
-                    // LastName = u.LastName,
-                    // ClearPassword = u.ClearPassword,
-                    // Email = u.Email,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    ClearPassword = u.ClearPassword,
+                    Email = u.Email,
 					typeID = u.TypeId,
                     typeName = u.Type.Name,
-                    //Icon = u.Icon
+                    Icon = u.Icon
 				};
 
 				account.roles = u.UserRoleUser.Select(p => p.RoleId).ToList();
@@ -81,12 +81,12 @@ namespace _8LMBackend.Service
             {
                 id = account.Id,
                 login = account.Login,
-                //FirstName = account.FirstName,
-                //LastName = account.LastName,
-                //ClearPassword = account.ClearPassword,
-                //Email = account.Email,
+                FirstName = account.FirstName,
+                LastName = account.LastName,
+                ClearPassword = account.ClearPassword,
+                Email = account.Email,
                 typeID = account.TypeId,
-                //Icon = account.Icon
+                Icon = account.Icon
             };
             return accountVM;
         }
@@ -407,11 +407,11 @@ namespace _8LMBackend.Service
             var item = DbContext.Users.Where(p => p.Id == u.Id).FirstOrDefault();
             if (item != default(Users))
             {
-                // item.FirstName = u.FirstName;
-                // item.LastName = u.LastName;
-                // item.ClearPassword = u.ClearPassword;
-                // item.Email = u.Email;
-                // item.Icon = u.Icon;
+                item.FirstName = u.FirstName;
+                item.LastName = u.LastName;
+                item.ClearPassword = u.ClearPassword;
+                item.Email = u.Email;
+                item.Icon = u.Icon;
                 DbContext.SaveChanges();
             }
             else
