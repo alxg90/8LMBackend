@@ -380,20 +380,6 @@ namespace _8LMCore.Controllers
         }
         public async void CreateCustomerProfileFromTransaction(int userId, long transactionID)
         {
-        // 1. SEND POST REQUEST TO CreateCustomerProfileFromTransactionRequest
-        // <?xml version="1.0" encoding="utf-8"?>
-        // <createCustomerProfileFromTransactionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">
-        // <merchantAuthentication>
-        // <name>API_LOGIN_ID</name>
-        // <transactionKey>API_TRANSACTION_KEY</transactionKey>
-        // </merchantAuthentication>
-        // <transId>{{{transactionID}}}</transId>
-        // </createCustomerProfileFromTransactionRequest>
-
-
-        // 2. GET customerProfileId AND customerPaymentProfileId
-
-        // 3. Create record in AuthprizeNETCustomerProfile table
             await _subscribeService.SaveCustomerProfile(userId, transactionID);
         }
         public void CreateTransaction(int invoiceId)
@@ -402,19 +388,26 @@ namespace _8LMCore.Controllers
             var authProfile = _subscribeService.GetAuthProfileByInvoice(invoiceId);
         // 2. SEND POST REQUEST TO createTransactionRequest
             _subscribeService.СreateTransactionRequest(authProfile.CustomerProfileId, authProfile.PaymentProfileId, invoiceId);
-
         // 3. Insert record into AuthorizeNETTransaction table
 
         // 4. Update Invoice table
         }
 
-        // void CaptureTransaction(Invoice invoiceID)
-        // {
+        public void CaptureTransaction(int invoiceId)
+        {
+            try{
+            var authProfile = _subscribeService.GetAuthProfileByInvoice(invoiceId);
         // 1. GET TransactionID and Amount based on Invoice //Check that transaction is not captured
+        _subscribeService.СaptureTransactionRequest(authProfile.CustomerProfileId, authProfile.PaymentProfileId, invoiceId);
+            }
+            catch
+            (Exception ex){
+                throw ex;
+            }
         // 2. SEND POST REQUEST TO createTransactionRequest
         // 3. Update AuthorizeNETTransaction table
         // 4. Update Invoice table
 
-        // }
+        }
     }
 }
