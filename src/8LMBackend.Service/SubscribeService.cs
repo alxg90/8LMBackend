@@ -180,7 +180,9 @@ namespace _8LMBackend.Service
             return DbContext.Package.Where(x=>x.StatusId == Statuses.Package.Published).ToList();
         }
         public async Task SaveCustomerProfile(int? userId, long transactionID){
-            var content = new JsonContent(new{createCustomerProfileFromTransactionRequest = new{merchantAuthentication = new{ name = "6k39MQtr", transactionKey = "76b2k9F8P55nWmHt"}, transId = transactionID.ToString()}});
+
+            var paymentSettings = DbContext.PaymentSetting.First();
+            var content = new JsonContent(new{createCustomerProfileFromTransactionRequest = new{merchantAuthentication = new{ name = paymentSettings.AuthorizeNetlogin, transactionKey = paymentSettings.AuthorizeNettransactionKey}, transId = transactionID.ToString()}});
 
             var requestTask = client.PostAsync("https://apitest.authorize.net/xml/v1/request.api", content);
 
@@ -203,11 +205,12 @@ namespace _8LMBackend.Service
         }
         public async Task СreateTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId){
             var amountDue = DbContext.Invoice.FirstOrDefault(x => x.Id == invoiceId).AmountDue;
+            var paymentSettings = DbContext.PaymentSetting.First();
             var content = new JsonContent(
                 new{createTransactionRequest = 
                     new{merchantAuthentication = 
-                        new{ name = "6k39MQtr",
-                             transactionKey = "76b2k9F8P55nWmHt"}, 
+                        new{ name = paymentSettings.AuthorizeNetlogin,
+                             transactionKey = paymentSettings.AuthorizeNettransactionKey}, 
                     transactionRequest = new{
                         transactionType = "authCaptureTransaction",
                         amount = amountDue,
@@ -234,8 +237,8 @@ namespace _8LMBackend.Service
 
                     AuthorizeNettransaction authNet = new AuthorizeNettransaction();
                     authNet.InvoiceId = invoiceId;
-                    authNet.MerchantName = "6k39MQtr";
-                    authNet.MerchantTransactionKey = "76b2k9F8P55nWmHt";
+                    authNet.MerchantName = paymentSettings.AuthorizeNetlogin;
+                    authNet.MerchantTransactionKey = paymentSettings.AuthorizeNettransactionKey;
                     authNet.CustomerProfileId = customerProfileId;
                     authNet.PaymentProfileId = paymentProfileId;
                     authNet.TransactionType = "authCaptureTransaction";
@@ -274,11 +277,12 @@ namespace _8LMBackend.Service
         public async Task СaptureTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId){
             var amountDue = DbContext.Invoice.FirstOrDefault(x => x.Id == invoiceId).AmountDue;
             var transaction = DbContext.AuthorizeNettransaction.FirstOrDefault(x => x.InvoiceId == invoiceId);
+            var paymentSettings = DbContext.PaymentSetting.First();
             var content = new JsonContent(
                 new{createTransactionRequest = 
                     new{merchantAuthentication = 
-                        new{ name = "6k39MQtr",
-                             transactionKey = "76b2k9F8P55nWmHt"
+                        new{ name = paymentSettings.AuthorizeNetlogin,
+                             transactionKey = paymentSettings.AuthorizeNettransactionKey
                              }, 
                     transactionRequest = new{
                         transactionType = "priorAuthCaptureTransaction",
@@ -298,8 +302,8 @@ namespace _8LMBackend.Service
 
                     AuthorizeNettransaction authNet = new AuthorizeNettransaction();
                     authNet.InvoiceId = invoiceId;
-                    authNet.MerchantName = "6k39MQtr";
-                    authNet.MerchantTransactionKey = "76b2k9F8P55nWmHt";
+                    authNet.MerchantName = paymentSettings.AuthorizeNetlogin;
+                    authNet.MerchantTransactionKey = paymentSettings.AuthorizeNettransactionKey;
                     authNet.CustomerProfileId = customerProfileId;
                     authNet.PaymentProfileId = paymentProfileId;
                     authNet.TransactionType = "priorAuthCaptureTransaction";
