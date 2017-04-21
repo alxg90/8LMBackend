@@ -266,12 +266,12 @@ namespace _8LMBackend.Service
                 .Join(DbContext.RoleFunction, p => p.RoleId, rf => rf.RoleId, (p, rf) => rf.FunctionId)
                 .Distinct().ToList();
 
-            var res = DbContext.Subscription
+            var res = DbContext.Subscription.Include("PackageRatePlan")
                         .Where(p => p.UserId == userId 
                             && p.StatusId == Statuses.Subscription.Active 
                             && p.EffectiveDate <= DateTime.UtcNow
                             && p.ExpirationDate >= DateTime.UtcNow)
-                        .Join(DbContext.PackageService, s => s.PackageId, ps => ps.PackageId, (s, ps) => ps)
+                        .Join(DbContext.PackageService, s => s.PackageRatePlan.PackageId, ps => ps.PackageId, (s, ps) => ps)
                         .Join(DbContext.ServiceFunction, ps => ps.ServiceId, sf => sf.ServiceId, (ps, sf) => sf)
                         .Select(sf => sf.SecurityFunctionId).ToList();
 

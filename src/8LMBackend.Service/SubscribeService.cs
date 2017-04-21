@@ -25,12 +25,15 @@ namespace _8LMBackend.Service
             DbContext.Package.Add(package);
             DbContext.SaveChanges();
         }
-        public void DeletePackage(int id){
+        public void DeletePackage(int id)
+        {
             var package = DbContext.Package.FirstOrDefault(x => x.Id == id);
-            if(package.StatusId==Statuses.Package.New){
+            if(package.StatusId==Statuses.Package.New)
+            {
                 DbContext.PackageService.RemoveRange(DbContext.PackageService.Where(x=>x.PackageId==package.Id));
                 DbContext.Invoice.RemoveRange(DbContext.Invoice.Where(x => x.PackageId == package.Id));
-                DbContext.Subscription.RemoveRange(DbContext.Subscription.Where(x => x.PackageId == package.Id));
+                DbContext.PackageRatePlan.RemoveRange(DbContext.PackageRatePlan.Where(p => p.PackageId == id));
+                DbContext.Subscription.RemoveRange(DbContext.Subscription.Include("PackageRatePlan").Where(x => x.PackageRatePlan.PackageId == package.Id));
                 DbContext.PackageReferenceCode.RemoveRange(DbContext.PackageReferenceCode.Where(x => x.PackageRatePlan.PackageId == package.Id));
                 DbContext.PackageReferenceExtendCode.RemoveRange(DbContext.PackageReferenceExtendCode.Where(x => x.PackageRatePlan.PackageId == package.Id));
                 DbContext.PackageReferenceServiceCode.RemoveRange(DbContext.PackageReferenceServiceCode.Where(x => x.PackageRatePlan.PackageId == package.Id));
@@ -51,13 +54,13 @@ namespace _8LMBackend.Service
             var services = DbContext.Service.ToArray();
             return (services.Length > 0) ? services : new _8LMBackend.DataAccess.Models.Service[0];
         } 
-        public Invoice PrepareInvoice(int PackageID, string token, string ReferenceCode = null){
+        public Invoice PrepareInvoice(int PackageRateID, string token, string ReferenceCode = null){
             var user = GetUserByToken(token);
 
             var invoice = new Invoice();
-            var packageRatePlan = DbContext.PackageRatePlan.FirstOrDefault(x => x.PackageId == PackageID);
+            var packageRatePlan = DbContext.PackageRatePlan.FirstOrDefault(x => x.Id == PackageRateID);
             invoice.Amount = packageRatePlan.Price;
-            invoice.PackageId = PackageID;
+            invoice.PackageId = packageRatePlan.PackageId;
             
             var tempDiscount = DbContext.PackageReferenceCode.FirstOrDefault(x => x.PackageRatePlanId == packageRatePlan.Id && x.ReferenceCode == ReferenceCode);
             invoice.Discount = tempDiscount == null ? 0 : tempDiscount.IsFixed ? tempDiscount.Value : invoice.Amount * tempDiscount.Value / 100;
@@ -87,9 +90,12 @@ namespace _8LMBackend.Service
             subsr.CreatedDate = DateTime.UtcNow;
             subsr.EffectiveDate = DateTime.UtcNow;
             subsr.ExpirationDate = subsr.EffectiveDate.AddMonths(packageRatePlan.DurationInMonths);
-            subsr.PackageId = packageRatePlan.PackageId;
+            subsr.PackageRatePlanId = packageRatePlan.Id;
             subsr.RelayAuthorizeNetresponse = rel.Id;
             subsr.StatusId = Statuses.Subscription.Active;
+
+            invoice.StatusId = Statuses.Invoice.Captured;
+            DbContext.Invoice.Update(invoice);
 
             DbContext.Subscription.Add(subsr);
             DbContext.SaveChanges();
@@ -150,23 +156,23 @@ namespace _8LMBackend.Service
             DbContext.Package.Update(package);
             DbContext.SaveChanges();
         }
-        public List<PackageReferenceCode> GetPackageReferenceCodeById(int packageId){
-            return DbContext.PackageReferenceCode.Where(x=>x.PackageRatePlan.PackageId == packageId).ToList();
+        public List<PackageReferenceCode> GetPackageReferenceCodeById(int packRateId){
+            return DbContext.PackageReferenceCode.Where(x=>x.PackageRatePlan.Id == packRateId).ToList();
         }
-        public List<PackageReferenceExtendCode> GetPackageReferenceExtendCodeById(int packageId){
-            return DbContext.PackageReferenceExtendCode.Where(x=>x.PackageRatePlan.PackageId == packageId).ToList();
+        public List<PackageReferenceExtendCode> GetPackageReferenceExtendCodeById(int packRateId){
+            return DbContext.PackageReferenceExtendCode.Where(x=>x.PackageRatePlan.Id == packRateId).ToList();
         }  
-        public List<PackageReferenceServiceCode> GetPackageReferenceServiceCodeById(int packageId){
-            return DbContext.PackageReferenceServiceCode.Where(x=>x.PackageRatePlan.PackageId == packageId).ToList();
+        public List<PackageReferenceServiceCode> GetPackageReferenceServiceCodeById(int packRateId){
+            return DbContext.PackageReferenceServiceCode.Where(x=>x.PackageRatePlan.Id == packRateId).ToList();
         }    
-        public List<Package> GetUserPackages(int UserId){
-            List<Package> packageList =  new List<Package>();
-            var subsr = DbContext.Subscription.Where(x=>x.UserId == UserId && x.EffectiveDate < DateTime.Now);
-            var packages = DbContext.Package.Where(x=>x.Subscription.Any(a => a.UserId == UserId));
-            return packages.ToList();
+        public List<Package> GetUserPackages(int UserId)
+        {
+            return DbContext.Subscription.Include("PackageRatePlan").Where(x => x.UserId == UserId && x.StatusId == Statuses.Subscription.Active)
+            .Join(DbContext.Package, s => s.PackageRatePlan.PackageId, p => p.Id, (s, p) => p).Distinct().ToList();
         }
-        public Subscription GetSubscriptionForPackage(int packageId, int userId){
-            return DbContext.Subscription.FirstOrDefault(x => x.PackageId == packageId && x.UserId == userId);
+        public Subscription GetSubscriptionForPackage(int packageId, int userId)
+        {
+            return DbContext.Subscription.Include("PackageRatePlan").FirstOrDefault(p => p.UserId == userId && p.PackageRatePlan.PackageId == packageId);
         }      
         public string GetTokenByInvoice(Invoice invoice){
             return DbContext.UserToken.FirstOrDefault(x=>x.UserId == invoice.UserId).Token;
@@ -335,8 +341,8 @@ namespace _8LMBackend.Service
             DbContext.SaveChanges();
             return packRatePlan;
         }
-        public PackageRatePlan GetPackageRatePlanByPackageID(int packageId){
-            return DbContext.PackageRatePlan.FirstOrDefault(x => x.PackageId == packageId);
+        public List<PackageRatePlan> GetPackageRatePlansByPackageID(int packageId){
+            return DbContext.PackageRatePlan.Where(x => x.PackageId == packageId).ToList();
         }
     }
 }

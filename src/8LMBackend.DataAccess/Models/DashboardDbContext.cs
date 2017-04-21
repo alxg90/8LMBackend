@@ -51,7 +51,7 @@ namespace _8LMBackend.DataAccess.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-            optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_test;sslmode=none");
+            optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_test;sslmode=none;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -1410,8 +1410,8 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Subscription>(entity =>
             {
-                entity.HasIndex(e => e.PackageId)
-                    .HasName("FKSubscriptionPackageID");
+                entity.HasIndex(e => e.PackageRatePlanId)
+                    .HasName("FKSubscriptionPackageRatePlanID");
 
                 entity.HasIndex(e => e.StatusId)
                     .HasName("FKSubscriptionStatusID");
@@ -1429,8 +1429,8 @@ namespace _8LMBackend.DataAccess.Models
 
                 entity.Property(e => e.ExpirationDate).HasColumnType("datetime");
 
-                entity.Property(e => e.PackageId)
-                    .HasColumnName("PackageID")
+                entity.Property(e => e.PackageRatePlanId)
+                    .HasColumnName("PackageRatePlanID")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.RelayAuthorizeNetresponse)
@@ -1445,11 +1445,11 @@ namespace _8LMBackend.DataAccess.Models
                     .HasColumnName("UserID")
                     .HasColumnType("int(11)");
 
-                entity.HasOne(d => d.Package)
+                entity.HasOne(d => d.PackageRatePlan)
                     .WithMany(p => p.Subscription)
-                    .HasForeignKey(d => d.PackageId)
+                    .HasForeignKey(d => d.PackageRatePlanId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FKSubscriptionPackageID");
+                    .HasConstraintName("FKSubscriptionPackageRatePlanID");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Subscription)
@@ -1637,9 +1637,7 @@ namespace _8LMBackend.DataAccess.Models
                     .IsRequired()
                     .HasColumnType("varchar(255)");
 
-                entity.Property(e => e.Icon)
-                    .IsRequired()
-                    .HasColumnType("varchar(255)");
+                entity.Property(e => e.Icon).HasColumnType("varchar(255)");
 
                 entity.Property(e => e.LastName)
                     .IsRequired()

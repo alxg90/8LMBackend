@@ -10,7 +10,6 @@ namespace _8LMBackend.DataAccess.Models
             Invoice = new HashSet<Invoice>();
             PackageRatePlan = new HashSet<PackageRatePlan>();
             PackageService = new HashSet<PackageService>();
-            Subscription = new HashSet<Subscription>();
         }
 
         public int Id { get; set; }
@@ -25,7 +24,6 @@ namespace _8LMBackend.DataAccess.Models
         public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<PackageRatePlan> PackageRatePlan { get; set; }
         public virtual ICollection<PackageService> PackageService { get; set; }
-        public virtual ICollection<Subscription> Subscription { get; set; }
         public virtual Users CreatedByNavigation { get; set; }
         public virtual EntityStatus Status { get; set; }
         public virtual EntityType UserType { get; set; }

@@ -20,9 +20,9 @@ namespace _8LMBackend.Service
         Users GetUserByToken(string token);
         bool CheckPackageNameValid(string name, int? id);
         void SetActive(int id, int setActual);
-        List<PackageReferenceCode> GetPackageReferenceCodeById(int packageId);
-        List<PackageReferenceExtendCode> GetPackageReferenceExtendCodeById(int packageId);
-        List<PackageReferenceServiceCode> GetPackageReferenceServiceCodeById(int packageId);
+        List<PackageReferenceCode> GetPackageReferenceCodeById(int packRateId);
+        List<PackageReferenceExtendCode> GetPackageReferenceExtendCodeById(int packRateId);
+        List<PackageReferenceServiceCode> GetPackageReferenceServiceCodeById(int packRateId);
         List<PackageService> GetPackageServicesById(int packageId);
         List<Package> GetUserPackages(int UserId);
         Subscription GetSubscriptionForPackage(int packageId, int userId);
@@ -34,6 +34,6 @@ namespace _8LMBackend.Service
         Task СaptureTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId);
         AuthorizeNetcustomerProfile GetAuthProfileByInvoice(int invoiceId);
         PackageRatePlan SavePackageRatePlan(PackageRatePlan packRatePlan);
-        PackageRatePlan GetPackageRatePlanByPackageID(int packageId);
+        List<PackageRatePlan> GetPackageRatePlansByPackageID(int packageId);
     }
 }
