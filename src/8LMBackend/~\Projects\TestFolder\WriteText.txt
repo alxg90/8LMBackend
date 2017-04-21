@@ -1,26 +1,2 @@
-   at Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal.ParameterExtractingExpressionVisitor.Evaluate(Expression expression, String& parameterName)
-   at Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal.ParameterExtractingExpressionVisitor.TryExtractParameter(Expression expression)
-   at Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal.ParameterExtractingExpressionVisitor.VisitMember(MemberExpression memberExpression)
-   at System.Linq.Expressions.MemberExpression.Accept(ExpressionVisitor visitor)
-   at System.Linq.Expressions.ExpressionVisitor.Visit(Expression node)
-   at System.Linq.Expressions.ExpressionVisitor.VisitBinary(BinaryExpression node)
-   at System.Linq.Expressions.BinaryExpression.Accept(ExpressionVisitor visitor)
-   at System.Linq.Expressions.ExpressionVisitor.Visit(Expression node)
-   at System.Linq.Expressions.ExpressionVisitor.VisitLambda[T](Expression`1 node)
-   at Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal.ParameterExtractingExpressionVisitor.VisitLambda[T](Expression`1 node)
-   at System.Linq.Expressions.Expression`1.Accept(ExpressionVisitor visitor)
-   at System.Linq.Expressions.ExpressionVisitor.Visit(Expression node)
-   at System.Linq.Expressions.ExpressionVisitor.VisitUnary(UnaryExpression node)
-   at Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal.ParameterExtractingExpressionVisitor.VisitUnary(UnaryExpression unaryExpression)
-   at System.Linq.Expressions.UnaryExpression.Accept(ExpressionVisitor visitor)
-   at System.Linq.Expressions.ExpressionVisitor.Visit(Expression node)
-   at System.Dynamic.Utils.ExpressionVisitorUtils.VisitArguments(ExpressionVisitor visitor, IArgumentProvider nodes)
-   at System.Linq.Expressions.ExpressionVisitor.VisitMethodCall(MethodCallExpression node)
-   at System.Linq.Expressions.MethodCallExpression.Accept(ExpressionVisitor visitor)
-   at System.Linq.Expressions.ExpressionVisitor.Visit(Expression node)
-   at Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal.ParameterExtractingExpressionVisitor.ExtractParameters(Expression expression)
-   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExtractParameters(Expression query, QueryContext queryContext)
-   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
-   at System.Linq.Queryable.FirstOrDefault[TSource](IQueryable`1 source, Expression`1 predicate)
-   at _8LMBackend.Service.SubscribeService.GetUserByToken(String token) in /home/ponchique/Projects/8LMBackend/src/8LMBackend.Service/SubscribeService.cs:line 122
-   at _8LMCore.Controllers.PackagesController.PrepareInvoice(Int32 PackageRateID, String token, String ReferenceCode) in /home/ponchique/Projects/8LMBackend/src/8LMBackend/Controllers/PackagesController.cs:line 121
+   at _8LMBackend.Service.SubscribeService.GetUserByToken(String token) in /home/ponchique/Projects/8LMBackend/src/8LMBackend.Service/SubscribeService.cs:line 128
+   at _8LMCore.Controllers.PackagesController.GetUserPackages(String token) in /home/ponchique/Projects/8LMBackend/src/8LMBackend/Controllers/PackagesController.cs:line 277

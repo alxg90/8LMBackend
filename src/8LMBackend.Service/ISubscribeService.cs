@@ -28,7 +28,7 @@ namespace _8LMBackend.Service
         Subscription GetSubscriptionForPackage(int packageId, int userId);
         string GetTokenByInvoice(Invoice invoice);
         List<Package> GetActivePackages();
-        Invoice AcceptGuestPayment(RelayAuthorizeNetresponse rel);
+        // Invoice AcceptGuestPayment(RelayAuthorizeNetresponse rel);
         Task SaveCustomerProfile(int? userId, long transactionID);
         Task СreateTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId);
         Task СaptureTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId);
