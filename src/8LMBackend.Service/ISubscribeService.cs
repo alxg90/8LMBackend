@@ -35,5 +35,6 @@ namespace _8LMBackend.Service
         AuthorizeNetcustomerProfile GetAuthProfileByInvoice(int invoiceId);
         PackageRatePlan SavePackageRatePlan(PackageRatePlan packRatePlan);
         List<PackageRatePlan> GetPackageRatePlansByPackageID(int packageId);
+        UserToken GetUserToken(string token);
     }
 }

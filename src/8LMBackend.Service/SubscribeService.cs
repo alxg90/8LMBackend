@@ -122,6 +122,10 @@ namespace _8LMBackend.Service
             var user = DbContext.Users.FirstOrDefault(x => x.Id == userToken.UserId);
             return user;
         }
+        public UserToken GetUserToken(string token){
+            var userToken = DbContext.UserToken.Where(p => p.Token == token).FirstOrDefault();
+            return userToken;
+        }        
         public Package GetPackageById(int id){
             return DbContext.Package.FirstOrDefault(x => x.Id == id);
         }
