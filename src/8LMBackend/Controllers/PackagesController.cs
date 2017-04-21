@@ -32,12 +32,9 @@ namespace _8LMCore.Controllers
                 pack.Name = package.Name;
                 pack.CreatedBy = user.Id;
                 pack.CreatedDate = DateTime.Now;
-                //pack.CurrencyId = package.Currency;
-                pack.Description = "empty";
-                //pack.DurationInMonth = package.Duration;                
+                pack.Description = "empty";             
                 pack.StatusId = Statuses.Package.New;
                 pack.PaletteId = package.PaletteId;
-                //pack.Price = package.Price;
                 pack.UserTypeId = user.TypeId; 
 
                 if(package.Id == 0)
@@ -170,6 +167,8 @@ namespace _8LMCore.Controllers
                 _subscribeService.AcceptPayment(rel);
                 var userToken = _subscribeService.GetTokenByInvoice(rel.Invoice);
                 ViewBag.userToken = userToken;
+                ViewBag.email = rel.XEmail;
+                ViewBag.transactionId = rel.XTransId;
                 
                 return View();
             }

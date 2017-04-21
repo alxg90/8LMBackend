@@ -1,2 +1,2 @@
-   at _8LMCore.Controllers.PackagesController.ToDtoPackage(Package item, Service[] services, Boolean isUser) in /home/ponchique/Projects/8LMBackend/src/8LMBackend/Controllers/PackagesController.cs:line 304
-   at _8LMCore.Controllers.PackagesController.GetActivePackages() in /home/ponchique/Projects/8LMBackend/src/8LMBackend/Controllers/PackagesController.cs:line 233
+   at _8LMBackend.Service.SubscribeService.PrepareInvoice(Int32 PackageRateID, String token, String ReferenceCode) in /home/ponchique/Projects/8LMBackend/src/8LMBackend.Service/SubscribeService.cs:line 62
+   at _8LMCore.Controllers.PackagesController.PrepareInvoice(Int32 PackageRateID, String token, String ReferenceCode) in /home/ponchique/Projects/8LMBackend/src/8LMBackend/Controllers/PackagesController.cs:line 124
