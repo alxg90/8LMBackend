@@ -118,6 +118,10 @@ namespace _8LMCore.Controllers
         }
         public JsonResult PrepareInvoice(int PackageRateID, string token, string ReferenceCode = null){
             try{
+                var user = _subscribeService.GetUserByToken(token);
+                if(user==null)
+                    return Json(new{ Status = "Fail", Message = "User with that token doesen't exist"});
+
                 var invoice = _subscribeService.PrepareInvoice(PackageRateID, token, ReferenceCode);
                 // var package = _subscribeService.GetPackageById(PackageRateID);
                 var customHash = new CustomHash();
