@@ -277,6 +277,7 @@ namespace _8LMCore.Controllers
                 var packageServices = _subscribeService.GetPackageServicesById(item.Id);
                 var packageRatePlans = _subscribeService.GetPackageRatePlansByPackageID(item.Id);
                 PackageDto pack = new PackageDto();
+                pack.PackageRatePlans = new List<PackageRatePlanDto>();
                 pack.Id = item.Id;
                 pack.Name = item.Name;
                 var servDto = new List<ServicesDto>();
@@ -293,7 +294,8 @@ namespace _8LMCore.Controllers
                 pack.StatusId = item.StatusId;
                 
                 foreach(var plan in packageRatePlans){
-                    pack.PackageRatePlans.Add(RatePlanToDto(plan, services, isUser));
+                    PackageRatePlanDto packRatePlan = RatePlanToDto(plan, services, isUser);
+                    pack.PackageRatePlans.Add(packRatePlan);
                 }
                 return pack;
             }
@@ -418,16 +420,17 @@ namespace _8LMCore.Controllers
                         });
                     }
                 }
-            return new PackageRatePlanDto(){
-                Id = ratePlan.Id,
-                PackageId = ratePlan.PackageId,
-                DurationInMonths = ratePlan.DurationInMonths,
-                Price = ratePlan.Price,
-                CurrencyId = ratePlan.CurrencyId,
-                PackageReferenceCode = tempRefCode,
-                PackageReferenceExtendCode = tempRefExtCode,
-                PackageReferenceServiceCode = tempRefServCode
-            };
+            var packRateDto = new PackageRatePlanDto(){
+                                    Id = ratePlan.Id,
+                                    PackageId = ratePlan.PackageId,
+                                    DurationInMonths = ratePlan.DurationInMonths,
+                                    Price = ratePlan.Price,
+                                    CurrencyId = ratePlan.CurrencyId,
+                                    PackageReferenceCode = tempRefCode,
+                                    PackageReferenceExtendCode = tempRefExtCode,
+                                    PackageReferenceServiceCode = tempRefServCode
+                                };
+            return packRateDto;
         }
     }
 }
