@@ -282,7 +282,7 @@ namespace _8LMCore.Controllers
                 {      
                     var pack = ToDtoPackage(item, services, true);   
                     var subscription = _subscribeService.GetSubscriptionForPackage(item.Id, user.Id);     
-                    if(item.StatusId == Statuses.Package.New)
+                    if(item.StatusId == Statuses.Package.Published)
                     {          
                         if(subscription != null)
                         {
