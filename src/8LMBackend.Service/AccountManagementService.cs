@@ -258,7 +258,7 @@ namespace _8LMBackend.Service
         public List<int> GetFunctionsForUser(string access_token)
         {
             var userId = GetUserID(access_token);
-            if(DbContext.Users.FirstOrDefault(x => x.Id == userId).Type.Id == Types.Users.Admin){
+            if(DbContext.Users.FirstOrDefault(x => x.Id == userId).TypeId == Types.Users.Admin){
                 return DbContext.SecurityFunction.Select(sf => sf.Id).ToList();
             }
             var result = DbContext.UserRole.Where(p => p.UserId == userId)
@@ -269,8 +269,8 @@ namespace _8LMBackend.Service
             var res = DbContext.Subscription.Include("PackageRatePlan")
                         .Where(p => p.UserId == userId 
                             && p.StatusId == Statuses.Subscription.Active 
-                            && p.EffectiveDate <= DateTime.UtcNow
-                            && p.ExpirationDate >= DateTime.UtcNow)
+                            && p.EffectiveDate.Date <= DateTime.UtcNow.Date
+                            && p.ExpirationDate.Date >= DateTime.UtcNow.Date)
                         .Join(DbContext.PackageService, s => s.PackageRatePlan.PackageId, ps => ps.PackageId, (s, ps) => ps)
                         .Join(DbContext.ServiceFunction, ps => ps.ServiceId, sf => sf.ServiceId, (ps, sf) => sf)
                         .Select(sf => sf.SecurityFunctionId).ToList();
