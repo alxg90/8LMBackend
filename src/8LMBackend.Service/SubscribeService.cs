@@ -202,7 +202,7 @@ namespace _8LMBackend.Service
         {
             return DbContext.Package.Where(x=>x.StatusId == Statuses.Package.Published).ToList();
         }
-        public async Task SaveCustomerProfile(int? userId, long transactionID)
+        public void SaveCustomerProfile(int? userId, long transactionID)
         {
             var paymentSettings = DbContext.PaymentSetting.First();
             var content = new JsonContent(new{
@@ -212,7 +212,7 @@ namespace _8LMBackend.Service
                                                         transactionKey = paymentSettings.AuthorizeNettransactionKey},
                                                     transId = transactionID.ToString()}});
             var requestTask = client.PostAsync("https://apitest.authorize.net/xml/v1/request.api", content);
-            await requestTask.ContinueWith(t =>
+            requestTask.ContinueWith(t =>
             {
                 using(var context = new DashboardDbContext())
                 {
@@ -303,7 +303,7 @@ namespace _8LMBackend.Service
             var invoice = DbContext.Invoice.FirstOrDefault( y=> y.Id == invoiceId);
             return DbContext.AuthorizeNetcustomerProfile.FirstOrDefault(x => x.UserId == invoice.UserId);
         }
-        public async Task СaptureTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId)
+        public void СaptureTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId, int subscriptionId)
         {
             var amountDue = DbContext.Invoice.FirstOrDefault(x => x.Id == invoiceId).AmountDue;
             var transaction = DbContext.AuthorizeNettransaction.FirstOrDefault(x => x.InvoiceId == invoiceId);
@@ -321,7 +321,7 @@ namespace _8LMBackend.Service
                     }
                     }});
             var requestTask = client.PostAsync("https://apitest.authorize.net/xml/v1/request.api", content);
-            await requestTask.ContinueWith(t =>
+            requestTask.ContinueWith(t =>
             {
                 using(var context = new DashboardDbContext())
                 {
@@ -356,7 +356,19 @@ namespace _8LMBackend.Service
                     context.AuthorizeNettransaction.Add(authNet);
 
                     var invoice = DbContext.Invoice.FirstOrDefault(x => x.Id == invoiceId);
-                    invoice.StatusId = Statuses.Invoice.Captured;
+                    if(responseFromApi.transactionResponse.responseCode == 1)
+                    {
+                        invoice.StatusId = Statuses.Invoice.Captured;
+                        var subscription = DbContext.Subscription.FirstOrDefault(x => x.Id == subscriptionId);
+                        subscription.ExpirationDate.AddMonths(DbContext.PackageRatePlan.FirstOrDefault(y=>y.Id == subscription.PackageRatePlanId).DurationInMonths);
+                        DbContext.Subscription.Update(subscription);
+                    }
+                    else
+                    {
+                        var user = DbContext.Users.FirstOrDefault(x => x.Id == invoice.UserId);
+                        user.StatusId = Statuses.Users.PaymentIssue;
+                        DbContext.Users.Update(user);
+                    }
                     context.Invoice.Update(invoice);
                     context.SaveChanges();
                 }
@@ -371,6 +383,57 @@ namespace _8LMBackend.Service
         public List<PackageRatePlan> GetPackageRatePlansByPackageID(int packageId)
         {
             return DbContext.PackageRatePlan.Where(x => x.PackageId == packageId).ToList();
+        }
+        public void ReCurrentPayment()
+        {
+            var subscriptions = DbContext.Subscription.Where(x => x.ExpirationDate.Date <= DateTime.UtcNow.Date).ToList();
+            if(subscriptions != null)
+            {
+                foreach (var subscription in subscriptions)
+                {
+                    if(DbContext.Users.FirstOrDefault(x => x.Id == subscription.UserId).StatusId == Statuses.Users.Active)
+                    {
+                        var packRatePlan = DbContext.PackageRatePlan.FirstOrDefault(x=>x.Id == subscription.PackageRatePlanId);
+                        var invoice = new Invoice();
+                        invoice.Amount = packRatePlan.Price;
+                        invoice.PackageId = packRatePlan.PackageId;
+                        
+                        var tempDiscount = DbContext.PackageReferenceCode.FirstOrDefault(x => x.PackageRatePlanId == packRatePlan.Id && x.ReferenceCode == DbContext.PackageReferenceCode.FirstOrDefault(y=>y.PackageRatePlanId == packRatePlan.Id).ReferenceCode);
+                        invoice.Discount = tempDiscount == null ? 0 : tempDiscount.IsFixed ? tempDiscount.Value : invoice.Amount * tempDiscount.Value / 100;            
+                        invoice.AmountDue = invoice.Amount - invoice.Discount;
+                        invoice.UserId = subscription.UserId;                        
+                        invoice.StatusId = Statuses.Invoice.New;
+                        invoice.CreatedDate = DateTime.UtcNow;
+                        invoice.UpdatedDate = null;
+                        DbContext.Invoice.Add(invoice);
+                        DbContext.SaveChanges();
+
+                        var customerProfile = DbContext.AuthorizeNetcustomerProfile.FirstOrDefault(x => x.UserId == subscription.UserId);
+                        if(customerProfile!=null)
+                        {              
+                            this.СaptureTransactionRequest(customerProfile.CustomerProfileId, customerProfile.PaymentProfileId, invoice.Id, subscription.Id);
+                        }
+                        else
+                        {
+                            var firstInvoice = DbContext.Invoice.Where(x => x.UserId == subscription.UserId && x.StatusId == Statuses.Invoice.Captured).OrderByDescending(t => t.CreatedDate).FirstOrDefault();
+                            var relay = DbContext.RelayAuthorizeNetresponse.FirstOrDefault(x => x.InvoiceId == firstInvoice.Id);
+                            this.SaveCustomerProfile(subscription.UserId, relay.XTransId);
+                            if(relay.XTransId != 0)
+                            {
+                                customerProfile = DbContext.AuthorizeNetcustomerProfile.FirstOrDefault(x => x.UserId == subscription.UserId);
+                                this.СaptureTransactionRequest(customerProfile.CustomerProfileId, customerProfile.PaymentProfileId, invoice.Id, subscription.Id);
+                            }
+                        }
+                    }
+                }
+            }
+            var expiredSubscriptions = DbContext.Subscription.Where(x => x.ExpirationDate.Date <= DateTime.Now.Date && DbContext.Users.FirstOrDefault(y=>y.Id == x.UserId).StatusId == Statuses.Users.PaymentIssue).ToList();
+            foreach(var expiredSubscription in expiredSubscriptions)
+            {
+                expiredSubscription.StatusId = Statuses.Subscription.Expired;
+                DbContext.Subscription.Update(expiredSubscription);
+            }
+            DbContext.SaveChanges();
         }
     }
 }

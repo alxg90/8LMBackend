@@ -29,12 +29,13 @@ namespace _8LMBackend.Service
         string GetTokenByInvoice(Invoice invoice);
         List<Package> GetActivePackages();
         // Invoice AcceptGuestPayment(RelayAuthorizeNetresponse rel);
-        Task SaveCustomerProfile(int? userId, long transactionID);
+        void SaveCustomerProfile(int? userId, long transactionID);
         Task СreateTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId);
-        Task СaptureTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId);
+        void СaptureTransactionRequest(long customerProfileId, long paymentProfileId, int invoiceId, int subscriptionId);
         AuthorizeNetcustomerProfile GetAuthProfileByInvoice(int invoiceId);
         PackageRatePlan SavePackageRatePlan(PackageRatePlan packRatePlan);
         List<PackageRatePlan> GetPackageRatePlansByPackageID(int packageId);
         UserToken GetUserToken(string token);
+        void ReCurrentPayment();
     }
 }
