@@ -246,7 +246,7 @@ namespace _8LMBackend.Service
             {
                 PromoProduct npp = new PromoProduct()
                 {
-                    Id = u.id,
+                    SupplierId = u.id,
                     Name = pp
                 };
                 DbContext.Set<PromoProduct>().Add(npp);
