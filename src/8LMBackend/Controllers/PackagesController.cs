@@ -191,6 +191,10 @@ namespace _8LMCore.Controllers
                 ViewBag.userToken = userToken;
                 ViewBag.email = rel.XEmail;
                 ViewBag.transactionId = rel.XTransId;
+                //  После первой транзакции (Accept Payment), 
+                // необходимо вызвать миетод, который на осмнове транзакции создаёт пеймент профиль. 
+                // Этот профиль записать в таблицу AuthorizeNETCustomerProfile.
+                CreateCustomerProfileFromTransaction(_subscribeService.GetUserByToken(userToken).Id, rel.XTransId);
                 
                 return View();
             }
@@ -394,9 +398,9 @@ namespace _8LMCore.Controllers
                 rel.XZip = relDto.x_zip;
                 return rel;
         }
-        public async void CreateCustomerProfileFromTransaction(int userId, long transactionID)
+        public void CreateCustomerProfileFromTransaction(int userId, long transactionID)
         {
-            await _subscribeService.SaveCustomerProfile(userId, transactionID);
+            _subscribeService.SaveCustomerProfile(userId, transactionID);
         }
         public void CreateTransaction(int invoiceId)
         {
@@ -404,19 +408,19 @@ namespace _8LMCore.Controllers
             _subscribeService.СreateTransactionRequest(authProfile.CustomerProfileId, authProfile.PaymentProfileId, invoiceId);
         }
 
-        public void CaptureTransaction(int invoiceId)
-        {
-            try
-            {
-                var authProfile = _subscribeService.GetAuthProfileByInvoice(invoiceId);
-                _subscribeService.СaptureTransactionRequest(authProfile.CustomerProfileId, authProfile.PaymentProfileId, invoiceId);
-            }
-            catch
-            (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        // public void CaptureTransaction(int invoiceId)
+        // {
+        //     try
+        //     {
+        //         var authProfile = _subscribeService.GetAuthProfileByInvoice(invoiceId);
+        //         _subscribeService.СaptureTransactionRequest(authProfile.CustomerProfileId, authProfile.PaymentProfileId, invoiceId);
+        //     }
+        //     catch
+        //     (Exception ex)
+        //     {
+        //         throw ex;
+        //     }
+        // }
         PackageRatePlanDto RatePlanToDto(PackageRatePlan ratePlan, Service[] services, bool isUser)
         {             
                 var dbPackageReferenceCodes = _subscribeService.GetPackageReferenceCodeById(ratePlan.Id);
@@ -465,6 +469,15 @@ namespace _8LMCore.Controllers
                                                 PackageReferenceExtendCode = tempRefExtCode,
                                                 PackageReferenceServiceCode = tempRefServCode
                                             };
+        }
+        public void ReCurrentPayment(){
+            try{
+                _subscribeService.ReCurrentPayment();      
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
