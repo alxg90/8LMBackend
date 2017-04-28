@@ -470,7 +470,8 @@ namespace _8LMCore.Controllers
                                             };
         }
         public void ReCurrentPayment(){
-            try{
+            try
+            {
                 _subscribeService.ReCurrentPayment();      
             }
             catch(Exception ex)
