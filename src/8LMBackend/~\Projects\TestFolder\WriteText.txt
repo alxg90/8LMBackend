@@ -1,2 +1,0 @@
-   at _8LMBackend.Service.SubscribeService.GetUserByToken(String token) in /home/ponchique/Projects/8LMBackend/src/8LMBackend.Service/SubscribeService.cs:line 128
-   at _8LMCore.Controllers.PackagesController.GetUserPackages(String token) in /home/ponchique/Projects/8LMBackend/src/8LMBackend/Controllers/PackagesController.cs:line 277
