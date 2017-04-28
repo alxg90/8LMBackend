@@ -205,7 +205,7 @@ namespace _8LMBackend.Service
                 result.Add(item);
             }
             foreach (var u in result)
-                foreach (var pp in DbContext.PromoProduct.Where(p => p.Id == u.id).ToList())
+                foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == u.id).ToList())
                     u.products.Add(pp.Name);
 
             return result;
