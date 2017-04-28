@@ -417,9 +417,9 @@ namespace _8LMBackend.Service
                         {
                             var firstInvoice = DbContext.Invoice.Where(x => x.UserId == subscription.UserId && x.StatusId == Statuses.Invoice.Captured).OrderByDescending(t => t.CreatedDate).FirstOrDefault();
                             var relay = DbContext.RelayAuthorizeNetresponse.FirstOrDefault(x => x.InvoiceId == firstInvoice.Id);
-                            this.SaveCustomerProfile(subscription.UserId, relay.XTransId);
                             if(relay.XTransId != 0)
                             {
+                                this.SaveCustomerProfile(subscription.UserId, relay.XTransId);
                                 customerProfile = DbContext.AuthorizeNetcustomerProfile.FirstOrDefault(x => x.UserId == subscription.UserId);
                                 this.СaptureTransactionRequest(customerProfile.CustomerProfileId, customerProfile.PaymentProfileId, invoice.Id, subscription.Id);
                             }
