@@ -197,7 +197,8 @@ namespace _8LMCore.Controllers
             catch(Exception ex)
             {
                 _8LMBackend.Logger.SaveLog(ex.StackTrace);
-                return Json(new{status = "fail", message = ex.Message});
+                return View("PaymentError");
+                //return Json(new{status = "fail", message = ex.Message});
             }            
         }
         // public ActionResult AcceptGuestPayment(RelayAuthorizeNetresponseDto relDto)
