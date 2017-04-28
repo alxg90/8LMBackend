@@ -185,7 +185,7 @@ namespace _8LMBackend.Service
             VerifyFunction(16, access_token);
 
             List<PromoUserViewModel> result = new List<PromoUserViewModel>();
-            foreach (var u in DbContext.PromoSupplier.OrderBy(p => p.Id).ToList())
+            foreach (var u in DbContext.PromoSupplier.Include("PromoProduct").OrderBy(p => p.Id).ToList())
             {
                 PromoUserViewModel item = new PromoUserViewModel()
                 {
@@ -202,12 +202,9 @@ namespace _8LMBackend.Service
                     discountPolicy = u.DiscountPolicy,
                     customCode = u.CustomCode
                 };
+                item.products.AddRange(u.PromoProduct.Select(p => p.Name));
                 result.Add(item);
             }
-            foreach (var u in result)
-                foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == u.id).ToList())
-                    u.products.Add(pp.Name);
-
             return result;
         }
 
