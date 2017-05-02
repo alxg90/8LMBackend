@@ -300,6 +300,10 @@ namespace _8LMCore.Controllers
                         if(subscription != null)
                         {
                             pack.ValidTo = subscription.ExpirationDate;
+                            foreach (var packageRatePlan in pack.PackageRatePlans)
+                            {
+                                packageRatePlan.Bought = true;
+                            }
                             packageDto.Add(pack);
                         }                
                     }

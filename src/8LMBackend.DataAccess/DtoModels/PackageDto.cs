@@ -24,6 +24,7 @@ namespace _8LMBackend.DataAccess.DtoModels
         public int DurationInMonths { get; set; }
         public int Price { get; set; } 
         public int CurrencyId { get; set; }
+        public bool Bought { get; set; }
         public List<PackageReferenceCodeDto> PackageReferenceCode { get; set; }
         public List<PackageReferenceExtendCodeDto> PackageReferenceExtendCode { get; set; }
         public List<PackageReferenceServiceCodeDto>  PackageReferenceServiceCode { get; set; }
