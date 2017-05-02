@@ -294,7 +294,8 @@ namespace _8LMCore.Controllers
                             pack.ValidTo = subscription.ExpirationDate;
                             foreach (var packageRatePlan in pack.PackageRatePlans)
                             {
-                                packageRatePlan.Bought = true;
+                                if(packageRatePlan.Id == subscription.PackageRatePlanId && subscription.StatusId == Statuses.Subscription.Active)
+                                    packageRatePlan.Bought = true;
                             }
                         }                
                         packageDto.Add(pack);  
