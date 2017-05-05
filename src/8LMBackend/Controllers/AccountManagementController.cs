@@ -106,7 +106,6 @@ namespace _8LMCore.Controllers
             }
         }
 
-        //[HttpPost]
         public JsonResult DeletePromoCode(int yyyy, int mm, string token)
         {
             try
