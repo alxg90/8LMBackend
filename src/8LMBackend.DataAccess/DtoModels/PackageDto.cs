@@ -54,4 +54,12 @@ namespace _8LMBackend.DataAccess.DtoModels
         public string ReferenceCode { get; set; }
         public int Months { get; set; }
     }
+
+    public class PackageDashboard
+    {
+        public string MonthlyCode { get; set; }
+        public int NumberOfSuppliers { get; set; }
+        public bool MorePackagesAvailable { get; set; }
+        public List<PackageDto> packages { get; set; }
+    }
 }

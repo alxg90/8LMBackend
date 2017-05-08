@@ -485,5 +485,16 @@ namespace _8LMCore.Controllers
                 throw ex;
             }
         }
+
+        public PackageDashboard GetUserPackageDashboard(string token)
+        {
+            PackageDashboard result = new PackageDashboard();
+            result.packages = GetUserPackages(token);
+            result.NumberOfSuppliers = _subscribeService.GetNumberOfSuppliers();
+            result.MonthlyCode = _subscribeService.GetMonthlyCode();
+            result.MorePackagesAvailable = _subscribeService.MorePackagesAvailable(token);
+
+            return result;
+        }
     }
 }

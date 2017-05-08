@@ -37,5 +37,9 @@ namespace _8LMBackend.Service
         List<PackageRatePlan> GetPackageRatePlansByPackageID(int packageId);
         UserToken GetUserToken(string token);
         void ReCurrentPayment();
+
+        int GetNumberOfSuppliers();
+        string GetMonthlyCode();
+        bool MorePackagesAvailable(string access_token);
     }
 }

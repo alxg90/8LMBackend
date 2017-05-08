@@ -435,5 +435,45 @@ namespace _8LMBackend.Service
             }
             DbContext.SaveChanges();
         }
+
+        public int GetNumberOfSuppliers()
+        {
+            return DbContext.PromoSupplier.Count();
+        }
+
+        public string GetMonthlyCode()
+        {
+            var code = DbContext.PromoCode.FirstOrDefault(p => p.Yyyy == DateTime.UtcNow.Year && p.Mm == DateTime.UtcNow.Month);
+            return code != null ? code.Code : string.Empty;
+        }
+
+        public bool MorePackagesAvailable(string access_token)
+        {
+            var u = DbContext.UserToken.Where(p => p.Token == access_token).FirstOrDefault();
+            if (u == default(UserToken))
+                throw new Exception("Not authorized");
+
+            var userId = u.Id;
+            
+            var result = DbContext.UserRole.Where(p => p.UserId == userId)
+                .Include(p => p.Role)
+                .Join(DbContext.RoleFunction, p => p.RoleId, rf => rf.RoleId, (p, rf) => rf.FunctionId)
+                .Distinct().ToList();
+
+            var res = DbContext.Subscription.Include("PackageRatePlan")
+                        .Where(p => p.UserId == userId
+                            && p.StatusId == Statuses.Subscription.Active
+                            && p.EffectiveDate.Date <= DateTime.UtcNow.Date
+                            && p.ExpirationDate.Date >= DateTime.UtcNow.Date)
+                        .Join(DbContext.PackageService, s => s.PackageRatePlan.PackageId, ps => ps.PackageId, (s, ps) => ps)
+                        .Join(DbContext.ServiceFunction, ps => ps.ServiceId, sf => sf.ServiceId, (ps, sf) => sf)
+                        .Select(sf => sf.SecurityFunctionId).ToList();
+
+            result.AddRange(res);
+
+            var SubscribtionFunctions = DbContext.ServiceFunction.Select(p => p.SecurityFunctionId).Distinct().ToList();
+
+            return result.Distinct().ToList().Count != SubscribtionFunctions.Count;
+        }
     }
 }
