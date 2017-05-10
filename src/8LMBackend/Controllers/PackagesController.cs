@@ -489,12 +489,55 @@ namespace _8LMCore.Controllers
         public PackageDashboard GetUserPackageDashboard(string token)
         {
             PackageDashboard result = new PackageDashboard();
-            result.packages = GetUserPackages(token);
+            result.packages = GetUserDashboardPackages(token);
             result.NumberOfSuppliers = _subscribeService.GetNumberOfSuppliers();
             result.MonthlyCode = _subscribeService.GetMonthlyCode();
             result.MorePackagesAvailable = _subscribeService.MorePackagesAvailable(token);
 
             return result;
+        }
+
+        public List<PackageDto> GetUserDashboardPackages(string token)
+        {
+            try
+            {
+                var user = _subscribeService.GetUserByToken(token);
+                var packages = _subscribeService.GetAllPackages();
+                var packageDto = new List<PackageDto>();
+                var services = GetAllServices();
+                foreach (var item in packages)
+                {
+                    var pack = ToDtoPackage(item, services, true);
+                    var subscription = _subscribeService.GetSubscriptionForPackage(item.Id, user.Id);
+                    if (item.StatusId == Statuses.Package.Published)
+                    {
+                        if (subscription != null)
+                        {
+                            pack.ValidTo = subscription.ExpirationDate;
+                            foreach (var packageRatePlan in pack.PackageRatePlans)
+                            {
+                                if (packageRatePlan.Id == subscription.PackageRatePlanId && subscription.StatusId == Statuses.Subscription.Active)
+                                    packageRatePlan.Bought = true;
+                            }
+                            packageDto.Add(pack);
+                        }
+                    }
+                    else
+                    {
+                        if (subscription != null)
+                        {
+                            pack.ValidTo = subscription.ExpirationDate;
+                            packageDto.Add(pack);
+                        }
+                    }
+                }
+                return packageDto;
+            }
+            catch (Exception ex)
+            {
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);
+                throw ex;
+            }
         }
     }
 }
