@@ -488,10 +488,12 @@ namespace _8LMCore.Controllers
 
         public PackageDashboard GetUserPackageDashboard(string token)
         {
+            var functions = _subscribeService.GetSecurityFunctionsForUser(token);
+
             PackageDashboard result = new PackageDashboard();
             result.packages = GetUserDashboardPackages(token);
             result.NumberOfSuppliers = _subscribeService.GetNumberOfSuppliers();
-            result.MonthlyCode = _subscribeService.GetMonthlyCode();
+            result.MonthlyCode = functions.Contains(17) ? _subscribeService.GetMonthlyCode() : string.Empty;
             result.MorePackagesAvailable = _subscribeService.MorePackagesAvailable(token);
 
             return result;

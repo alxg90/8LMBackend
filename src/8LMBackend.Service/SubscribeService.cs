@@ -447,14 +447,14 @@ namespace _8LMBackend.Service
             return code != null ? code.Code : string.Empty;
         }
 
-        public bool MorePackagesAvailable(string access_token)
+        public List<int> GetSecurityFunctionsForUser(string access_token)
         {
             var u = DbContext.UserToken.Where(p => p.Token == access_token).FirstOrDefault();
             if (u == default(UserToken))
                 throw new Exception("Not authorized");
 
             var userId = u.Id;
-            
+
             var result = DbContext.UserRole.Where(p => p.UserId == userId)
                 .Include(p => p.Role)
                 .Join(DbContext.RoleFunction, p => p.RoleId, rf => rf.RoleId, (p, rf) => rf.FunctionId)
@@ -470,6 +470,13 @@ namespace _8LMBackend.Service
                         .Select(sf => sf.SecurityFunctionId).ToList();
 
             result.AddRange(res);
+
+            return result;
+        }
+
+        public bool MorePackagesAvailable(string access_token)
+        {
+            var result = GetSecurityFunctionsForUser(access_token);
 
             var SubscribtionFunctions = DbContext.ServiceFunction.Select(p => p.SecurityFunctionId).Distinct().ToList();
 

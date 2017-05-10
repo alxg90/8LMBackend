@@ -39,6 +39,7 @@ namespace _8LMBackend.Service
         void ReCurrentPayment();
 
         int GetNumberOfSuppliers();
+        List<int> GetSecurityFunctionsForUser(string access_token);
         string GetMonthlyCode();
         bool MorePackagesAvailable(string access_token);
     }
