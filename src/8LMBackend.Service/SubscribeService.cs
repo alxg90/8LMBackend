@@ -453,7 +453,7 @@ namespace _8LMBackend.Service
             if (u == default(UserToken))
                 throw new Exception("Not authorized");
 
-            var userId = u.Id;
+            var userId = u.UserId;
 
             var result = DbContext.UserRole.Where(p => p.UserId == userId)
                 .Include(p => p.Role)
