@@ -78,12 +78,12 @@ namespace _8LMCore.Controllers
             return Json(new { status = "ok" });
         }
 
-        //[HttpPost]
-        public JsonResult UpdateCode(int yyyy, int mm, string Code, string token)
+        [HttpPost]
+        public JsonResult UpdateCode([FromBody]PromoCodeModel pc, string token)
         {
             try
             {
-                _accountManagementService.UpdateCode(yyyy, mm, Code, token);
+                _accountManagementService.UpdateCode(pc.yyyy, pc.mm, pc.Code, token);
             }
             catch (System.Exception ex)
             {
