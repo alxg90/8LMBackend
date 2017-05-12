@@ -488,7 +488,7 @@ namespace _8LMCore.Controllers
 
         public PackageDashboard GetUserPackageDashboard(string token)
         {
-            var functions = _subscribeService.GetSecurityFunctionsForUser(token);
+            var functions = _subscribeService.GetSecurityFunctionsForUser(token); 
 
             PackageDashboard result = new PackageDashboard();
             result.packages = GetUserDashboardPackages(token);
