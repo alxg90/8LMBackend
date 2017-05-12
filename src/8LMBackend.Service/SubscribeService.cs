@@ -478,9 +478,10 @@ namespace _8LMBackend.Service
         {
             var result = GetSecurityFunctionsForUser(access_token);
 
-            var SubscribtionFunctions = DbContext.ServiceFunction.Select(p => p.SecurityFunctionId).Distinct().ToList();
-
-            return result.Distinct().ToList().Count != SubscribtionFunctions.Count;
+            var ss = DbContext.PackageService.Include("Package").Where(p => p.Package.StatusId == Statuses.Package.Published).Select(p => p.ServiceId).Distinct().ToList();
+            var sfs = ss.Join(DbContext.ServiceFunction, s => s, sf => sf.ServiceId, (s, sf) => sf).Select(p => p.SecurityFunctionId).Distinct().ToList();
+            
+            return result.Distinct().ToList().Count != sfs.Count;
         }
     }
 }
