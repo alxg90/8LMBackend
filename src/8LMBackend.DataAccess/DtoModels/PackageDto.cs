@@ -17,6 +17,8 @@ namespace _8LMBackend.DataAccess.DtoModels
         public int? StatusId { get; set; }
         public List<PackageRatePlanDto> PackageRatePlans { get; set; }        
         public DateTime ValidTo { get; set; }
+        public string VideoURL { get; set; }
+        public int SortOrder { get; set; }
     }
     public class PackageRatePlanDto{
         public int Id { get; set; }

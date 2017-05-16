@@ -267,7 +267,7 @@ namespace _8LMCore.Controllers
                     var pack = ToDtoPackage(item, services, true);
                     packageDto.Add(pack);                  
                 }
-                return packageDto;
+                return packageDto.OrderBy(p => p.SortOrder).ToList();
             }
             catch (System.Exception ex)
             {
@@ -339,7 +339,9 @@ namespace _8LMCore.Controllers
                 pack.Services = servDto.ToArray();
                 pack.PaletteId = item.PaletteId;
                 pack.StatusId = item.StatusId;
-                
+                pack.VideoURL = item.VideoURL;
+                pack.SortOrder = item.SortOrder;
+
                 foreach(var plan in packageRatePlans)
                 {
                     PackageRatePlanDto packRatePlan = RatePlanToDto(plan, services, isUser);

@@ -20,6 +20,8 @@ namespace _8LMBackend.DataAccess.Models
         public int PaletteId { get; set; }
         public int StatusId { get; set; }
         public int UserTypeId { get; set; }
+        public string VideoURL { get; set; }
+        public int SortOrder { get; set; }
 
         public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<PackageRatePlan> PackageRatePlan { get; set; }
