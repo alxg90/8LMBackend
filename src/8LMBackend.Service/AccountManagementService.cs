@@ -205,7 +205,7 @@ namespace _8LMBackend.Service
                 item.products.AddRange(u.PromoProduct.Select(p => p.Name));
                 result.Add(item);
             }
-            return result;
+            return result.OrderBy(x => x.name).ToList();
         }
 
         public void UpdatePromoUser(PromoUserViewModel u, string access_token)
