@@ -236,7 +236,7 @@ namespace _8LMBackend.Service
                 DbContext.Set<PromoSupplier>().Add(item);
 
             if (!isNew)
-                foreach (var pp in DbContext.PromoProduct.Where(p => p.Id == u.id).ToList())
+                foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == u.id).ToList())
                     DbContext.Set<PromoProduct>().Remove(pp);
 
             foreach (var pp in u.products)
