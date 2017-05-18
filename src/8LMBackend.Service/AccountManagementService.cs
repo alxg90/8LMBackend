@@ -386,7 +386,7 @@ namespace _8LMBackend.Service
         {
             VerifyFunction(12, token);
 
-            foreach (var pp in DbContext.PromoProduct.Where(p => p.Id == ID).ToList())
+            foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == ID).ToList())
                 DbContext.Set<PromoProduct>().Remove(pp);
 
             var item = DbContext.PromoSupplier.Where(p => p.Id == ID).FirstOrDefault();
