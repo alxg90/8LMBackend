@@ -21,8 +21,8 @@ namespace _8LMCore.Controllers
         {
             _proxyService = proxyService;
         }
-        public ActionResult UpdateStatistic(string url, string controlId, int pageId){
-            
+        public ActionResult UpdateStatistic(string url, string controlId, int pageId)
+        {            
             try
             {
                 var remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress;
@@ -41,8 +41,8 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public void IsPageLoad(int pageId, bool? isLoad){
-            
+        public void IsPageLoad(int pageId, bool? isLoad)
+        {            
             try
             {
                 var remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress;
@@ -65,8 +65,10 @@ namespace _8LMCore.Controllers
             try
             {
                 TempControlStats[] items = JsonConvert.DeserializeObject<TempControlStats[]>(buttonsArray);
-                foreach(var item in items){
-                    if(item.IsTracked){
+                foreach(var item in items)
+                {
+                    if(item.IsTracked)
+                    {
                         ControlStat stats = new ControlStat();                    
                         stats.Name = item.Name;
                         stats.PageId = pageId;
