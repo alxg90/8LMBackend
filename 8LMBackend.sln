@@ -10,6 +10,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "8LMBackend.Service", "src\8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "8LMBackend.DataAccess", "src\8LMBackend.DataAccess\8LMBackend.DataAccess.csproj", "{E88B5B05-9C28-4C1B-BEF9-CB2455F9C8C2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db", "db", "{3CC0F876-A8DC-45F0-BBE0-D8C77FBEB2D4}"
+	ProjectSection(SolutionItems) = preProject
+		..\ELMDB\db.sql = ..\ELMDB\db.sql
+		..\ELMDB\drop.sql = ..\ELMDB\drop.sql
+		..\ELMDB\EntityData.sql = ..\ELMDB\EntityData.sql
+		..\ELMDB\GeneralData.sql = ..\ELMDB\GeneralData.sql
+		..\ELMDB\ServiceData.sql = ..\ELMDB\ServiceData.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
