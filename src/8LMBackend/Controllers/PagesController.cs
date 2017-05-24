@@ -16,7 +16,8 @@ namespace _8LMCore.Controllers
             _pagesService = pagesService;
         }
         
-        public int NewPage(){
+        public int NewPage()
+        {
             var page = new Pages();
             page.Html = "Empty Page";
             page.Json = "Empty Page";

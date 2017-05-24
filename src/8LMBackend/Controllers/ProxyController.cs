@@ -3,11 +3,15 @@ using _8LMBackend.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace _8LMCore.Controllers
 {
-    public class TempControlStats{
+    public class TempControlStats
+    {
         public string Id { get; set; }
         public string Name { get;set;}
         public bool IsActive {get;set;}
@@ -61,7 +65,8 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public void SaveButtonsToStats(string buttonsArray, int pageId){
+        public void SaveButtonsToStats(string buttonsArray, int pageId)
+        {
             try
             {
                 TempControlStats[] items = JsonConvert.DeserializeObject<TempControlStats[]>(buttonsArray);
@@ -83,6 +88,15 @@ namespace _8LMCore.Controllers
             {
                 throw new Exception(ex.Message);
             }
+        }
+        public void SaveFile(List<Microsoft.AspNetCore.Http.IFormFile> files)
+        {
+            FileManager manager = new FileManager();
+            manager.writeFiles(files);
+        }
+        public ViewResult SaveImage()
+        {
+            return View();
         }
     }
 }
