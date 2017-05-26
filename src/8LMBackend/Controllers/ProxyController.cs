@@ -89,7 +89,7 @@ namespace _8LMCore.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        public void SaveFile(List<Microsoft.AspNetCore.Http.IFormFile> files)
+        public void SaveImageFiles(List<Microsoft.AspNetCore.Http.IFormFile> files)
         {
             FileManager manager = new FileManager();
             manager.writeFiles(files);
