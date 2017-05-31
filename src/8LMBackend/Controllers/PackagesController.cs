@@ -543,5 +543,16 @@ namespace _8LMCore.Controllers
                 throw ex;
             }
         }
+
+        public AvailableEmailBroadcast GetNumberOfEmailBroadcast(string token)
+        {
+            AvailableEmailBroadcast result = new AvailableEmailBroadcast();
+
+            result.Amount = 6;
+            result.PeriodFrom = DateTime.Now.Date;
+            result.PeriodFrom = DateTime.Now.Date.AddMonths(1);
+
+            return result;
+        }
     }
 }

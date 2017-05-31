@@ -64,4 +64,11 @@ namespace _8LMBackend.DataAccess.DtoModels
         public bool MorePackagesAvailable { get; set; }
         public List<PackageDto> packages { get; set; }
     }
+
+    public class AvailableEmailBroadcast
+    {
+        public int Amount { get; set; }
+        public DateTime PeriodFrom { get; set; }
+        public DateTime PeriodTo { get; set; }
+    }
 }
