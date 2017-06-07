@@ -554,5 +554,14 @@ namespace _8LMCore.Controllers
 
             return result;
         }
+
+        public void ChargeAll41()   //DELETE!!!!!!!!!!!!!!!!!!!!!!!!
+        {
+            List<int> invoices = new List<int>()
+            {};
+
+            foreach (var item in invoices)
+                CreateTransaction(item);
+        }
     }
 }

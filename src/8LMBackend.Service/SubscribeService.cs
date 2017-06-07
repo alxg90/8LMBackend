@@ -11,6 +11,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace _8LMBackend.Service
 {
@@ -237,11 +238,12 @@ namespace _8LMBackend.Service
                     new{merchantAuthentication = 
                         new { name = paymentSettings.AuthorizeNetlogin,
                              transactionKey = paymentSettings.AuthorizeNettransactionKey
-                            }, 
+                            },
+                        refId = invoiceId.ToString(),
                     transactionRequest = new
                     {
                         transactionType = "authCaptureTransaction",
-                        amount = amountDue,
+                        amount = (decimal)amountDue / (decimal)100,
                         profile = new
                         {
                             customerProfileId = customerProfileId.ToString(),
@@ -256,12 +258,25 @@ namespace _8LMBackend.Service
                         }
                     }
                     }});
-            var requestTask = client.PostAsync("https://apitest.authorize.net/xml/v1/request.api", content);
+            //var requestTask = client.PostAsync("https://apitest.authorize.net/xml/v1/request.api", content);
+            var requestTask = client.PostAsync("https://api.authorize.net/xml/v1/request.api", content);
             await requestTask.ContinueWith(t =>
             {
-                using(var context = new DashboardDbContext())
+                var responseString = t.Result.Content.ReadAsStringAsync().Result;
+
+                string s = invoiceId.ToString() + "," +
+                           customerProfileId.ToString() + "," +
+                           paymentProfileId.ToString() + "," +
+                           ((decimal)amountDue / (decimal)100).ToString() + "," +
+                           responseString;
+                File.AppendAllText(@"c:\ELMCharging\responses.csv", s + Environment.NewLine);
+
+                /*using(var context = new DashboardDbContext())
                 {
                     var responseString = t.Result.Content.ReadAsStringAsync().Result;
+                    responseString = responseString.Replace(@"\""", @"""");
+                    responseString = responseString.Replace(@"{""transactionResponse"":", @"");
+                    responseString = responseString.Replace(@"}]}}", @"}]}");
                     CreateTransactionResponseDto responseFromApi = JsonConvert.DeserializeObject<CreateTransactionResponseDto>(responseString);
                     AuthorizeNettransaction authNet = new AuthorizeNettransaction();
                     authNet.InvoiceId = invoiceId;
@@ -271,11 +286,25 @@ namespace _8LMBackend.Service
                     authNet.PaymentProfileId = paymentProfileId;
                     authNet.TransactionType = "authCaptureTransaction";
                     authNet.Amount = amountDue;
-                    authNet.Description = responseFromApi.transactionResponse.messages.description;
+                    try
+                    {
+                        authNet.Description = responseFromApi.transactionResponse.messages.description;
+                        authNet.TransactionResponseMessageCode = responseFromApi.transactionResponse.messages.code;
+                        authNet.TransactionResponseMessageDescription = responseFromApi.transactionResponse.messages.description;
+                        authNet.ResponseResultCode = responseFromApi.messages.First().resultCode;
+                        authNet.ResponseText = responseFromApi.messages.First().message[0]["text"];
+                        authNet.ResponseCode = responseFromApi.transactionResponse.responseCode.ToString();
+                    }
+                    catch
+                    {
+                        authNet.Description = "";
+                        authNet.TransactionResponseMessageDescription = "";
+                        authNet.ResponseResultCode = "";
+                        authNet.ResponseText = "";
+                        authNet.ResponseCode = "";
+                    }
                     authNet.CreatedDate = DateTime.UtcNow;
-                    authNet.ResponseResultCode = responseFromApi.messages.resultCode;
-                    authNet.ResponseCode = null;
-                    authNet.ResponseText = responseFromApi.messages.message[0]["text"];
+                    
                     authNet.TransactionResponseResponseCode = responseFromApi.transactionResponse.responseCode;
                     authNet.TransactionResponseAuthCode = responseFromApi.transactionResponse.authCode;
                     authNet.TransactionResponseAvsresultCode = responseFromApi.transactionResponse.avsResultCode;
@@ -287,15 +316,14 @@ namespace _8LMBackend.Service
                     authNet.TransactionResponseTestRequest = responseFromApi.transactionResponse.testRequest;
                     authNet.TransactionResponseAccountNumber = responseFromApi.transactionResponse.accountNumber;
                     authNet.TransactionResponseAccountType = responseFromApi.transactionResponse.accountType;
-                    authNet.TransactionResponseMessageCode = responseFromApi.transactionResponse.messages.code;
-                    authNet.TransactionResponseMessageDescription = responseFromApi.transactionResponse.messages.description;                    
+                    
                     context.AuthorizeNettransaction.Add(authNet);
 
                     var invoice = DbContext.Invoice.FirstOrDefault(x => x.Id == invoiceId);
                     invoice.StatusId = Statuses.Invoice.New;
                     context.Invoice.Update(invoice);
                     context.SaveChanges();
-                }
+                }*/
             });
         }
         public AuthorizeNetcustomerProfile GetAuthProfileByInvoice(int invoiceId)
@@ -337,9 +365,9 @@ namespace _8LMBackend.Service
                     authNet.Amount = amountDue;
                     authNet.Description = responseFromApi.transactionResponse.messages.description;
                     authNet.CreatedDate = DateTime.UtcNow;
-                    authNet.ResponseResultCode = responseFromApi.messages.resultCode;
+                    authNet.ResponseResultCode = responseFromApi.messages.First().resultCode;
                     authNet.ResponseCode = null;
-                    authNet.ResponseText = responseFromApi.messages.message[0]["text"];
+                    authNet.ResponseText = responseFromApi.messages.First().message[0]["text"];
                     authNet.TransactionResponseResponseCode = responseFromApi.transactionResponse.responseCode;
                     authNet.TransactionResponseAuthCode = responseFromApi.transactionResponse.authCode;
                     authNet.TransactionResponseAvsresultCode = responseFromApi.transactionResponse.avsResultCode;

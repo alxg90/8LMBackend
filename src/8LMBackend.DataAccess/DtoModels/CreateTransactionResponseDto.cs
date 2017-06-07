@@ -11,7 +11,7 @@ namespace _8LMBackend.DataAccess.DtoModels
 
         }
         public TransResposneDto transactionResponse { get; set; }
-        public MessagesDto messages { get; set; }
+        public List<MessagesDto> messages { get; set; }
     }
     public class TransMessagesDto{
         public int? code { get; set; }
