@@ -4,6 +4,7 @@ using _8LMBackend.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System;
+using System.IO;
 
 namespace _8LMCore.Controllers
 {
@@ -28,6 +29,12 @@ namespace _8LMCore.Controllers
             page.CreatedBy = 1;
             _pagesService.NewPage(page);
             return page.Id;
+        }
+
+        public ActionResult DownloadPage(int pageID)
+        {
+            var page = _pagesService.GetPage(pageID);
+            return File(_pagesService.Download(page), "application/zip", "page" + page.Id.ToString() + ".zip");
         }
     }
 }
