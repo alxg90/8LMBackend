@@ -31,7 +31,9 @@ namespace _8LMBackend.Service
                     int i = HTML.IndexOf("\"", index + s.Length + 1);
                     string sr = HTML.Substring(index + s.Length, i - index - s.Length);
                     index += sr.Length + s.Length;
-                    result.Add(sr, Guid.NewGuid());
+
+                    if (sr.Contains(".."))
+                        result.Add(sr, Guid.NewGuid());
                 }
                 else
                     break;
