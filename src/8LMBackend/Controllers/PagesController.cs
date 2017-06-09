@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System;
 using System.IO;
+using _8LMBackend.Service.DTO;
 
 namespace _8LMCore.Controllers
 {
@@ -17,22 +18,21 @@ namespace _8LMCore.Controllers
             _pagesService = pagesService;
         }
         
-        public int NewPage()
+        [HttpPost]
+        public JsonResult NewPage(string token)
         {
-            var page = new Pages();
-            
-            page.Html = "Empty Page";
-            page.Json = "Empty Page";
-            page.Name = "Empty Page" + DateTime.Now;
-            page.TypeId = Types.Pages.LandingPage;
-            page.StatusId = Statuses.Pages.Active;
-            page.CreatedDate = DateTime.Now;
-            page.CreatedBy = 1;
-            _pagesService.NewPage(page);
-            return page.Id;
+            try
+            {
+                return Json(new { status = "OK", PageID = _pagesService.NewPage(token) });
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(new { status = "failed", error = ex.Message });
+            }
         }
 
-        public Pages GetPage(int id)
+        public Pages GetPage(int id, string token)
         {
             return _pagesService.GetPage(id);
         }
@@ -43,6 +43,39 @@ namespace _8LMCore.Controllers
             return File(_pagesService.Download(page), "application/zip", "page" + page.Id.ToString() + ".zip");
         }
 
-        
+        [HttpPost]
+        public ActionResult UpdatePage([FromBody]dtoPage page, string token)
+        {
+            try
+            {
+                _pagesService.UpdatePage(page, token);
+                return Json(new { status = "OK"});
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(new { status = "failed", error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult DeletePage([FromBody]dtoPage page, string token)
+        {
+            try
+            {
+                _pagesService.DeletePage(page, token);
+                return Json(new { status = "OK" });
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(new { status = "failed", error = ex.Message });
+            }
+        }
+
+        public dtoPage[] GetPages(string token)
+        {
+            return _pagesService.GetPages(token).ToArray();
+        }
     }
 }
