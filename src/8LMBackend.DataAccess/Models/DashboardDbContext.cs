@@ -51,9 +51,9 @@ namespace _8LMBackend.DataAccess.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-            //optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_development;sslmode=none;");
+            optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_development;sslmode=none;");
             //optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3606;database=testdb;sslmode=none;");
-            optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=devpass;port=3306;database=8lm_net;sslmode=none;");
+            //optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=devpass;port=3306;database=8lm_net;sslmode=none;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -547,8 +547,8 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Invoice>(entity =>
             {
-                entity.HasIndex(e => e.PackageId)
-                    .HasName("FKInvoicePackageID");
+                entity.HasIndex(e => e.PackageRatePlanId)
+                    .HasName("FKInvoicePackageRatePlanID");
 
                 entity.HasIndex(e => e.StatusId)
                     .HasName("FKInvoiceStatusID");
@@ -568,8 +568,8 @@ namespace _8LMBackend.DataAccess.Models
 
                 entity.Property(e => e.Discount).HasColumnType("int(11)");
 
-                entity.Property(e => e.PackageId)
-                    .HasColumnName("PackageID")
+                entity.Property(e => e.PackageRatePlanId)
+                    .HasColumnName("PackageRatePlanID")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.ReferenceCode).HasColumnType("varchar(255)");
@@ -584,11 +584,11 @@ namespace _8LMBackend.DataAccess.Models
                     .HasColumnName("UserID")
                     .HasColumnType("int(11)");
 
-                entity.HasOne(d => d.Package)
+                entity.HasOne(d => d.PackageRatePlan)
                     .WithMany(p => p.Invoice)
-                    .HasForeignKey(d => d.PackageId)
+                    .HasForeignKey(d => d.PackageRatePlanId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FKInvoicePackageID");
+                    .HasConstraintName("FKInvoicePackageRatePlanID");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Invoice)

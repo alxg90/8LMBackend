@@ -20,6 +20,7 @@ namespace _8LMCore.Controllers
         public int NewPage()
         {
             var page = new Pages();
+            
             page.Html = "Empty Page";
             page.Json = "Empty Page";
             page.Name = "Empty Page" + DateTime.Now;
@@ -31,10 +32,17 @@ namespace _8LMCore.Controllers
             return page.Id;
         }
 
+        public Pages GetPage(int id)
+        {
+            return _pagesService.GetPage(id);
+        }
+
         public ActionResult DownloadPage(int pageID)
         {
             var page = _pagesService.GetPage(pageID);
             return File(_pagesService.Download(page), "application/zip", "page" + page.Id.ToString() + ".zip");
         }
+
+        
     }
 }

@@ -7,6 +7,7 @@ namespace _8LMBackend.DataAccess.Models
     {
         public PackageRatePlan()
         {
+            Invoice = new HashSet<Invoice>();
             PackageReferenceCode = new HashSet<PackageReferenceCode>();
             PackageReferenceExtendCode = new HashSet<PackageReferenceExtendCode>();
             PackageReferenceServiceCode = new HashSet<PackageReferenceServiceCode>();
@@ -19,6 +20,7 @@ namespace _8LMBackend.DataAccess.Models
         public int PackageId { get; set; }
         public int Price { get; set; }
 
+        public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<PackageReferenceCode> PackageReferenceCode { get; set; }
         public virtual ICollection<PackageReferenceExtendCode> PackageReferenceExtendCode { get; set; }
         public virtual ICollection<PackageReferenceServiceCode> PackageReferenceServiceCode { get; set; }

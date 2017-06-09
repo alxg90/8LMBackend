@@ -7,7 +7,6 @@ namespace _8LMBackend.DataAccess.Models
     {
         public Package()
         {
-            Invoice = new HashSet<Invoice>();
             PackageRatePlan = new HashSet<PackageRatePlan>();
             PackageService = new HashSet<PackageService>();
         }
@@ -23,7 +22,6 @@ namespace _8LMBackend.DataAccess.Models
         public string VideoURL { get; set; }
         public int SortOrder { get; set; }
 
-        public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<PackageRatePlan> PackageRatePlan { get; set; }
         public virtual ICollection<PackageService> PackageService { get; set; }
         public virtual Users CreatedByNavigation { get; set; }

@@ -15,16 +15,17 @@ namespace _8LMBackend.Service
 			: base(dbFactory) 
 		{
 		}
-        public int NewPage(Pages pages){
-            DbContext.Pages.AddRange(pages);
+        public int NewPage(Pages page)
+        {
+            DbContext.Pages.AddRange(page);
             DbContext.SaveChanges();
             
-            return pages.Id;
+            return page.Id;
         }
 
-        public Pages GetPage(int PageID)
+        public Pages GetPage(int id)
         {
-            return DbContext.Pages.Where(p => p.Id == PageID).FirstOrDefault();
+            return DbContext.Pages.Where(p => p.Id == id).FirstOrDefault();
         }
 
         public MemoryStream Download(Pages page)

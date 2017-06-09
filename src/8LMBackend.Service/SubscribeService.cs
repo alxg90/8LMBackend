@@ -33,7 +33,6 @@ namespace _8LMBackend.Service
             if(package.StatusId==Statuses.Package.New)
             {
                 DbContext.PackageService.RemoveRange(DbContext.PackageService.Where(x=>x.PackageId==package.Id));
-                DbContext.Invoice.RemoveRange(DbContext.Invoice.Where(x => x.PackageId == package.Id));
                 DbContext.PackageRatePlan.RemoveRange(DbContext.PackageRatePlan.Where(p => p.PackageId == id));
                 DbContext.Subscription.RemoveRange(DbContext.Subscription.Include("PackageRatePlan").Where(x => x.PackageRatePlan.PackageId == package.Id));
                 DbContext.PackageReferenceCode.RemoveRange(DbContext.PackageReferenceCode.Where(x => x.PackageRatePlan.PackageId == package.Id));
@@ -65,7 +64,7 @@ namespace _8LMBackend.Service
             var invoice = new Invoice();
             var packageRatePlan = DbContext.PackageRatePlan.FirstOrDefault(x => x.Id == PackageRateID);
             invoice.Amount = packageRatePlan.Price;
-            invoice.PackageId = packageRatePlan.Id; //packageId it's packageRatePlanId, should be renamed in database
+            invoice.PackageRatePlanId = packageRatePlan.Id;
             
             var tempDiscount = DbContext.PackageReferenceCode.FirstOrDefault(x => x.PackageRatePlanId == packageRatePlan.Id && x.ReferenceCode == ReferenceCode);
             invoice.Discount = tempDiscount == null ? 0 : tempDiscount.IsFixed ? tempDiscount.Value : invoice.Amount * tempDiscount.Value / 100;            
@@ -88,7 +87,7 @@ namespace _8LMBackend.Service
             DbContext.SaveChanges();
 
             var invoice = DbContext.Invoice.FirstOrDefault(x=>x.Id == rel.InvoiceId);
-            var packageRatePlan = DbContext.PackageRatePlan.FirstOrDefault(x=>x.Id == invoice.PackageId); //packageId it's packageRatePlanId, should be renamed in database
+            var packageRatePlan = DbContext.PackageRatePlan.FirstOrDefault(x=>x.Id == invoice.PackageRatePlanId); //packageId it's packageRatePlanId, should be renamed in database
             var subsr = new Subscription();
             subsr.UserId = invoice.UserId;
             subsr.CreatedDate = DateTime.UtcNow;
@@ -415,7 +414,7 @@ namespace _8LMBackend.Service
         public void ReCurrentPayment()
         {
             var subscriptions = DbContext.Subscription.Where(x => x.ExpirationDate.Date <= DateTime.UtcNow.Date).ToList();
-            if(subscriptions != null)
+            if (subscriptions != null)
             {
                 foreach (var subscription in subscriptions)
                 {
@@ -424,7 +423,7 @@ namespace _8LMBackend.Service
                         var packRatePlan = DbContext.PackageRatePlan.FirstOrDefault(x=>x.Id == subscription.PackageRatePlanId);
                         var invoice = new Invoice();
                         invoice.Amount = packRatePlan.Price;
-                        invoice.PackageId = packRatePlan.Id;//packageId it's packageRatePlanId, should be renamed in database
+                        invoice.PackageRatePlanId = packRatePlan.Id;
                         
                         var tempDiscount = DbContext.PackageReferenceCode.FirstOrDefault(x => x.PackageRatePlanId == packRatePlan.Id && x.ReferenceCode == DbContext.PackageReferenceCode.FirstOrDefault(y=>y.PackageRatePlanId == packRatePlan.Id).ReferenceCode);
                         invoice.Discount = tempDiscount == null ? 0 : tempDiscount.IsFixed ? tempDiscount.Value : invoice.Amount * tempDiscount.Value / 100;            

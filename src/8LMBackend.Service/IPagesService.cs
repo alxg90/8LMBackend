@@ -8,8 +8,8 @@ namespace _8LMBackend.Service
 {
     public interface IPagesService
     {
-		int NewPage(Pages pages);
-        Pages GetPage(int PageID);
+		int NewPage(Pages page);
+        Pages GetPage(int id);
         MemoryStream Download(Pages page);
     }
 }
