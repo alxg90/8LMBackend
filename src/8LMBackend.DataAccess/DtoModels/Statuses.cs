@@ -45,6 +45,7 @@ public static class Statuses
 	{
 		public const int Active = 17;
 		public const int Inactive = 18;
-	}
+        public const int NotInitialized = 19;
+        }
 }
 }

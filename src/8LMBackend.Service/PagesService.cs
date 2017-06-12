@@ -17,15 +17,26 @@ namespace _8LMBackend.Service
 			: base(dbFactory) 
 		{
 		}
-        public int NewPage(string token)
+
+        public int NewLandingPage(string token)
+        {
+            return NewPage(token, Types.Pages.LandingPage);
+        }
+
+        public int NewEmailPage(string token)
+        {
+            return NewPage(token, Types.Pages.Email);
+        }
+
+        int NewPage(string token, int TypeID)
         {
             Pages page = new Pages()
             {
                 Name = Guid.NewGuid().ToString(),
                 Json = string.Empty,
                 Html = string.Empty,
-                TypeId = Types.Pages.LandingPage,
-                StatusId = Statuses.Pages.Active,
+                TypeId = TypeID,
+                StatusId = Statuses.Pages.NotInitialized,
                 CreatedDate = DateTime.UtcNow,
                 CreatedBy = GetUserID(token)
             };
@@ -86,6 +97,23 @@ namespace _8LMBackend.Service
         {
             var functions = GetFunctionsForUser(token);
             //TODO: check functions
+            var item = DbContext.Pages.Where(p => p.Id == page.ID).FirstOrDefault();
+            if (item == null)
+                throw new Exception("Page with ID = " + page.ID.ToString() + " not found");
+
+            item.Name = page.Name;
+            item.Description = page.Description;
+            item.Json = page.JSON;
+            item.Html = page.HTML;
+            item.StatusId = Statuses.Pages.Active;
+
+            DbContext.SaveChanges();
+        }
+
+        public void UpdatePageMeta(dtoPage page, string token)
+        {
+            var functions = GetFunctionsForUser(token);
+            //TODO: check functions
             DbContext.RemoveRange(DbContext.PageTag.Where(p => p.PageId == page.ID).ToList());
             var item = DbContext.Pages.Where(p => p.Id == page.ID).FirstOrDefault();
             if (item == null)
@@ -95,6 +123,7 @@ namespace _8LMBackend.Service
             item.Description = page.Description;
             item.Json = page.JSON;
             item.Html = page.HTML;
+            item.StatusId = Statuses.Pages.Active;
 
             foreach (var t in page.tags)
             {
@@ -138,7 +167,7 @@ namespace _8LMBackend.Service
             //TODO: check functions
 
             List<dtoPage> result = new List<dtoPage>();
-            var pages = DbContext.Pages.Where(p => p.CreatedBy == GetUserID(token)).ToList();
+            var pages = DbContext.Pages.Where(p => p.CreatedBy == GetUserID(token) && p.StatusId == Statuses.Pages.Active).ToList();
             foreach (var item in pages)
             {
                 var p = new dtoPage()
@@ -160,6 +189,30 @@ namespace _8LMBackend.Service
             }
 
             return result;
+        }
+
+        void Activate(dtoPage page, string token, bool active)
+        {
+            var functions = GetFunctionsForUser(token);
+            //TODO: check functions
+            DbContext.RemoveRange(DbContext.PageTag.Where(p => p.PageId == page.ID).ToList());
+            var item = DbContext.Pages.Where(p => p.Id == page.ID).FirstOrDefault();
+            if (item == null)
+                throw new Exception("Page with ID = " + page.ID.ToString() + " not found");
+
+            item.StatusId = active ? Statuses.Pages.Active : Statuses.Pages.Inactive;
+
+            DbContext.SaveChanges();
+        }
+
+        public void Activate(dtoPage page, string token)
+        {
+            Activate(page, token, true);
+        }
+
+        public void Deactivate(dtoPage page, string token)
+        {
+            Activate(page, token, false);
         }
     }
 }

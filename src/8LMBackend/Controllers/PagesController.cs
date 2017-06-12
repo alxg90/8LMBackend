@@ -19,11 +19,25 @@ namespace _8LMCore.Controllers
         }
         
         [HttpPost]
-        public JsonResult NewPage(string token)
+        public JsonResult NewLandingPage(string token)
         {
             try
             {
-                return Json(new { status = "OK", PageID = _pagesService.NewPage(token) });
+                return Json(new { status = "OK", PageID = _pagesService.NewLandingPage(token) });
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(new { status = "failed", error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult NewEmailPage(string token)
+        {
+            try
+            {
+                return Json(new { status = "OK", PageID = _pagesService.NewEmailPage(token) });
             }
             catch (System.Exception ex)
             {
@@ -59,6 +73,21 @@ namespace _8LMCore.Controllers
         }
 
         [HttpPost]
+        public ActionResult UpdatePageMeta([FromBody]dtoPage page, string token)
+        {
+            try
+            {
+                _pagesService.UpdatePageMeta(page, token);
+                return Json(new { status = "OK" });
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(new { status = "failed", error = ex.Message });
+            }
+        }
+
+        [HttpPost]
         public ActionResult DeletePage([FromBody]dtoPage page, string token)
         {
             try
@@ -76,6 +105,36 @@ namespace _8LMCore.Controllers
         public dtoPage[] GetPages(string token)
         {
             return _pagesService.GetPages(token).ToArray();
+        }
+
+        [HttpPost]
+        public ActionResult ActivatePage([FromBody]dtoPage page, string token)
+        {
+            try
+            {
+                _pagesService.Activate(page, token);
+                return Json(new { status = "OK" });
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(new { status = "failed", error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult DeactivatePage([FromBody]dtoPage page, string token)
+        {
+            try
+            {
+                _pagesService.Deactivate(page, token);
+                return Json(new { status = "OK" });
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(new { status = "failed", error = ex.Message });
+            }
         }
     }
 }

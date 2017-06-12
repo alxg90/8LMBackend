@@ -9,11 +9,15 @@ namespace _8LMBackend.Service
 {
     public interface IPagesService
     {
-        int NewPage(string token);
+        int NewLandingPage(string token);
+        int NewEmailPage(string token);
         Pages GetPage(int id);
         MemoryStream Download(Pages page);
         void UpdatePage(dtoPage page, string token);
+        void UpdatePageMeta(dtoPage page, string token);
         void DeletePage(dtoPage page, string token);
         List<dtoPage> GetPages(string token);
+        void Activate(dtoPage page, string token);
+        void Deactivate(dtoPage page, string token);
     }
 }
