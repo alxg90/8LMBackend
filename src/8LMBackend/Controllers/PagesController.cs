@@ -102,9 +102,14 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public dtoPage[] GetPages(string token)
+        public dtoPage[] GetLandingPages(string token)
         {
-            return _pagesService.GetPages(token).ToArray();
+            return _pagesService.GetLandingPages(token).ToArray();
+        }
+
+        public dtoPage[] GetEmailPages(string token)
+        {
+            return _pagesService.GetEmailPages(token).ToArray();
         }
 
         [HttpPost]

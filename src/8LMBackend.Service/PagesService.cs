@@ -161,13 +161,23 @@ namespace _8LMBackend.Service
             DbContext.SaveChanges();
         }
 
-        public List<dtoPage> GetPages(string token)
+        public List<dtoPage> GetLandingPages(string token)
+        {
+            return GetPages(token, Types.Pages.LandingPage);
+        }
+
+        public List<dtoPage> GetEmailPages(string token)
+        {
+            return GetPages(token, Types.Pages.Email);
+        }
+
+        List<dtoPage> GetPages(string token, int TypeID)
         {
             var functions = GetFunctionsForUser(token);
             //TODO: check functions
 
             List<dtoPage> result = new List<dtoPage>();
-            var pages = DbContext.Pages.Where(p => p.CreatedBy == GetUserID(token) && p.StatusId == Statuses.Pages.Active).ToList();
+            var pages = DbContext.Pages.Where(p => p.CreatedBy == GetUserID(token) && p.StatusId == Statuses.Pages.Active && p.TypeId == TypeID).ToList();
             foreach (var item in pages)
             {
                 var p = new dtoPage()

@@ -16,7 +16,8 @@ namespace _8LMBackend.Service
         void UpdatePage(dtoPage page, string token);
         void UpdatePageMeta(dtoPage page, string token);
         void DeletePage(dtoPage page, string token);
-        List<dtoPage> GetPages(string token);
+        List<dtoPage> GetLandingPages(string token);
+        List<dtoPage> GetEmailPages(string token);
         void Activate(dtoPage page, string token);
         void Deactivate(dtoPage page, string token);
     }
