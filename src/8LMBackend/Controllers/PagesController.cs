@@ -142,15 +142,16 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public string HTML(int id)
+        public ActionResult HTML(int id)
         {
             try
             {
-                return _pagesService.HTML(id);
+                ViewBag.html = _pagesService.HTML(id);
+                return View();
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return ViewBag.html = ex.Message;
             }
         }
     }

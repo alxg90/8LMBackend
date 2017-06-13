@@ -9,7 +9,7 @@ namespace _8LMBackend.Service
 {
     public class PageSpider
     {
-        const string localNameResolution = @"http://8lm.ang.local";
+        const string localNameResolution = @"http://ang.mark8.media/";
         string HTML;
         Dictionary<string, Guid> src;
         Dictionary<string, Guid> href;
