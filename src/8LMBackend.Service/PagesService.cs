@@ -105,30 +105,29 @@ namespace _8LMBackend.Service
 
             item.Name = page.Name;
             item.Description = page.Description;
-            //item.Json = page.JSON;
-            //item.Html = page.HTML;
             item.StatusId = Statuses.Pages.Active;
 
-            foreach (var t in page.tags)
-            {
-                var tag = DbContext.Tags.Where(p => p.Tag == t.Tag).FirstOrDefault();
-                if (tag == null)
+            if (page.tags != null)
+                foreach (var t in page.tags)
                 {
-                    var nt = new Tags()
+                    var tag = DbContext.Tags.Where(p => p.Tag == t.Tag).FirstOrDefault();
+                    if (tag == null)
                     {
-                        Tag = t.Tag
-                    };
-                    DbContext.Add(nt);
-                    tag.Id = nt.Id;
-                }
+                        var nt = new Tags()
+                        {
+                            Tag = t.Tag
+                        };
+                        DbContext.Add(nt);
+                        tag.Id = nt.Id;
+                    }
 
-                var npt = new PageTag()
-                {
-                    PageId = page.ID,
-                    TagId = tag.Id
-                };
-                DbContext.Add(npt);
-            }
+                    var npt = new PageTag()
+                    {
+                        PageId = page.ID,
+                        TagId = tag.Id
+                    };
+                    DbContext.Add(npt);
+                }
 
             DbContext.SaveChanges();
         }
