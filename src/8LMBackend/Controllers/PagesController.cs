@@ -141,5 +141,17 @@ namespace _8LMCore.Controllers
                 return Json(new { status = "failed", error = ex.Message });
             }
         }
+
+        public string HTML(int id)
+        {
+            try
+            {
+                return _pagesService.HTML(id);
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
     }
 }

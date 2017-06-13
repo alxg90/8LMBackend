@@ -20,5 +20,6 @@ namespace _8LMBackend.Service
         List<dtoPage> GetEmailPages(string token);
         void Activate(dtoPage page, string token);
         void Deactivate(dtoPage page, string token);
+        string HTML(int id);
     }
 }

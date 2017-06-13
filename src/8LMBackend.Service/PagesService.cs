@@ -224,5 +224,14 @@ namespace _8LMBackend.Service
         {
             Activate(page, token, false);
         }
+
+        public string HTML(int id)
+        {
+            var item = DbContext.Pages.Where(p => p.Id == id).FirstOrDefault();
+            if (item == null)
+                throw new Exception("Page with ID = " + id.ToString() + " not found");
+
+            return item.Html;
+        }
     }
 }
