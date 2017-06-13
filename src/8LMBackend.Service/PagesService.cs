@@ -97,23 +97,7 @@ namespace _8LMBackend.Service
         {
             var functions = GetFunctionsForUser(token);
             //TODO: check functions
-            var item = DbContext.Pages.Where(p => p.Id == page.ID).FirstOrDefault();
-            if (item == null)
-                throw new Exception("Page with ID = " + page.ID.ToString() + " not found");
 
-            item.Name = page.Name;
-            item.Description = page.Description;
-            item.Json = page.JSON;
-            item.Html = page.HTML;
-            item.StatusId = Statuses.Pages.Active;
-
-            DbContext.SaveChanges();
-        }
-
-        public void UpdatePage(dtoPage page, string token)
-        {
-            var functions = GetFunctionsForUser(token);
-            //TODO: check functions
             DbContext.RemoveRange(DbContext.PageTag.Where(p => p.PageId == page.ID).ToList());
             var item = DbContext.Pages.Where(p => p.Id == page.ID).FirstOrDefault();
             if (item == null)
@@ -121,8 +105,8 @@ namespace _8LMBackend.Service
 
             item.Name = page.Name;
             item.Description = page.Description;
-            item.Json = page.JSON;
-            item.Html = page.HTML;
+            //item.Json = page.JSON;
+            //item.Html = page.HTML;
             item.StatusId = Statuses.Pages.Active;
 
             foreach (var t in page.tags)
@@ -145,6 +129,24 @@ namespace _8LMBackend.Service
                 };
                 DbContext.Add(npt);
             }
+
+            DbContext.SaveChanges();
+        }
+
+        public void UpdatePage(dtoPage page, string token)
+        {
+            var functions = GetFunctionsForUser(token);
+            //TODO: check functions
+            
+            var item = DbContext.Pages.Where(p => p.Id == page.ID).FirstOrDefault();
+            if (item == null)
+                throw new Exception("Page with ID = " + page.ID.ToString() + " not found");
+
+            item.Name = page.Name;
+            //item.Description = page.Description;
+            item.Json = page.JSON;
+            item.Html = page.HTML;
+            item.StatusId = Statuses.Pages.Active;
 
             DbContext.SaveChanges();
         }
