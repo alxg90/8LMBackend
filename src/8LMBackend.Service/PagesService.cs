@@ -93,7 +93,7 @@ namespace _8LMBackend.Service
             return u.UserId;
         }
 
-        public void UpdatePage(dtoPage page, string token)
+        public void UpdatePageMeta(dtoPage page, string token)
         {
             var functions = GetFunctionsForUser(token);
             //TODO: check functions
@@ -110,7 +110,7 @@ namespace _8LMBackend.Service
             DbContext.SaveChanges();
         }
 
-        public void UpdatePageMeta(dtoPage page, string token)
+        public void UpdatePage(dtoPage page, string token)
         {
             var functions = GetFunctionsForUser(token);
             //TODO: check functions
@@ -186,8 +186,8 @@ namespace _8LMBackend.Service
                     Name = item.Name,
                     Description = item.Description,
                     TypeID = item.TypeId,
-                    JSON = item.Json,
-                    HTML = item.Html,
+                    //JSON = item.Json,
+                    //HTML = item.Html,
                     tags = new List<dtoPageTag>()
                 };
 
