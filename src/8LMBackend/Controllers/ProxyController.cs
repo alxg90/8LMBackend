@@ -25,17 +25,17 @@ namespace _8LMCore.Controllers
         {
             _proxyService = proxyService;
         }
-        public ActionResult UpdateStatistic(string url, string controlId, int pageId)
+        public ActionResult UpdateStatistic(string url, string controlId, int pageId, string trackingName)
         {            
             try
             {
                 var remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress;
                 PageStatistic stats = new PageStatistic();
-                stats.ControlId = controlId.Substring(0, 16);
-                stats.CreatedDate = DateTime.Now;
+                stats.ControlId = controlId.Substring(0, 32);
+                stats.CreatedDate = DateTime.UtcNow;
                 stats.PageId = pageId;
                 //stats.Ip = remoteIpAddress.ToString();
-                _proxyService.UpdateStatistic(stats);
+                _proxyService.UpdateStatistic(stats, trackingName);
                 _proxyService.SaveDBChanges();
                 return Redirect(url);
             }
@@ -54,7 +54,7 @@ namespace _8LMCore.Controllers
                 stats.CreatedDate = new DateTime();
                 stats.PageId = pageId;
                 stats.IsLoad = isLoad;
-                stats.CreatedDate = DateTime.Now;
+                stats.CreatedDate = DateTime.UtcNow;
                 //stats.Ip = remoteIpAddress.ToString();
                 _proxyService.UpdateStatistic(stats);
                 _proxyService.SaveDBChanges();

@@ -51,9 +51,9 @@ namespace _8LMBackend.DataAccess.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-            //optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_development;sslmode=none;");
+            optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_development;sslmode=none;");
             //optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3606;database=testdb;sslmode=none;");
-            optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3306;database=railsapi_development;sslmode=none;");
+            //optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3306;database=railsapi_development;sslmode=none;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -440,7 +440,7 @@ namespace _8LMBackend.DataAccess.Models
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasColumnType("char(16)");
+                    .HasColumnType("char(32)");
 
                 entity.Property(e => e.IsActive).HasColumnType("bit(1)");
 
@@ -850,7 +850,7 @@ namespace _8LMBackend.DataAccess.Models
 
                 entity.Property(e => e.ControlId)
                     .HasColumnName("ControlID")
-                    .HasColumnType("char(16)");
+                    .HasColumnType("char(32)");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 

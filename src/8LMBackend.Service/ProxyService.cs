@@ -14,8 +14,24 @@ namespace _8LMBackend.Service
 			: base(dbFactory) 
 		{
 		}
-        public void UpdateStatistic(PageStatistic stats)
-        {            
+        public void UpdateStatistic(PageStatistic stats, string trackingName = null)
+        {
+            if (trackingName != null)
+            {
+                var control = DbContext.ControlStat.Where(p => p.Id == stats.ControlId).FirstOrDefault();
+                if (control == null)
+                {
+                    var item = new ControlStat()
+                    {
+                        Id = stats.ControlId,
+                        PageId = stats.PageId,
+                        Name = trackingName,
+                        IsActive = true
+                    };
+                    DbContext.Add(item);
+                } 
+            }
+
             DbContext.PageStatistic.Add(stats);
         }  
         public void AddButtonStatistic(ControlStat stats)

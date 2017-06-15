@@ -7,8 +7,8 @@ namespace _8LMBackend.Service
 {
     public interface IProxyService
     {
-		void UpdateStatistic(PageStatistic stats);
-    void AddButtonStatistic(ControlStat stats);
-    void SaveDBChanges();
+		void UpdateStatistic(PageStatistic stats, string trackingName = null);
+        void AddButtonStatistic(ControlStat stats);
+        void SaveDBChanges();
     }
 }
