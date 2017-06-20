@@ -154,5 +154,28 @@ namespace _8LMCore.Controllers
                 return ViewBag.html = ex.Message;
             }
         }
+
+        [HttpPost]
+        public string Convert(ConvertRequestParam convertParam)
+        {
+            if (convertParam.Key != "65214651465")
+            {
+                return "Game over!";
+            }
+
+            using (var pm = new PreMailer.Net.PreMailer(convertParam.Html))
+            {
+                var document = pm.Document;
+
+                var result = pm.MoveCssInline();
+                return result.Html;
+            }
+        }
+
+        public class ConvertRequestParam
+        {
+            public string Html { get; set; }
+            public string Key { get; set; }
+        }
     }
 }
