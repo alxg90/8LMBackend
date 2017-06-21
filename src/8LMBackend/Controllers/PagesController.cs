@@ -46,7 +46,7 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public dtoPage GetPage(int id, string token)
+        public Pages GetPage(int id, string token)
         {
             return _pagesService.GetPage(id);
         }
@@ -54,7 +54,7 @@ namespace _8LMCore.Controllers
         public ActionResult DownloadPage(int pageID)
         {
             var page = _pagesService.GetPage(pageID);
-            return File(_pagesService.Download(page), "application/zip", "page" + page.ID.ToString() + ".zip");
+            return File(_pagesService.Download(page), "application/zip", "page" + page.Id.ToString() + ".zip");
         }
 
         [HttpPost]

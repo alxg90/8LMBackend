@@ -47,27 +47,18 @@ namespace _8LMBackend.Service
             return page.Id;
         }
 
-        public dtoPage GetPage(int id)
+        public Pages GetPage(int id)
         {
             var item = DbContext.Pages.Where(p => p.Id == id).FirstOrDefault();
             if (item == null)
                 throw new Exception("Page with ID = " + id.ToString() + " not found");
 
-            var result = new dtoPage()
-            {
-                ID = item.Id,
-                Name = item.Name,
-                Description = item.Description,
-                TypeID = item.TypeId,
-                JSON = item.Json,
-                HTML = item.Html
-            };
-            return result;
+            return item;
         }
 
-        public MemoryStream Download(dtoPage page)
+        public MemoryStream Download(Pages page)
         {
-            PageSpider ps = new PageSpider(page.HTML);
+            PageSpider ps = new PageSpider(page.Html);
             return ps.Load();
         }
 
