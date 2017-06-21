@@ -46,7 +46,7 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public Pages GetPage(int id, string token)
+        public dtoPage GetPage(int id, string token)
         {
             return _pagesService.GetPage(id);
         }
@@ -54,7 +54,7 @@ namespace _8LMCore.Controllers
         public ActionResult DownloadPage(int pageID)
         {
             var page = _pagesService.GetPage(pageID);
-            return File(_pagesService.Download(page), "application/zip", "page" + page.Id.ToString() + ".zip");
+            return File(_pagesService.Download(page), "application/zip", "page" + page.ID.ToString() + ".zip");
         }
 
         [HttpPost]
@@ -153,29 +153,6 @@ namespace _8LMCore.Controllers
             {
                 return ViewBag.html = ex.Message;
             }
-        }
-
-        [HttpPost]
-        public string Convert(ConvertRequestParam convertParam)
-        {
-            if (convertParam.Key != "65214651465")
-            {
-                return "Game over!";
-            }
-
-            using (var pm = new PreMailer.Net.PreMailer(convertParam.Html))
-            {
-                var document = pm.Document;
-
-                var result = pm.MoveCssInline();
-                return result.Html;
-            }
-        }
-
-        public class ConvertRequestParam
-        {
-            public string Html { get; set; }
-            public string Key { get; set; }
         }
     }
 }

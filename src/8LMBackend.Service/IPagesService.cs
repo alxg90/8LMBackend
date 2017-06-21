@@ -11,8 +11,8 @@ namespace _8LMBackend.Service
     {
         int NewLandingPage(string token);
         int NewEmailPage(string token);
-        Pages GetPage(int id);
-        MemoryStream Download(Pages page);
+        dtoPage GetPage(int id);
+        MemoryStream Download(dtoPage page);
         void UpdatePage(dtoPage page, string token);
         void UpdatePageMeta(dtoPage page, string token);
         void DeletePage(dtoPage page, string token);
