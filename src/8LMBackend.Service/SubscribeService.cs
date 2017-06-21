@@ -510,5 +510,23 @@ namespace _8LMBackend.Service
             
             return result.Distinct().ToList().Count != sfs.Count;
         }
+
+        public AvailableEmailBroadcast GetNumberOfEmailBroadcast(string token)
+        {
+            AvailableEmailBroadcast result = new AvailableEmailBroadcast()
+            {
+                Amount = 0
+            };
+
+            var u = GetUserByToken(token);
+            var s = DbContext.Subscription.Where(p => p.UserId == u.Id && p.StatusId == Statuses.Subscription.Active).OrderByDescending(p => p.ExpirationDate).FirstOrDefault();
+            if (s == null)
+                return result;
+
+            result.Amount = 6;
+            result.PeriodFrom = s.EffectiveDate;
+            result.PeriodTo = s.ExpirationDate;
+            return result;
+        }
     }
 }

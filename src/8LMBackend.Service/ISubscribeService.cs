@@ -42,5 +42,6 @@ namespace _8LMBackend.Service
         List<int> GetSecurityFunctionsForUser(string access_token);
         string GetMonthlyCode();
         bool MorePackagesAvailable(string access_token);
+        AvailableEmailBroadcast GetNumberOfEmailBroadcast(string token);
     }
 }

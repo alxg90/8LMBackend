@@ -546,13 +546,7 @@ namespace _8LMCore.Controllers
 
         public AvailableEmailBroadcast GetNumberOfEmailBroadcast(string token)
         {
-            AvailableEmailBroadcast result = new AvailableEmailBroadcast();
-
-            result.Amount = 6;
-            result.PeriodFrom = DateTime.Now.Date;
-            result.PeriodFrom = DateTime.Now.Date.AddMonths(1);
-
-            return result;
+            return _subscribeService.GetNumberOfEmailBroadcast(token);
         }
 
         public void ChargeAll41()   //DELETE!!!!!!!!!!!!!!!!!!!!!!!!
