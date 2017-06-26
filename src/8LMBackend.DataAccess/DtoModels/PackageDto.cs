@@ -68,6 +68,7 @@ namespace _8LMBackend.DataAccess.DtoModels
     public class AvailableEmailBroadcast
     {
         public int Amount { get; set; }
+        public int Participants { get; set; }
         public DateTime PeriodFrom { get; set; }
         public DateTime PeriodTo { get; set; }
     }

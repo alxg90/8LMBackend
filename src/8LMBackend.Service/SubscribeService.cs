@@ -526,6 +526,31 @@ namespace _8LMBackend.Service
             result.Amount = 6;
             result.PeriodFrom = s.EffectiveDate;
             result.PeriodTo = s.ExpirationDate;
+
+            result.Participants = 0;
+            var functions = GetSecurityFunctionsForUser(token);
+            foreach (var f in functions)
+            {
+                switch (f)
+                {
+                    case 29:
+                        result.Participants += 500;
+                        break;
+
+                    case 30:
+                        result.Participants += 2500;
+                        break;
+
+                    case 31:
+                        result.Participants += 5000;
+                        break;
+
+                    case 32:
+                        result.Participants += 10000;
+                        break;
+                }
+            }
+
             return result;
         }
     }
