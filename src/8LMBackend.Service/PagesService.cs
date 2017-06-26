@@ -107,6 +107,8 @@ namespace _8LMBackend.Service
             if (item == null)
                 throw new Exception("Page with ID = " + page.ID.ToString() + " not found");
 
+            VerifyName(page.Name, page.ID, item.CreatedBy);
+
             item.Name = page.Name;
             item.Description = page.Description;
             item.StatusId = Statuses.Pages.Active;
@@ -144,6 +146,8 @@ namespace _8LMBackend.Service
             var item = DbContext.Pages.Where(p => p.Id == page.ID).FirstOrDefault();
             if (item == null)
                 throw new Exception("Page with ID = " + page.ID.ToString() + " not found");
+
+            VerifyName(page.Name, page.ID, item.CreatedBy);
 
             item.Name = page.Name;
             //item.Description = page.Description;
@@ -237,6 +241,13 @@ namespace _8LMBackend.Service
                 throw new Exception("Page with ID = " + id.ToString() + " not found");
 
             return item.Html;
+        }
+
+        void VerifyName(string name, int PageID, int UserID)
+        {
+            var result = DbContext.Pages.FirstOrDefault(p => p.Name.ToUpper() == name.ToUpper() && p.Id != PageID && p.CreatedBy == UserID);
+            if (result != null)
+                throw new Exception("This name has already been taken. Please select another one");
         }
     }
 }
