@@ -933,6 +933,10 @@ namespace _8LMBackend.DataAccess.Models
                     .IsRequired()
                     .HasColumnType("varchar(255)");
 
+                entity.Property(e => e.IsPublic)
+                    .IsRequired()
+                    .HasColumnType("bit(1)");
+
                 entity.Property(e => e.StatusId)
                     .HasColumnName("StatusID")
                     .HasColumnType("int(11)");

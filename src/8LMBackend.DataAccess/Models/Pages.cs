@@ -22,6 +22,7 @@ namespace _8LMBackend.DataAccess.Models
         public string Name { get; set; }
         public int StatusId { get; set; }
         public int TypeId { get; set; }
+        public bool IsPublic { get; set; }
 
         public virtual ICollection<ControlStat> ControlStat { get; set; }
         public virtual ICollection<PageCampaign> PageCampaign { get; set; }

@@ -38,7 +38,8 @@ namespace _8LMBackend.Service
                 TypeId = TypeID,
                 StatusId = Statuses.Pages.NotInitialized,
                 CreatedDate = DateTime.UtcNow,
-                CreatedBy = GetUserID(token)
+                CreatedBy = GetUserID(token),
+                IsPublic = false
             };
 
             DbContext.Pages.Add(page);
@@ -166,7 +167,8 @@ namespace _8LMBackend.Service
             if (item == null)
                 throw new Exception("Page with ID = " + page.ID.ToString() + " not found");
 
-            DbContext.Remove(item);
+            //DbContext.Remove(item);
+            item.StatusId = Statuses.Pages.Inactive;
             DbContext.SaveChanges();
         }
 
