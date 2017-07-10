@@ -70,7 +70,7 @@ namespace _8LMBackend.Service
             invoice.Discount = tempDiscount == null ? 0 : tempDiscount.IsFixed ? tempDiscount.Value : invoice.Amount * tempDiscount.Value / 100;            
             invoice.AmountDue = invoice.Amount - invoice.Discount;
 
-            if ((DbContext.Subscription.Where(x => x.UserId == user.Id).ToList().Count == 0) && (user.StatusId != 8))
+            if ((DbContext.Subscription.Where(x => x.UserId == user.Id).ToList().Count == 0) && (user.TypeId != 8))
                 invoice.AmountDue = DbContext.PaymentSetting.First().WelcomePackagePrice;
 
             invoice.UserId = user.Id;                        
