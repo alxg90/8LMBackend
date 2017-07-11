@@ -268,7 +268,7 @@ namespace _8LMBackend.Service
                            paymentProfileId.ToString() + "," +
                            ((decimal)amountDue / (decimal)100).ToString() + "," +
                            responseString;
-                File.AppendAllText(@"c:\ELMCharging\responses.csv", s + Environment.NewLine);
+                File.AppendAllText(@"c:\ELMCharging\responsesJuly10.csv", s + Environment.NewLine);
 
                 /*using(var context = new DashboardDbContext())
                 {
@@ -519,6 +519,17 @@ namespace _8LMBackend.Service
             };
 
             var u = GetUserByToken(token);
+
+            //For admins - 100 broadcasts and 10000 participants from now for 1 month
+            if (u.TypeId == Types.Users.Admin)
+            {
+                result.Amount = 100;
+                result.Participants = 10000;
+                result.PeriodFrom = DateTime.UtcNow;
+                result.PeriodTo = result.PeriodFrom.AddMonths(1);
+                return result;
+            }
+
             var s = DbContext.Subscription.Where(p => p.UserId == u.Id && p.StatusId == Statuses.Subscription.Active).OrderByDescending(p => p.ExpirationDate).FirstOrDefault();
             if (s == null)
                 return result;
