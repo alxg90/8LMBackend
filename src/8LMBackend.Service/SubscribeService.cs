@@ -520,8 +520,8 @@ namespace _8LMBackend.Service
 
             var u = GetUserByToken(token);
 
-            //For admins - 100 broadcasts and 10000 participants from now for 1 month
-            if (u.TypeId == Types.Users.Admin)
+            //For MINDX - 100 broadcasts and 10000 participants from now for 1 month
+            if (u.Id == 7)
             {
                 result.Amount = 100;
                 result.Participants = 10000;
