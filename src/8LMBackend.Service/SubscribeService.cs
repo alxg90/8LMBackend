@@ -602,9 +602,14 @@ namespace _8LMBackend.Service
             result.EmailLimitAddress = required.EmailLimitAddress;
             result.Price = required.Price;
             result.AmountDue = required.Price - invoice.AmountDue;
-            result.IsTheSameRatePlan = rp.Id == required.Id;
+            result.CurrentRatePlanID = rp.Id;
 
             return result;
+        }
+
+        public void UpgradePackage(string token, int CurrentRatePlanID, int NewRatePlanID, int AmountDue, Guid UpgradeRequestID)
+        {
+
         }
     }
 }

@@ -80,6 +80,6 @@ namespace _8LMBackend.DataAccess.DtoModels
         public int EmailLimitAddress { get; set; }
         public int Price { get; set; }
         public int AmountDue { get; set; }
-        public bool IsTheSameRatePlan { get; set; }
+        public int CurrentRatePlanID { get; set; }
     }
 }
