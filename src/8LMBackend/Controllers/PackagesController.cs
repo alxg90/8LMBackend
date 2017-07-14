@@ -549,6 +549,11 @@ namespace _8LMCore.Controllers
             return _subscribeService.GetNumberOfEmailBroadcast(token);
         }
 
+        public UpgradeSubscriptionResponse RequestUpgradeSubscription(string token, int TotalAmount)
+        {
+            return _subscribeService.RequestUpgradeSubscription(token, TotalAmount);
+        }
+
         public void ChargeAll41()   //DELETE!!!!!!!!!!!!!!!!!!!!!!!!
         {
             List<int> invoices = new List<int>()

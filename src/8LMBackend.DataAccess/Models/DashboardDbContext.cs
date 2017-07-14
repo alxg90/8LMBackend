@@ -689,6 +689,9 @@ namespace _8LMBackend.DataAccess.Models
 
                 entity.Property(e => e.DurationInMonths).HasColumnType("int(11)");
 
+                entity.Property(e => e.EmailLimitBroadcast).HasColumnType("int(11)");
+                entity.Property(e => e.EmailLimitAddress).HasColumnType("int(11)");
+
                 entity.Property(e => e.PackageId)
                     .HasColumnName("PackageID")
                     .HasColumnType("int(11)");

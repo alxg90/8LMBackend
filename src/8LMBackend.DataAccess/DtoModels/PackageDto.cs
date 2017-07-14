@@ -72,4 +72,14 @@ namespace _8LMBackend.DataAccess.DtoModels
         public DateTime PeriodFrom { get; set; }
         public DateTime PeriodTo { get; set; }
     }
+
+    public class UpgradeSubscriptionResponse
+    {
+        public int RequiredRatePlanID { get; set; }
+        public int EmailLimitBroadcast { get; set; }
+        public int EmailLimitAddress { get; set; }
+        public int Price { get; set; }
+        public int AmountDue { get; set; }
+        public bool IsTheSameRatePlan { get; set; }
+    }
 }

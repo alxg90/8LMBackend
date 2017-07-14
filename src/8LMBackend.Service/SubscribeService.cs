@@ -564,5 +564,47 @@ namespace _8LMBackend.Service
 
             return result;
         }
+
+        public UpgradeSubscriptionResponse RequestUpgradeSubscription(string token, int TotalAmount)
+        {
+            UpgradeSubscriptionResponse result = new UpgradeSubscriptionResponse();
+
+            var u = GetUserByToken(token);
+            Subscription cs = null;
+            PackageRatePlan rp = null;
+            foreach (var item in DbContext.Subscription.Where(p => p.UserId == u.Id && p.StatusId == Statuses.Subscription.Active))
+            {
+                rp = DbContext.PackageRatePlan.FirstOrDefault(r => r.Id == item.PackageRatePlanId && r.EmailLimitAddress > 0);
+                if (rp != null)
+                {
+                    cs = item;
+                    break;
+                }
+            }
+
+            if (cs == null)
+            {
+                result.RequiredRatePlanID = -1;
+                return result;
+            }
+
+            var required = DbContext.PackageRatePlan.OrderBy(p => p.EmailLimitAddress).FirstOrDefault(p => p.PackageId == rp.PackageId && p.DurationInMonths == rp.DurationInMonths && p.EmailLimitAddress >= TotalAmount);
+            if (required == null)
+            {
+                result.RequiredRatePlanID = -1;
+                return result;
+            }
+
+            var invoice = DbContext.Invoice.First(p => p.UserId == u.Id && p.PackageRatePlanId == cs.PackageRatePlanId && p.StatusId == Statuses.Invoice.Captured);
+
+            result.RequiredRatePlanID = required.Id;
+            result.EmailLimitBroadcast = required.EmailLimitBroadcast;
+            result.EmailLimitAddress = required.EmailLimitAddress;
+            result.Price = required.Price;
+            result.AmountDue = required.Price - invoice.AmountDue;
+            result.IsTheSameRatePlan = rp.Id == required.Id;
+
+            return result;
+        }
     }
 }

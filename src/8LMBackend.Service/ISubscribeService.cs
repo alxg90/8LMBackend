@@ -43,5 +43,6 @@ namespace _8LMBackend.Service
         string GetMonthlyCode();
         bool MorePackagesAvailable(string access_token);
         AvailableEmailBroadcast GetNumberOfEmailBroadcast(string token);
+        UpgradeSubscriptionResponse RequestUpgradeSubscription(string token, int TotalAmount);
     }
 }

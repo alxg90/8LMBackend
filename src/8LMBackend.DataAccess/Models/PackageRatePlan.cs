@@ -19,6 +19,8 @@ namespace _8LMBackend.DataAccess.Models
         public int DurationInMonths { get; set; }
         public int PackageId { get; set; }
         public int Price { get; set; }
+        public int EmailLimitBroadcast { get; set; }
+        public int EmailLimitAddress { get; set; }
 
         public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<PackageReferenceCode> PackageReferenceCode { get; set; }
