@@ -211,7 +211,7 @@ namespace _8LMBackend.Service
                                                         name = paymentSettings.AuthorizeNetlogin,
                                                         transactionKey = paymentSettings.AuthorizeNettransactionKey},
                                                     transId = transactionID.ToString()}});
-            var requestTask = client.PostAsync("https://apitest.authorize.net/xml/v1/request.api", content);
+            var requestTask = client.PostAsync("https://api.authorize.net/xml/v1/request.api", content);
             requestTask.ContinueWith(t =>
             {
                 using(var context = new DashboardDbContext())
@@ -268,7 +268,7 @@ namespace _8LMBackend.Service
                            paymentProfileId.ToString() + "," +
                            ((decimal)amountDue / (decimal)100).ToString() + "," +
                            responseString;
-                File.AppendAllText(@"c:\ELMCharging\responsesJuly10.csv", s + Environment.NewLine);
+                File.AppendAllText(@"c:\ELMCharging\responsesJuly18.csv", s + Environment.NewLine);
 
                 /*using(var context = new DashboardDbContext())
                 {
@@ -572,9 +572,9 @@ namespace _8LMBackend.Service
             var u = GetUserByToken(token);
             Subscription cs = null;
             PackageRatePlan rp = null;
-            foreach (var item in DbContext.Subscription.Where(p => p.UserId == u.Id && p.StatusId == Statuses.Subscription.Active))
+            foreach (var item in DbContext.Subscription.Include("PackageRatePlan").Where(p => p.UserId == u.Id && p.StatusId == Statuses.Subscription.Active && p.PackageRatePlan.EmailLimitAddress > 0))
             {
-                rp = DbContext.PackageRatePlan.FirstOrDefault(r => r.Id == item.PackageRatePlanId && r.EmailLimitAddress > 0);
+                rp = item.PackageRatePlan;
                 if (rp != null)
                 {
                     cs = item;
@@ -595,21 +595,26 @@ namespace _8LMBackend.Service
                 return result;
             }
 
-            var invoice = DbContext.Invoice.First(p => p.UserId == u.Id && p.PackageRatePlanId == cs.PackageRatePlanId && p.StatusId == Statuses.Invoice.Captured);
+            //var invoice = DbContext.Invoice.First(p => p.UserId == u.Id && p.PackageRatePlanId == cs.PackageRatePlanId && p.StatusId == Statuses.Invoice.Captured);
 
             result.RequiredRatePlanID = required.Id;
             result.EmailLimitBroadcast = required.EmailLimitBroadcast;
             result.EmailLimitAddress = required.EmailLimitAddress;
             result.Price = required.Price;
-            result.AmountDue = required.Price - invoice.AmountDue;
+            result.AmountDue = required.Price - rp.Price;
             result.CurrentRatePlanID = rp.Id;
 
             return result;
         }
 
-        public void UpgradePackage(string token, int CurrentRatePlanID, int NewRatePlanID, int AmountDue, Guid UpgradeRequestID)
+        public void UpgradePackage(string token, int CurrentRatePlanID, int NewRatePlanID, Guid UpgradeRequestID)
         {
+            var u = GetUserByToken(token);
 
+            //Create invoice
+            var item = DbContext.Subscription.First(p => p.UserId == u.Id && p.StatusId == Statuses.Subscription.Active && p.PackageRatePlanId == CurrentRatePlanID);
+            item.PackageRatePlanId = NewRatePlanID;
+            DbContext.SaveChanges();
         }
     }
 }

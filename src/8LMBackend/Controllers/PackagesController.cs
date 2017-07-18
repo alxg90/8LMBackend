@@ -554,13 +554,18 @@ namespace _8LMCore.Controllers
             return _subscribeService.RequestUpgradeSubscription(token, TotalAmount);
         }
 
-        public void ChargeAll41()   //DELETE!!!!!!!!!!!!!!!!!!!!!!!!
+        public void UpgradePackage(string token, int CurrentRatePlanID, int NewRatePlanID, Guid UpgradeRequestID)
+        {
+            _subscribeService.UpgradePackage(token, CurrentRatePlanID, NewRatePlanID, UpgradeRequestID);
+        }
+
+        /*public void ChargeAll41()   //DELETE!!!!!!!!!!!!!!!!!!!!!!!!
         {
             List<int> invoices = new List<int>()
             {};
 
             foreach (var item in invoices)
                 CreateTransaction(item);
-        }
+        }*/
     }
 }
