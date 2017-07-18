@@ -554,9 +554,10 @@ namespace _8LMCore.Controllers
             return _subscribeService.RequestUpgradeSubscription(token, TotalAmount);
         }
 
-        public void UpgradePackage(string token, int CurrentRatePlanID, int NewRatePlanID, Guid UpgradeRequestID)
+        [HttpPost]
+        public void UpgradePackage([FromBody]UpgradePackageRequest request, string token)
         {
-            _subscribeService.UpgradePackage(token, CurrentRatePlanID, NewRatePlanID, UpgradeRequestID);
+            _subscribeService.UpgradePackage(token, request.CurrentRatePlanID, request.NewRatePlanID, request.UpgradeRequestID);
         }
 
         /*public void ChargeAll41()   //DELETE!!!!!!!!!!!!!!!!!!!!!!!!

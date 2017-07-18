@@ -603,6 +603,8 @@ namespace _8LMBackend.Service
             result.Price = required.Price;
             result.AmountDue = required.Price - rp.Price;
             result.CurrentRatePlanID = rp.Id;
+            result.CurrentEmailLimitBroadcast = rp.EmailLimitBroadcast;
+            result.CurrentEmailLimitAddress = rp.EmailLimitAddress;
 
             return result;
         }
