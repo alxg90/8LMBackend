@@ -559,7 +559,7 @@ namespace _8LMCore.Controllers
         {
             try
             {
-                _subscribeService.UpgradePackage(token, request.CurrentRatePlanID, request.NewRatePlanID, request.UpgradeRequestID);
+                _subscribeService.UpgradePackage(token, request.CurrentRatePlanID, request.NewRatePlanID, request.UpgradeRequestID, request.listID);
                 return Json(new { status = "ok", message = "Package upgraded" });
             }
             catch (Exception ex)
@@ -567,7 +567,6 @@ namespace _8LMCore.Controllers
                 _8LMBackend.Logger.SaveLog(ex.StackTrace);
                 return Json(new { status = "fail", message = ex.Message });
             }
-            
         }
 
         /*public void ChargeAll41()   //DELETE!!!!!!!!!!!!!!!!!!!!!!!!

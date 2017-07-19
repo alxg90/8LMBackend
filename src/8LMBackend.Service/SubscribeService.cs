@@ -609,7 +609,7 @@ namespace _8LMBackend.Service
             return result;
         }
 
-        public void UpgradePackage(string token, int CurrentRatePlanID, int NewRatePlanID, Guid UpgradeRequestID)
+        public void UpgradePackage(string token, int CurrentRatePlanID, int NewRatePlanID, Guid UpgradeRequestID, int listID)
         {
             var u = GetUserByToken(token);
 
@@ -617,6 +617,20 @@ namespace _8LMBackend.Service
             var item = DbContext.Subscription.First(p => p.UserId == u.Id && p.StatusId == Statuses.Subscription.Active && p.PackageRatePlanId == CurrentRatePlanID);
             item.PackageRatePlanId = NewRatePlanID;
             DbContext.SaveChanges();
+
+            ProcessList(token, UpgradeRequestID, listID);
+        }
+
+        void ProcessList(string token, Guid uploadRequestID, int listID)
+        {
+            var content = new JsonContent(new
+            {
+                listID = listID,
+                uploadRequestID = uploadRequestID,
+                token = token
+            });
+            var requestTask = client.PostAsync("http://rails.mark8.media/dist_emails/process_list", content);
+            requestTask.ContinueWith(t => { var responseString = t.Result.Content.ReadAsStringAsync().Result; });
         }
     }
 }

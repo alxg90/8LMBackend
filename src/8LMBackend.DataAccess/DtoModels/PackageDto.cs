@@ -90,5 +90,6 @@ namespace _8LMBackend.DataAccess.DtoModels
         public int CurrentRatePlanID { get; set; }
         public int NewRatePlanID { get; set; }
         public Guid UpgradeRequestID { get; set; }
+        public int listID { get; set; }
     }
 }

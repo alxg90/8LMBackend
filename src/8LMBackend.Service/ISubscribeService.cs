@@ -44,6 +44,6 @@ namespace _8LMBackend.Service
         bool MorePackagesAvailable(string access_token);
         AvailableEmailBroadcast GetNumberOfEmailBroadcast(string token);
         UpgradeSubscriptionResponse RequestUpgradeSubscription(string token, int TotalAmount);
-        void UpgradePackage(string token, int CurrentRatePlanID, int NewRatePlanID, Guid UpgradeRequestID);
+        void UpgradePackage(string token, int CurrentRatePlanID, int NewRatePlanID, Guid UpgradeRequestID, int listID);
     }
 }
