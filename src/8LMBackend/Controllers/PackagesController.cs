@@ -555,9 +555,19 @@ namespace _8LMCore.Controllers
         }
 
         [HttpPost]
-        public void UpgradePackage([FromBody]UpgradePackageRequest request, string token)
+        public JsonResult UpgradePackage([FromBody]UpgradePackageRequest request, string token)
         {
-            _subscribeService.UpgradePackage(token, request.CurrentRatePlanID, request.NewRatePlanID, request.UpgradeRequestID);
+            try
+            {
+                _subscribeService.UpgradePackage(token, request.CurrentRatePlanID, request.NewRatePlanID, request.UpgradeRequestID);
+                return Json(new { status = "ok", message = "Package upgraded" });
+            }
+            catch (Exception ex)
+            {
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);
+                return Json(new { status = "fail", message = ex.Message });
+            }
+            
         }
 
         /*public void ChargeAll41()   //DELETE!!!!!!!!!!!!!!!!!!!!!!!!
