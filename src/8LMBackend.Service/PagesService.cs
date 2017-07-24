@@ -177,6 +177,11 @@ namespace _8LMBackend.Service
             return GetPages(token, Types.Pages.LandingPage);
         }
 
+        public List<dtoPage> GetControls(string token)
+        {
+            return GetPages(token, Types.Pages.Control);
+        }
+
         public List<dtoPage> GetEmailPages(string token)
         {
             return GetPages(token, Types.Pages.Email);

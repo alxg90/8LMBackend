@@ -538,6 +538,15 @@ namespace _8LMBackend.Service
             result.PeriodFrom = s.EffectiveDate;
             result.PeriodTo = s.ExpirationDate;
 
+            //Identify trial subscription
+            var inv = DbContext.Invoice.OrderByDescending(p => p.CreatedDate).First(p => p.UserId == u.Id && p.PackageRatePlanId == s.PackageRatePlanId && p.StatusId == Statuses.Invoice.Captured);
+            if (inv.AmountDue != inv.Amount - inv.Discount)
+            {
+                result.Participants = 100;
+                return result;
+            }
+
+            //Standard subscription processing
             result.Participants = 0;
             var functions = GetSecurityFunctionsForUser(token);
             foreach (var f in functions)
@@ -595,8 +604,6 @@ namespace _8LMBackend.Service
                 return result;
             }
 
-            //var invoice = DbContext.Invoice.First(p => p.UserId == u.Id && p.PackageRatePlanId == cs.PackageRatePlanId && p.StatusId == Statuses.Invoice.Captured);
-
             result.RequiredRatePlanID = required.Id;
             result.EmailLimitBroadcast = required.EmailLimitBroadcast;
             result.EmailLimitAddress = required.EmailLimitAddress;
@@ -605,6 +612,12 @@ namespace _8LMBackend.Service
             result.CurrentRatePlanID = rp.Id;
             result.CurrentEmailLimitBroadcast = rp.EmailLimitBroadcast;
             result.CurrentEmailLimitAddress = rp.EmailLimitAddress;
+
+            if (result.RequiredRatePlanID == result.CurrentRatePlanID)
+            {
+                var inv = DbContext.Invoice.OrderByDescending(p => p.CreatedDate).First(p => p.UserId == u.Id && p.PackageRatePlanId == cs.PackageRatePlanId && p.StatusId == Statuses.Invoice.Captured);
+                result.AmountDue = required.Price - inv.AmountDue;
+            }
 
             return result;
         }

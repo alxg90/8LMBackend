@@ -13,7 +13,8 @@ public static class Types
 	{
 		public const int LandingPage = 5;
 		public const int Email = 6;
-	        public const int EPage = 7;
-	}
+	    public const int EPage = 7;
+        public const int Control = 9;
+        }
 }
 }

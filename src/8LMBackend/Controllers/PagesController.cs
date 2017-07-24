@@ -154,5 +154,10 @@ namespace _8LMCore.Controllers
                 return ViewBag.html = ex.Message;
             }
         }
+        
+        public dtoPage[] GetControls(string token)
+        {
+            return _pagesService.GetControls(token).ToArray();
+        }
     }
 }
