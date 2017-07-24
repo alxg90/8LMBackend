@@ -11,8 +11,8 @@ namespace _8LMCore.Controllers
     {
         public string GetHashedString(string Price, string OrderID)
         {
-            string LoginID = "9c6x9RG4Pt";
-            string SignatureKey = "6495FCD5132C75E7AFB8EA01033E2542921B809E97297D692A977C1F4AAB47C046D00DA2E0FC0FE31A683FCEE95FC60402ACC83851BB8A0744D5F4C72B3050B7";
+            string LoginID = "5vZf2t6M8";
+            string SignatureKey = "17ECCD2A62D5F75E7E1D3993AB5A8949B70660689D1AEA0E0AF952796233EAE4EDA1B27CB9E543B2B107DCDC5992A9E27538942AACBD69D793F46773CEBD7CD2";
             string body = LoginID + "^" + OrderID + "^" + ConvertToUnixTimestamp(DateTime.UtcNow).ToString() + "^" + Price + "^";
             return GenerateSHA512String(body, SignatureKey);
         }
