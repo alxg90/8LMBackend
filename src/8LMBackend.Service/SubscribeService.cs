@@ -214,7 +214,7 @@ namespace _8LMBackend.Service
             var requestTask = client.PostAsync("https://api.authorize.net/xml/v1/request.api", content);
             requestTask.ContinueWith(t =>
             {
-                using(var context = new DashboardDbContext())
+                using (var context = new DashboardDbContext())
                 {
                     var responseString = t.Result.Content.ReadAsStringAsync().Result;
                     CustomerProfileResponseDto responseFromApi = JsonConvert.DeserializeObject<CustomerProfileResponseDto>(responseString);
@@ -616,6 +616,9 @@ namespace _8LMBackend.Service
             if (result.RequiredRatePlanID == result.CurrentRatePlanID)
             {
                 var inv = DbContext.Invoice.OrderByDescending(p => p.CreatedDate).First(p => p.UserId == u.Id && p.PackageRatePlanId == cs.PackageRatePlanId && p.StatusId == Statuses.Invoice.Captured);
+                if (inv.AmountDue < inv.Amount - inv.Discount)
+                    result.CurrentEmailLimitAddress = 100;
+
                 result.AmountDue = required.Price - inv.AmountDue;
             }
 
