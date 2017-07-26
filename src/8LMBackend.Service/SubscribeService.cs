@@ -530,46 +530,20 @@ namespace _8LMBackend.Service
                 return result;
             }
 
-            var s = DbContext.Subscription.Where(p => p.UserId == u.Id && p.StatusId == Statuses.Subscription.Active).OrderByDescending(p => p.ExpirationDate).FirstOrDefault();
+            var s = DbContext.Subscription.Include("PackageRatePlan").Where(p => p.UserId == u.Id && p.StatusId == Statuses.Subscription.Active).OrderByDescending(p => p.ExpirationDate).FirstOrDefault();
             if (s == null)
                 return result;
 
-            result.Amount = 6;
+            result.Amount = s.PackageRatePlan.EmailLimitBroadcast;
             result.PeriodFrom = s.EffectiveDate;
             result.PeriodTo = s.ExpirationDate;
 
             //Identify trial subscription
             var inv = DbContext.Invoice.OrderByDescending(p => p.CreatedDate).First(p => p.UserId == u.Id && p.PackageRatePlanId == s.PackageRatePlanId && p.StatusId == Statuses.Invoice.Captured);
             if (inv.AmountDue != inv.Amount - inv.Discount)
-            {
                 result.Participants = 100;
-                return result;
-            }
-
-            //Standard subscription processing
-            result.Participants = 0;
-            var functions = GetSecurityFunctionsForUser(token);
-            foreach (var f in functions)
-            {
-                switch (f)
-                {
-                    case 29:
-                        result.Participants += 500;
-                        break;
-
-                    case 30:
-                        result.Participants += 2500;
-                        break;
-
-                    case 31:
-                        result.Participants += 5000;
-                        break;
-
-                    case 32:
-                        result.Participants += 10000;
-                        break;
-                }
-            }
+            else
+                result.Participants = s.PackageRatePlan.EmailLimitAddress;
 
             return result;
         }
@@ -629,7 +603,26 @@ namespace _8LMBackend.Service
         {
             var u = GetUserByToken(token);
 
+            var rp = DbContext.PackageRatePlan.First(p => p.Id == NewRatePlanID);
+
             //Create invoice
+            var inv = DbContext.Invoice.OrderByDescending(p => p.CreatedDate).First(p => p.UserId == u.Id && p.PackageRatePlanId == CurrentRatePlanID && p.StatusId == Statuses.Invoice.Captured);
+            Invoice newInvoice = new Invoice()
+            {
+                UserId = inv.UserId,
+                PackageRatePlanId = NewRatePlanID,
+                Amount = rp.Price,
+                Discount = inv.AmountDue,
+                ReferenceCode = "",
+                AmountDue = rp.Price - inv.AmountDue,
+                StatusId = Statuses.Invoice.Captured,
+                CreatedDate = DateTime.UtcNow
+            };
+            DbContext.Add(newInvoice);
+
+            //Bill newInvoice
+
+            //Change Subscription
             var item = DbContext.Subscription.First(p => p.UserId == u.Id && p.StatusId == Statuses.Subscription.Active && p.PackageRatePlanId == CurrentRatePlanID);
             item.PackageRatePlanId = NewRatePlanID;
             DbContext.SaveChanges();
