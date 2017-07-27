@@ -193,7 +193,7 @@ namespace _8LMBackend.Service
             //TODO: check functions
 
             List<dtoPage> result = new List<dtoPage>();
-            var pages = DbContext.Pages.Where(p => p.CreatedBy == GetUserID(token) && p.StatusId == Statuses.Pages.Active && p.TypeId == TypeID).ToList();
+            var pages = DbContext.Pages.Where(p => p.CreatedBy == GetUserID(token) && p.StatusId == Statuses.Pages.Active && p.TypeId == TypeID).OrderByDescending(p => p.CreatedDate).ToList();
             foreach (var item in pages)
             {
                 var p = new dtoPage()
