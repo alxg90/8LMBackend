@@ -640,6 +640,7 @@ namespace _8LMBackend.Service
             });
             var requestTask = client.PostAsync("http://rails.mark8.media/dist_emails/process_list", content);
             requestTask.ContinueWith(t => { var responseString = t.Result.Content.ReadAsStringAsync().Result; });
+            requestTask.Wait();
         }
     }
 }
