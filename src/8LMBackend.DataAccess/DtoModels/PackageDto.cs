@@ -83,6 +83,7 @@ namespace _8LMBackend.DataAccess.DtoModels
         public int CurrentRatePlanID { get; set; }
         public int CurrentEmailLimitBroadcast { get; set; }
         public int CurrentEmailLimitAddress { get; set; }
+        public int DurationInMonth { get; set; }
     }
 
     public class UpgradePackageRequest

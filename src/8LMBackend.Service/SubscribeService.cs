@@ -586,6 +586,7 @@ namespace _8LMBackend.Service
             result.CurrentRatePlanID = rp.Id;
             result.CurrentEmailLimitBroadcast = rp.EmailLimitBroadcast;
             result.CurrentEmailLimitAddress = rp.EmailLimitAddress;
+            result.DurationInMonth = required.DurationInMonths;
 
             if (result.RequiredRatePlanID == result.CurrentRatePlanID)
             {
