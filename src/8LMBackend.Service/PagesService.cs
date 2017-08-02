@@ -182,6 +182,28 @@ namespace _8LMBackend.Service
             return GetPages(token, Types.Pages.Control);
         }
 
+        public List<dtoPage> GetThemes(string token) {
+            List<dtoPage> result = new List<dtoPage>();
+            var pages = DbContext.Pages.Where(p => p.StatusId == Statuses.Pages.Active && p.TypeId == Types.Pages.Theme).OrderByDescending(p => p.CreatedDate).ToList();
+            foreach (var item in pages)
+            {
+                var p = new dtoPage()
+                {
+                    ID = item.Id,
+                    Name = item.Name,
+                    Description = item.Description,
+                    TypeID = item.TypeId
+                    //JSON = item.Json,
+                    //HTML = item.Html,
+                    //tags = new List<dtoPageTag>()
+                };
+
+                result.Add(p);
+            }
+
+            return result;
+        }
+
         public List<dtoPage> GetEmailPages(string token)
         {
             return GetPages(token, Types.Pages.Email);

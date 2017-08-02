@@ -18,6 +18,7 @@ namespace _8LMBackend.Service
         void DeletePage(dtoPage page, string token);
         List<dtoPage> GetLandingPages(string token);
         List<dtoPage> GetControls(string token);
+        List<dtoPage> GetThemes(string token);
         List<dtoPage> GetEmailPages(string token);
         void Activate(dtoPage page, string token);
         void Deactivate(dtoPage page, string token);

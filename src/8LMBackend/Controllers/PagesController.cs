@@ -2,6 +2,7 @@ using _8LMBackend.DataAccess.Models;
 using _8LMBackend.DataAccess.DtoModels;
 using _8LMBackend.Service;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.IO;
@@ -158,6 +159,23 @@ namespace _8LMCore.Controllers
         public dtoPage[] GetControls(string token)
         {
             return _pagesService.GetControls(token).ToArray();
+        }
+
+
+        [HttpGet]
+        public JsonResult GetThemes(string token){
+            var status = "ok";
+            var message = "";
+            List<dtoPage> data = null;
+            try {
+                data = _pagesService.GetThemes(token);
+            }
+            catch(Exception ex) {
+                status = "fail";
+                message = ex.Message;
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);
+            }
+            return Json(new {status, message, data});
         }
     }
 }
