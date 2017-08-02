@@ -1083,6 +1083,14 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.Web)
                     .HasColumnName("web")
                     .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.notes)
+                    .HasColumnName("notes")
+                    .HasColumnType("nvarchar(4096)");
+
+                entity.Property(e => e.externalLink)
+                    .HasColumnName("externalLink")
+                    .HasColumnType("nvarchar(255)");
             });
 
             modelBuilder.Entity<RelayAuthorizeNetresponse>(entity =>

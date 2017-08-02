@@ -200,7 +200,9 @@ namespace _8LMBackend.Service
                     artworkEmail = u.ArtworkEmail,
                     web = u.Web,
                     discountPolicy = u.DiscountPolicy,
-                    customCode = u.CustomCode
+                    customCode = u.CustomCode,
+                    notes = u.notes,
+                    externalLink = u.externalLink
                 };
                 item.products.AddRange(u.PromoProduct.Select(p => p.Name));
                 result.Add(item);
@@ -231,6 +233,8 @@ namespace _8LMBackend.Service
             item.Web = u.web;
             item.DiscountPolicy = u.discountPolicy;
             item.CustomCode = u.customCode;
+            item.notes = u.notes;
+            item.externalLink = u.externalLink;
 
             if (isNew)
                 DbContext.Set<PromoSupplier>().Add(item);

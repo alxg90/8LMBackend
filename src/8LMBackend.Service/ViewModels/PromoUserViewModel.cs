@@ -21,6 +21,8 @@ namespace _8LMBackend.Service.ViewModels
         public string web { get; set; }
         public string discountPolicy { get; set; }
         public string customCode { get; set; }
+        public string notes { get; set; }
+        public string externalLink { get; set; }
 
         public List<string> products = new List<string>();
     }
