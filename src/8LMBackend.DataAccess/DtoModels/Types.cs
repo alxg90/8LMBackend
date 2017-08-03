@@ -16,6 +16,7 @@ public static class Types
 	    	public const int EPage = 7;
         	public const int Control = 9;
 		public const int Theme = 10;
+		public const int EmailTheme = 11;
         }
 }
 }

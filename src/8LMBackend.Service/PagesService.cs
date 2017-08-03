@@ -182,9 +182,9 @@ namespace _8LMBackend.Service
             return GetPages(token, Types.Pages.Control);
         }
 
-        public List<dtoPage> GetThemes(string token) {
+        public List<dtoPage> GetThemes(string token, int ThemeType) {
             List<dtoPage> result = new List<dtoPage>();
-            var pages = DbContext.Pages.Where(p => p.StatusId == Statuses.Pages.Active && p.TypeId == Types.Pages.Theme).OrderByDescending(p => p.CreatedDate).ToList();
+            var pages = DbContext.Pages.Where(p => p.StatusId == Statuses.Pages.Active && p.TypeId == ThemeType).OrderByDescending(p => p.CreatedDate).ToList();
             foreach (var item in pages)
             {
                 var p = new dtoPage()

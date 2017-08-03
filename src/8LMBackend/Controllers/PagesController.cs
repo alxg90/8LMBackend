@@ -168,7 +168,23 @@ namespace _8LMCore.Controllers
             var message = "";
             List<dtoPage> data = null;
             try {
-                data = _pagesService.GetThemes(token);
+                data = _pagesService.GetThemes(token, Types.Pages.Theme);
+            }
+            catch(Exception ex) {
+                status = "fail";
+                message = ex.Message;
+                _8LMBackend.Logger.SaveLog(ex.StackTrace);
+            }
+            return Json(new {status, message, data});
+        }
+
+        [HttpGet]
+        public JsonResult GetEmailThemes(string token){
+            var status = "ok";
+            var message = "";
+            List<dtoPage> data = null;
+            try {
+                data = _pagesService.GetThemes(token, Types.Pages.EmailTheme);
             }
             catch(Exception ex) {
                 status = "fail";
