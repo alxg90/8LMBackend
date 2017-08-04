@@ -12,6 +12,7 @@ namespace _8LMBackend.Service.DTO
         public int TypeID { get; set; }
         public string JSON { get; set; }
         public string HTML { get; set; }
+        public string PreviewUrl { get; set; }
 
         public List<dtoPageTag> tags { get; set; }
     }

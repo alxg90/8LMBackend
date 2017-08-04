@@ -35,6 +35,7 @@ namespace _8LMBackend.Service
                 Name = Guid.NewGuid().ToString(),
                 Json = string.Empty,
                 Html = string.Empty,
+                PreviewUrl = string.Empty,
                 TypeId = TypeID,
                 StatusId = Statuses.Pages.NotInitialized,
                 CreatedDate = DateTime.UtcNow,
@@ -154,6 +155,7 @@ namespace _8LMBackend.Service
             //item.Description = page.Description;
             item.Json = page.JSON;
             item.Html = page.HTML;
+            item.PreviewUrl = page.PreviewUrl;
             item.StatusId = Statuses.Pages.Active;
 
             DbContext.SaveChanges();
@@ -192,7 +194,8 @@ namespace _8LMBackend.Service
                     ID = item.Id,
                     Name = item.Name,
                     Description = item.Description,
-                    TypeID = item.TypeId
+                    TypeID = item.TypeId,
+                    PreviewUrl = item.PreviewUrl
                     //JSON = item.Json,
                     //HTML = item.Html,
                     //tags = new List<dtoPageTag>()
@@ -226,6 +229,7 @@ namespace _8LMBackend.Service
                     TypeID = item.TypeId,
                     //JSON = item.Json,
                     //HTML = item.Html,
+                    PreviewUrl = item.PreviewUrl,
                     tags = new List<dtoPageTag>()
                 };
 

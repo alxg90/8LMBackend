@@ -23,6 +23,7 @@ namespace _8LMBackend.Service.ViewModels
         public string customCode { get; set; }
         public string notes { get; set; }
         public string externalLink { get; set; }
+        public string DocumentPath { get; set; }
 
         public List<string> products = new List<string>();
     }

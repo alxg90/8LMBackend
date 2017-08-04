@@ -202,7 +202,8 @@ namespace _8LMBackend.Service
                     discountPolicy = u.DiscountPolicy,
                     customCode = u.CustomCode,
                     notes = u.notes,
-                    externalLink = u.externalLink
+                    externalLink = u.externalLink,
+                    DocumentPath = u.DocumentPath
                 };
                 item.products.AddRange(u.PromoProduct.Select(p => p.Name));
                 result.Add(item);
@@ -235,6 +236,7 @@ namespace _8LMBackend.Service
             item.CustomCode = u.customCode;
             item.notes = u.notes;
             item.externalLink = u.externalLink;
+            item.DocumentPath = u.DocumentPath;
 
             if (isNew)
                 DbContext.Set<PromoSupplier>().Add(item);

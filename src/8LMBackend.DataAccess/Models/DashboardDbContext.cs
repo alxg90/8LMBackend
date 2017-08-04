@@ -924,6 +924,8 @@ namespace _8LMBackend.DataAccess.Models
 
                 entity.Property(e => e.Description).HasColumnType("varchar(4096)");
 
+                entity.Property(e => e.PreviewUrl).HasColumnName("PreviewUrl").HasColumnType("nvarchar(255)");
+
                 entity.Property(e => e.Html)
                     .IsRequired()
                     .HasColumnName("HTML");
@@ -1090,6 +1092,10 @@ namespace _8LMBackend.DataAccess.Models
 
                 entity.Property(e => e.externalLink)
                     .HasColumnName("externalLink")
+                    .HasColumnType("nvarchar(255)");
+
+                entity.Property(e => e.DocumentPath)
+                    .HasColumnName("DocumentPath")
                     .HasColumnType("nvarchar(255)");
             });
 
