@@ -181,7 +181,26 @@ namespace _8LMBackend.Service
 
         public List<dtoPage> GetControls(string token)
         {
-            return GetPages(token, Types.Pages.Control);
+            List<dtoPage> result = new List<dtoPage>();
+            var pages = DbContext.Pages.Where(p =>  p.StatusId == Statuses.Pages.Active && p.TypeId == Types.Pages.Control).ToList();
+            foreach (var item in pages)
+            {
+                var p = new dtoPage()
+                {
+                    ID = item.Id,
+                    Name = item.Name,
+                    Description = item.Description,
+                    TypeID = item.TypeId,
+                    JSON = item.Json,
+                    //HTML = item.Html,
+                    PreviewUrl = item.PreviewUrl,
+                    tags = new List<dtoPageTag>()
+                };
+
+                result.Add(p);
+            }
+
+            return result;
         }
 
         public List<dtoPage> GetThemes(string token, int ThemeType) {
