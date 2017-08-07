@@ -3,6 +3,7 @@ using _8LMBackend.Service;
 using _8LMBackend.Service.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace _8LMCore.Controllers
@@ -294,6 +295,23 @@ namespace _8LMCore.Controllers
             }
 
             return Json(new { status = "ok" });
+        }
+
+        public ActionResult DownloadSupplierPDF(string token)
+        {
+            try
+            {
+                MemoryStream ms = new MemoryStream();
+                var f = _accountManagementService.DownloadSupplierPDF(token);
+                f.CopyTo(ms);
+                ms.Position = 0;
+                return File(ms, "application/pdf", "CorePricing.pdf");
+            }
+            catch (System.Exception ex)
+            {
+
+                return Json(new { status = "failed", error = ex.Message });
+            }
         }
     }
 }

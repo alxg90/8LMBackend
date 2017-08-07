@@ -11,5 +11,6 @@ namespace _8LMBackend.DataAccess.Models
         public string SignatureKey { get; set; }
         public int WelcomePackageDays { get; set; }
         public int WelcomePackagePrice { get; set; }
+        public string SupplierPDFPath { get; set; }
     }
 }

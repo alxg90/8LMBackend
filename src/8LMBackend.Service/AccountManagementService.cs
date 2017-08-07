@@ -6,6 +6,7 @@ using _8LMBackend.DataAccess.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using _8LMBackend.DataAccess.Models;
 using _8LMBackend.DataAccess.DtoModels;
+using System.IO;
 
 namespace _8LMBackend.Service
 {
@@ -435,6 +436,14 @@ namespace _8LMBackend.Service
             else
                 throw new Exception("User with ID = " + u.Id.ToString() + " not found");
 
+        }
+
+        public FileStream DownloadSupplierPDF(string token)
+        {
+            VerifyFunction(15, token);
+
+            string SupplierPDFPath = DbContext.PaymentSetting.First().SupplierPDFPath;
+            return File.OpenRead(SupplierPDFPath);
         }
     }
 }

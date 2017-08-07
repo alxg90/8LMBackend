@@ -992,6 +992,10 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.WelcomePackageDays).HasColumnType("int(11)");
 
                 entity.Property(e => e.WelcomePackagePrice).HasColumnType("int(11)");
+
+                entity.Property(e => e.SupplierPDFPath)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
             });
 
             modelBuilder.Entity<PromoCode>(entity =>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using _8LMBackend.Service.ViewModels;
 using _8LMBackend.DataAccess.Models;
+using System.IO;
 
 namespace _8LMBackend.Service
 {
@@ -27,5 +28,6 @@ namespace _8LMBackend.Service
         AccountViewModel GetAccount(int id, string token);
         void UpdateUser(Users u, string token);
         void DeleteUser(Users u, string token);
+        FileStream DownloadSupplierPDF(string token);
     }
 }
