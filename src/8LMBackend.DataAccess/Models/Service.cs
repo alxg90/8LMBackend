@@ -7,6 +7,7 @@ namespace _8LMBackend.DataAccess.Models
     {
         public Service()
         {
+            RoleService = new HashSet<RoleService>();
             PackageReferenceServiceCode = new HashSet<PackageReferenceServiceCode>();
             PackageService = new HashSet<PackageService>();
             ServiceFunction = new HashSet<ServiceFunction>();
@@ -17,6 +18,7 @@ namespace _8LMBackend.DataAccess.Models
         public bool IsActual { get; set; }
         public string Name { get; set; }
 
+        public virtual ICollection<RoleService> RoleService { get; set; }
         public virtual ICollection<PackageReferenceServiceCode> PackageReferenceServiceCode { get; set; }
         public virtual ICollection<PackageService> PackageService { get; set; }
         public virtual ICollection<ServiceFunction> ServiceFunction { get; set; }

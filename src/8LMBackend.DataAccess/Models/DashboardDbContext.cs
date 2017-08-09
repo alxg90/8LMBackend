@@ -48,6 +48,8 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<UserToken> UserToken { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
+        public virtual DbSet<RoleService> RoleService { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
@@ -1346,6 +1348,38 @@ namespace _8LMBackend.DataAccess.Models
                     .HasConstraintName("FKRoleFunctionRoleID");
             });
 
+            modelBuilder.Entity<RoleService>(entity =>
+            {
+                entity.HasKey(e => new { e.RoleId, e.ServiceId })
+                    .HasName("PK_RoleService");
+
+                entity.HasIndex(e => e.RoleId)
+                    .HasName("FKRoleServiceRoleID");
+
+                entity.HasIndex(e => e.ServiceId)
+                    .HasName("FKRoleServiceServiceID");
+
+                entity.Property(e => e.RoleId)
+                    .HasColumnName("RoleID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ServiceId)
+                    .HasColumnName("ServiceID")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Service)
+                    .WithMany(p => p.RoleService)
+                    .HasForeignKey(d => d.ServiceId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FKRoleServiceServiceID");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.RoleService)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FKRoleServiceRoleID");
+            });
+
             modelBuilder.Entity<SecurityFunction>(entity =>
             {
                 entity.HasIndex(e => e.Name)
@@ -1673,6 +1707,10 @@ namespace _8LMBackend.DataAccess.Models
                     .HasColumnType("varchar(255)");
 
                 entity.Property(e => e.Icon).HasColumnType("varchar(255)");
+
+                entity.Property(e => e.company).HasColumnType("varchar(255)");
+                entity.Property(e => e.phone).HasColumnType("varchar(255)");
+                entity.Property(e => e.mailing_state).HasColumnType("varchar(255)");
 
                 entity.Property(e => e.LastName)
                     .IsRequired()

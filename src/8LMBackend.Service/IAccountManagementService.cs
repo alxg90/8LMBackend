@@ -7,7 +7,7 @@ namespace _8LMBackend.Service
 {
     public interface IAccountManagementService
     {
-		AccountManagementViewModel AccountList(string access_token);
+        List<AccountViewModel> AccountList(string access_token);
 		void AssignFunction(int FunctionID, int RoleID, string access_token);
 		void DeassignFunction(int FunctionID, int RoleID, string access_token);
         void UpdateCode(int yyyy, int mm, string Code, string access_token);
@@ -25,9 +25,7 @@ namespace _8LMBackend.Service
         int GetUserID(string access_token);
         void VerifyFunction(int FunctionID, string access_token);
         void DeletePromoUser(int ID, string token);
-        AccountViewModel GetAccount(int id, string token);
         void UpdateUser(Users u, string token);
-        void DeleteUser(Users u, string token);
         FileStream DownloadSupplierPDF(string token);
     }
 }

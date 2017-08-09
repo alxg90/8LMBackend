@@ -12,5 +12,6 @@ namespace _8LMBackend.Service.ViewModels
 		public string name { get; set; }
 
 		public List<int> functions;
+        public List<ServiceViewModel> Services { get; set; }
     }
 }

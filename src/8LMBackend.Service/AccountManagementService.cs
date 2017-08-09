@@ -17,82 +17,95 @@ namespace _8LMBackend.Service
 		{
 		}
 
-		public AccountManagementViewModel AccountList(string access_token)
+		public List<AccountViewModel> AccountList(string access_token)
 		{
-            VerifyFunction(9, access_token);
+            //VerifyFunction(9, access_token);
 
-			AccountManagementViewModel result = new AccountManagementViewModel();
-			
-			foreach (var u in DbContext.Users.Include(r => r.UserRoleUser).Include(t => t.Type).ToList())
-			{
-				AccountViewModel account = new AccountViewModel()
-				{
-					id = u.Id,
-					login = u.Login,
+			var result = new List<AccountViewModel>();
+
+            var ServiceDictionary = new List<ServiceViewModel>();
+            foreach (var s in DbContext.Service.ToList())
+            {
+                ServiceViewModel item = new ServiceViewModel()
+                {
+                    ID = s.Id,
+                    Name = s.Name
+                };
+                ServiceDictionary.Add(item);
+            }
+
+            var RoleDictionary = new List<RoleViewModel>();
+            foreach (var r in DbContext.SecurityRole.Include(p => p.RoleService).ToList())
+            {
+                RoleViewModel item = new RoleViewModel()
+                {
+                    id = r.Id,
+                    name = r.Name,
+                    Services = new List<ServiceViewModel>()
+                };
+
+                foreach (var sid in r.RoleService.Select(s => s.ServiceId).ToList())
+                    item.Services.Add(ServiceDictionary.First(s => s.ID == sid));
+
+                RoleDictionary.Add(item);
+            }
+
+            var RatePlanDictionary = DbContext.PackageRatePlan.Include(p => p.Package).ToList();
+            var PackageServiceDictionary = DbContext.PackageService.ToList();
+
+            foreach (var u in DbContext.Users.Include(r => r.UserRoleUser).Include(t => t.Type).Include(s => s.Status).Include(x => x.Subscription).ToList())
+            {
+                AccountViewModel account = new AccountViewModel()
+                {
+                    id = u.Id,
+                    login = u.Login,
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     ClearPassword = u.ClearPassword,
                     Email = u.Email,
-					typeID = u.TypeId,
+                    typeID = u.TypeId,
                     typeName = u.Type.Name,
-                    Icon = u.Icon
-				};
+                    Icon = u.Icon,
+                    company = u.company,
+                    phone = u.phone,
+                    mailing_state = u.mailing_state,
+                    StatusID = u.StatusId,
+                    StatusName = u.Status.Name,
+                    EnrollmentDate = u.CreatedDate,
+                    roles = new List<RoleViewModel>(),
+                    packages = new List<PackageViewModel>()
+                };
 
-				account.roles = u.UserRoleUser.Select(p => p.RoleId).ToList();
-				result.accounts.Add(account);
-			}
+                foreach (var rid in u.UserRoleUser.Select(p => p.RoleId).ToList())
+                    account.roles.Add(RoleDictionary.First(x => x.id == rid));
 
-			foreach (var r in DbContext.SecurityRole.Include(f => f.RoleFunction).ToList())
-			{
-				RoleViewModel role = new RoleViewModel()
-				{
-					id = r.Id,
-					name = r.Name
-				};
+                foreach (var cs in u.Subscription.ToList())
+                {
+                    var rp = RatePlanDictionary.First(p => p.Id == cs.PackageRatePlanId);
+                    var item = new PackageViewModel()
+                    {
+                        ID = rp.PackageId,
+                        Name = rp.Package.Name,
+                        BoughtDate = cs.EffectiveDate,
+                        NextBillingDate = cs.ExpirationDate,
+                        NumberOfMonths = rp.DurationInMonths,
+                        Price = rp.Price,
+                        Status = cs.StatusId == 12 ? "Active" : "Inactive",
+                        Services = new List<ServiceViewModel>()
+                    };
 
-				role.functions = r.RoleFunction.Select(p => p.FunctionId).ToList();
-				result.roles.Add(role); 
-			}
+                    foreach (var ps in PackageServiceDictionary.Where(p => p.PackageId == rp.PackageId).ToList())
+                        item.Services.Add(ServiceDictionary.First(s => s.ID == ps.ServiceId));
 
-			result.securityFunctions = new List<SecurityFunctionViewModel>();
-			foreach (var f in DbContext.SecurityFunction.ToList())
-			{
-				SecurityFunctionViewModel function = new SecurityFunctionViewModel()
-				{
-					id = f.Id,
-					name = f.Name
-				};
-
-				result.securityFunctions.Add(function);
-			}
+                    account.packages.Add(item);
+                }
+                result.Add(account);
+            }
 
 			return result;
 		}
 
-        public AccountViewModel GetAccount(int id, string token)
-        {
-            VerifyFunction(9, token);
-
-            var account = DbContext.Users.FirstOrDefault(u => u.Id == id);
-            if (account == null)
-            {
-                return null;
-            }
-            var accountVM = new AccountViewModel
-            {
-                id = account.Id,
-                login = account.Login,
-                FirstName = account.FirstName,
-                LastName = account.LastName,
-                ClearPassword = account.ClearPassword,
-                Email = account.Email,
-                typeID = account.TypeId,
-                Icon = account.Icon
-            };
-            return accountVM;
-        }
-
-		public void AssignFunction(int FunctionID, int RoleID, string access_token)
+        public void AssignFunction(int FunctionID, int RoleID, string access_token)
 		{
             VerifyFunction(10, access_token);
 
@@ -416,22 +429,10 @@ namespace _8LMBackend.Service
                 item.ClearPassword = u.ClearPassword;
                 item.Email = u.Email;
                 item.Icon = u.Icon;
+                item.company = u.company;
+                item.phone = u.phone;
+                item.mailing_state = u.mailing_state;
                 DbContext.SaveChanges();
-            }
-            else
-                throw new Exception("User with ID = " + u.Id.ToString() + " not found");
-
-        }
-
-        public void DeleteUser(Users u, string token)
-        {
-            VerifyFunction(10, token);
-
-            var item = DbContext.Users.Where(p => p.Id == u.Id).FirstOrDefault();
-            if (item != default(Users))
-            {
-                DbContext.SaveChanges();
-                DbContext.Set<Users>().Remove(item);
             }
             else
                 throw new Exception("User with ID = " + u.Id.ToString() + " not found");

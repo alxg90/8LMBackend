@@ -8,6 +8,7 @@ namespace _8LMBackend.DataAccess.Models
         public SecurityRole()
         {
             RoleFunction = new HashSet<RoleFunction>();
+            RoleService = new HashSet<RoleService>();
             UserRole = new HashSet<UserRole>();
         }
 
@@ -19,6 +20,7 @@ namespace _8LMBackend.DataAccess.Models
         public string Name { get; set; }
 
         public virtual ICollection<RoleFunction> RoleFunction { get; set; }
+        public virtual ICollection<RoleService> RoleService { get; set; }
         public virtual ICollection<UserRole> UserRole { get; set; }
         public virtual Users CreatedByNavigation { get; set; }
     }
