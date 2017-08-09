@@ -19,7 +19,7 @@ namespace _8LMBackend.Service
 
 		public List<AccountViewModel> AccountList(string access_token)
 		{
-            //VerifyFunction(9, access_token);
+            VerifyFunction(9, access_token);
 
 			var result = new List<AccountViewModel>();
 
