@@ -87,6 +87,7 @@ namespace _8LMBackend.Service
                         ID = rp.PackageId,
                         Name = rp.Package.Name,
                         BoughtDate = cs.EffectiveDate,
+                        term = cs.ExpirationDate,
                         NextBillingDate = cs.ExpirationDate,
                         NumberOfMonths = rp.DurationInMonths,
                         Price = rp.Price,

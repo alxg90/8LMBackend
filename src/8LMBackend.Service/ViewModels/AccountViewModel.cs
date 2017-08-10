@@ -35,6 +35,7 @@ namespace _8LMBackend.Service.ViewModels
         public string Name { get; set; }
         public int  NumberOfMonths { get; set; }
         public int Price { get; set; }
+        public DateTime? term { get; set; }
         public DateTime? NextBillingDate { get; set; }
         public DateTime BoughtDate { get; set; }
         public string Status { get; set; }
