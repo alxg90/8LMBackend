@@ -12,5 +12,8 @@ namespace _8LMBackend.DataAccess.Models
         public int WelcomePackageDays { get; set; }
         public int WelcomePackagePrice { get; set; }
         public string SupplierPDFPath { get; set; }
+
+        public int defaultLandingPageTemplateID { get; set; }
+        public int defaultEmailTemplateID { get; set; }
     }
 }

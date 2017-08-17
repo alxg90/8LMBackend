@@ -998,6 +998,9 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.SupplierPDFPath)
                     .IsRequired()
                     .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.defaultLandingPageTemplateID).HasColumnType("int(11)");
+                entity.Property(e => e.defaultEmailTemplateID).HasColumnType("int(11)");
             });
 
             modelBuilder.Entity<PromoCode>(entity =>

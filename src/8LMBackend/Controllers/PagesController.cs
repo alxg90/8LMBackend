@@ -193,5 +193,41 @@ namespace _8LMCore.Controllers
             }
             return Json(new {status, message, data});
         }
+
+        public JsonResult GetDefaultLandingPageTemplateID()
+        {
+            var status = "ok";
+            var message = "";
+            int data = 0;
+            try
+            {
+                data = _pagesService.GetDefaultLandingPageTemplateID();
+            }
+            catch (Exception ex)
+            {
+                status = "fail";
+                message = ex.Message;
+            }
+
+            return Json(new { status, message, data });
+        }
+
+        public JsonResult GetDefaultEmailTemplateID()
+        {
+            var status = "ok";
+            var message = "";
+            int data = 0;
+            try
+            {
+                data = _pagesService.GetDefaultEmailTemplateID();
+            }
+            catch (Exception ex)
+            {
+                status = "fail";
+                message = ex.Message;
+            }
+
+            return Json(new { status, message, data });
+        }
     }
 }

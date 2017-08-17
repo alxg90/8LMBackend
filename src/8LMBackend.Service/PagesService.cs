@@ -301,5 +301,17 @@ namespace _8LMBackend.Service
             if (result != null)
                 throw new Exception("This name has already been taken. Please select another one");
         }
+
+        public int GetDefaultLandingPageTemplateID()
+        {
+            var result = DbContext.PaymentSetting.First();
+            return result.defaultLandingPageTemplateID;
+        }
+
+        public int GetDefaultEmailTemplateID()
+        {
+            var result = DbContext.PaymentSetting.First();
+            return result.defaultEmailTemplateID;
+        }
     }
 }

@@ -23,5 +23,7 @@ namespace _8LMBackend.Service
         void Activate(dtoPage page, string token);
         void Deactivate(dtoPage page, string token);
         string HTML(int id);
+        int GetDefaultLandingPageTemplateID();
+        int GetDefaultEmailTemplateID();
     }
 }
