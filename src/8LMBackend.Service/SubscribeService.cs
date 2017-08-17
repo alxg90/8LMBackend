@@ -597,6 +597,12 @@ namespace _8LMBackend.Service
                 result.AmountDue = required.Price - inv.AmountDue;
             }
 
+            if (result.AmountDue < 0)
+            {
+                result.RequiredRatePlanID = -1;
+                result.AmountDue = 0;
+            }
+
             return result;
         }
 
