@@ -578,11 +578,13 @@ namespace _8LMBackend.Service
                 return result;
             }
 
+            var inv = DbContext.Invoice.OrderByDescending(p => p.CreatedDate).First(p => p.UserId == u.Id && p.PackageRatePlanId == cs.PackageRatePlanId && p.StatusId == Statuses.Invoice.Captured);
+
             result.RequiredRatePlanID = required.Id;
             result.EmailLimitBroadcast = required.EmailLimitBroadcast;
             result.EmailLimitAddress = required.EmailLimitAddress;
             result.Price = required.Price;
-            result.AmountDue = required.Price - rp.Price;
+            result.AmountDue = required.Price - inv.AmountDue;
             result.CurrentRatePlanID = rp.Id;
             result.CurrentEmailLimitBroadcast = rp.EmailLimitBroadcast;
             result.CurrentEmailLimitAddress = rp.EmailLimitAddress;
@@ -590,7 +592,6 @@ namespace _8LMBackend.Service
 
             if (result.RequiredRatePlanID == result.CurrentRatePlanID)
             {
-                var inv = DbContext.Invoice.OrderByDescending(p => p.CreatedDate).First(p => p.UserId == u.Id && p.PackageRatePlanId == cs.PackageRatePlanId && p.StatusId == Statuses.Invoice.Captured);
                 if (inv.AmountDue < inv.Amount - inv.Discount)
                     result.CurrentEmailLimitAddress = 100;
 
