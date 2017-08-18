@@ -4,6 +4,33 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace _8LMBackend.DataAccess.Models
 {
+    public partial class DevelopmentDbContext : DbContext
+    {
+        public virtual DbSet<distributors> distributors { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+            //optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_development;sslmode=none;");
+            //optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3606;database=testdb;sslmode=none;");
+            optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3306;database=dashboard_development;sslmode=none;");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<distributors>(entity =>
+            {
+                entity.Property(e => e.id)
+                    .HasColumnName("id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.company).HasColumnType("varchar(255)");
+                entity.Property(e => e.phone).HasColumnType("varchar(255)");
+                entity.Property(e => e.mailing_state).HasColumnType("varchar(255)");
+            });
+        }
+    }
+
     public partial class DashboardDbContext : DbContext
     {
         public virtual DbSet<AuthorizeNetcustomerProfile> AuthorizeNetcustomerProfile { get; set; }
@@ -1710,10 +1737,6 @@ namespace _8LMBackend.DataAccess.Models
                     .HasColumnType("varchar(255)");
 
                 entity.Property(e => e.Icon).HasColumnType("varchar(255)");
-
-                entity.Property(e => e.company).HasColumnType("varchar(255)");
-                entity.Property(e => e.phone).HasColumnType("varchar(255)");
-                entity.Property(e => e.mailing_state).HasColumnType("varchar(255)");
 
                 entity.Property(e => e.LastName)
                     .IsRequired()

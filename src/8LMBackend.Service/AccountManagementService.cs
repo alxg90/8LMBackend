@@ -23,6 +23,8 @@ namespace _8LMBackend.Service
 
 			var result = new List<AccountViewModel>();
 
+            var distributors = DevDbContext.distributors;
+
             var ServiceDictionary = new List<ServiceViewModel>();
             foreach (var s in DbContext.Service.ToList())
             {
@@ -55,6 +57,7 @@ namespace _8LMBackend.Service
 
             foreach (var u in DbContext.Users.Include(r => r.UserRoleUser).Include(t => t.Type).Include(s => s.Status).Include(x => x.Subscription).ToList())
             {
+                var dist = distributors.FirstOrDefault(d => d.id == u.Id);
                 AccountViewModel account = new AccountViewModel()
                 {
                     id = u.Id,
@@ -66,9 +69,9 @@ namespace _8LMBackend.Service
                     typeID = u.TypeId,
                     typeName = u.Type.Name,
                     Icon = u.Icon,
-                    company = u.company,
-                    phone = u.phone,
-                    mailing_state = u.mailing_state,
+                    company = dist != null ? dist.company : "",
+                    phone = dist != null ? dist.phone : "",
+                    mailing_state = dist != null ? dist.mailing_state : "",
                     StatusID = u.StatusId,
                     StatusName = u.Status.Name,
                     EnrollmentDate = u.CreatedDate,
@@ -430,9 +433,9 @@ namespace _8LMBackend.Service
                 item.ClearPassword = u.ClearPassword;
                 item.Email = u.Email;
                 item.Icon = u.Icon;
-                item.company = u.company;
-                item.phone = u.phone;
-                item.mailing_state = u.mailing_state;
+                //item.company = u.company;
+                //item.phone = u.phone;
+                //item.mailing_state = u.mailing_state;
                 DbContext.SaveChanges();
             }
             else

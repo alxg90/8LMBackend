@@ -18,6 +18,13 @@ namespace _8LMBackend.Service
         protected ServiceBase(IDbFactory dbFactory)
         {
 			DbContext = dbFactory.Init();
+            DevDbContext = dbFactory.InitDev();
+        }
+
+        protected DevelopmentDbContext DevDbContext
+        {
+            get;
+            private set;
         }
     }
 }

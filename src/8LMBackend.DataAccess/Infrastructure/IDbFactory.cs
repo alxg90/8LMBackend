@@ -6,5 +6,6 @@ namespace _8LMBackend.DataAccess.Infrastructure
     public interface IDbFactory : IDisposable
     {
         DashboardDbContext Init();
+        DevelopmentDbContext InitDev();
     }
 }

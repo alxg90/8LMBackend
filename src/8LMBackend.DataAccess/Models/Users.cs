@@ -3,6 +3,18 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
+    public partial class distributors
+    {
+        public distributors()
+        {
+        }
+
+        public int id { get; set; }
+        public string phone { get; set; }
+        public string company { get; set; }
+        public string mailing_state { get; set; }
+    }
+
     public partial class Users
     {
         public Users()
@@ -31,9 +43,6 @@ namespace _8LMBackend.DataAccess.Models
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string Icon { get; set; }
-        public string company { get; set; }
-        public string phone { get; set; }
-        public string mailing_state { get; set; }
         public string LastName { get; set; }
         public string Login { get; set; }
         public int StatusId { get; set; }
