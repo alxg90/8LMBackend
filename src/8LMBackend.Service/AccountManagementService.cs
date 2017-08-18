@@ -421,11 +421,11 @@ namespace _8LMBackend.Service
             }
         }
 
-        public void UpdateUser(Users u, string token)
+        public void UpdateUser(AccountViewModel u, string token)
         {
             VerifyFunction(10, token);
 
-            var item = DbContext.Users.Where(p => p.Id == u.Id).FirstOrDefault();
+            var item = DbContext.Users.Where(p => p.Id == u.id).FirstOrDefault();
             if (item != default(Users))
             {
                 item.FirstName = u.FirstName;
@@ -433,14 +433,20 @@ namespace _8LMBackend.Service
                 item.ClearPassword = u.ClearPassword;
                 item.Email = u.Email;
                 item.Icon = u.Icon;
-                //item.company = u.company;
-                //item.phone = u.phone;
-                //item.mailing_state = u.mailing_state;
                 DbContext.SaveChanges();
             }
             else
-                throw new Exception("User with ID = " + u.Id.ToString() + " not found");
+                throw new Exception("User with ID = " + u.id.ToString() + " not found");
 
+
+            var dist = DevDbContext.distributors.FirstOrDefault(p => p.id == u.id);
+            if (dist != null)
+            {
+                dist.company = u.company;
+                dist.phone = u.phone;
+                dist.mailing_state = u.mailing_state;
+                DevDbContext.SaveChanges();
+            }
         }
 
         public FileStream DownloadSupplierPDF(string token)

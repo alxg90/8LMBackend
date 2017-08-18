@@ -25,7 +25,7 @@ namespace _8LMBackend.Service
         int GetUserID(string access_token);
         void VerifyFunction(int FunctionID, string access_token);
         void DeletePromoUser(int ID, string token);
-        void UpdateUser(Users u, string token);
+        void UpdateUser(AccountViewModel u, string token);
         FileStream DownloadSupplierPDF(string token);
     }
 }

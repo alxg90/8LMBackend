@@ -250,7 +250,7 @@ namespace _8LMCore.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateUser([FromBody]Users u)
+        public JsonResult UpdateUser([FromBody]AccountViewModel u)
         {
             try
             {
