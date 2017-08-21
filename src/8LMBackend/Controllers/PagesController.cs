@@ -147,7 +147,9 @@ namespace _8LMCore.Controllers
         {
             try
             {
-                ViewBag.html = _pagesService.HTML(id);
+                var html = _pagesService.HTML(id);
+                html = html.Replace("class='elm preview'", "class='elm webview'");
+                ViewBag.html = html;
                 return View();
             }
             catch (Exception ex)
