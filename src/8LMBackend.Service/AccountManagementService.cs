@@ -25,6 +25,17 @@ namespace _8LMBackend.Service
 
             var distributors = DevDbContext.distributors;
 
+            Dictionary<int, string> dCompany = new Dictionary<int, string>();
+            Dictionary<int, string> dPhone = new Dictionary<int, string>();
+            Dictionary<int, string> dMailing_state = new Dictionary<int, string>();
+
+            foreach (var d in distributors)
+            {
+                dCompany.Add(d.id, d.company);
+                dPhone.Add(d.id, d.phone);
+                dMailing_state.Add(d.id, d.mailing_state);
+            }
+
             var ServiceDictionary = new List<ServiceViewModel>();
             foreach (var s in DbContext.Service.ToList())
             {
@@ -57,7 +68,13 @@ namespace _8LMBackend.Service
 
             foreach (var u in DbContext.Users.Include(r => r.UserRoleUser).Include(t => t.Type).Include(s => s.Status).Include(x => x.Subscription).ToList())
             {
-                var dist = distributors.FirstOrDefault(d => d.id == u.Id);
+                string _company;
+                string _phone;
+                string _mailing_state;
+                dCompany.TryGetValue(u.Id, out _company);
+                dPhone.TryGetValue(u.Id, out _phone);
+                dMailing_state.TryGetValue(u.Id, out _mailing_state);
+
                 AccountViewModel account = new AccountViewModel()
                 {
                     id = u.Id,
@@ -69,9 +86,9 @@ namespace _8LMBackend.Service
                     typeID = u.TypeId,
                     typeName = u.Type.Name,
                     Icon = u.Icon,
-                    company = dist != null ? dist.company : "",
-                    phone = dist != null ? dist.phone : "",
-                    mailing_state = dist != null ? dist.mailing_state : "",
+                    company = _company,
+                    phone = _phone,
+                    mailing_state = _mailing_state,
                     StatusID = u.StatusId,
                     StatusName = u.Status.Name,
                     EnrollmentDate = u.CreatedDate,
