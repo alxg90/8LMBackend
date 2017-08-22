@@ -25,8 +25,8 @@ namespace _8LMBackend.Service.ViewModels
         public string StatusName { get; set; }
         public DateTime EnrollmentDate { get; set; }
 
-        public List<RoleViewModel> roles;
-        public List<PackageViewModel> packages;
+        public List<RoleViewModel> roles { get; set; }
+        public List<PackageViewModel> packages { get; set; }
     }
 
     public class PackageViewModel
