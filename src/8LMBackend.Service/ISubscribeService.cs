@@ -45,5 +45,7 @@ namespace _8LMBackend.Service
         AvailableEmailBroadcast GetNumberOfEmailBroadcast(string token);
         UpgradeSubscriptionResponse RequestUpgradeSubscription(string token, int TotalAmount);
         void UpgradePackage(string token, int CurrentRatePlanID, int NewRatePlanID, Guid UpgradeRequestID, int listID);
+        string GetAuthorizeNETLogin();
+        string GetSignatureKey();
     }
 }

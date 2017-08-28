@@ -9,10 +9,8 @@ namespace _8LMCore.Controllers
 {
     public class CustomHash
     {
-        public string GetHashedString(string Price, string OrderID)
+        public string GetHashedString(string Price, string OrderID, string LoginID, string SignatureKey)
         {
-            string LoginID = "5vZf2t6M8";
-            string SignatureKey = "17ECCD2A62D5F75E7E1D3993AB5A8949B70660689D1AEA0E0AF952796233EAE4EDA1B27CB9E543B2B107DCDC5992A9E27538942AACBD69D793F46773CEBD7CD2";
             string body = LoginID + "^" + OrderID + "^" + ConvertToUnixTimestamp(DateTime.UtcNow).ToString() + "^" + Price + "^";
             return GenerateSHA512String(body, SignatureKey);
         }

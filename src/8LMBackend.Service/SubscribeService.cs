@@ -650,5 +650,15 @@ namespace _8LMBackend.Service
             requestTask.ContinueWith(t => { var responseString = t.Result.Content.ReadAsStringAsync().Result; });
             requestTask.Wait();
         }
+
+        public string GetAuthorizeNETLogin()
+        {
+            return DbContext.PaymentSetting.First().AuthorizeNetlogin;
+        }
+
+        public string GetSignatureKey()
+        {
+            return DbContext.PaymentSetting.First().SignatureKey;
+        }
     }
 }

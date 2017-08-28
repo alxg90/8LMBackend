@@ -140,8 +140,8 @@ namespace _8LMCore.Controllers
 
                 var invoice = _subscribeService.PrepareInvoice(PackageRateID, token, ReferenceCode);
                 var customHash = new CustomHash();
-
-                return Json(new {InvoiceId = invoice.Id, invoice.AmountDue, HashCode = customHash.GetHashedString(((decimal)invoice.AmountDue / 100).ToString(), invoice.Id.ToString()), TimeStamp = customHash.ConvertToUnixTimestamp(DateTime.UtcNow).ToString()});
+                
+                return Json(new {InvoiceId = invoice.Id, invoice.AmountDue, HashCode = customHash.GetHashedString(((decimal)invoice.AmountDue / 100).ToString(), invoice.Id.ToString(), _subscribeService.GetAuthorizeNETLogin(), _subscribeService.GetSignatureKey()), TimeStamp = customHash.ConvertToUnixTimestamp(DateTime.UtcNow).ToString(), x_login = _subscribeService.GetAuthorizeNETLogin() });
             }
             catch(Exception ex)
             {
