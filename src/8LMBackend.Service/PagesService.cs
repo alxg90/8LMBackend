@@ -179,17 +179,16 @@ namespace _8LMBackend.Service
             return GetPages(token, Types.Pages.LandingPage);
         }
 
-        public List<dtoPage> GetControls(string token)
+        public List<dtoPage> GetControls(int ParentID, string token)
         {
             List<dtoPage> result = new List<dtoPage>();
-            var pages = DbContext.Pages.Where(p =>  p.StatusId == Statuses.Pages.Active && p.TypeId == Types.Pages.Control).ToList();
+            var pages = DbContext.PageControl.Where(p => p.ParentID == ParentID).ToList();
             foreach (var item in pages)
             {
                 var p = new dtoPage()
                 {
                     ID = item.Id,
                     Name = item.Name,
-                    Description = item.Description,
                     TypeID = item.TypeId,
                     JSON = item.Json,
                     //HTML = item.Html,
@@ -205,19 +204,15 @@ namespace _8LMBackend.Service
 
         public List<dtoPage> GetThemes(string token, int ThemeType) {
             List<dtoPage> result = new List<dtoPage>();
-            var pages = DbContext.Pages.Where(p => p.StatusId == Statuses.Pages.Active && p.TypeId == ThemeType).OrderByDescending(p => p.CreatedDate).ToList();
+            var pages = DbContext.PageControl.Where(p => p.TypeId == ThemeType).ToList();
             foreach (var item in pages)
             {
                 var p = new dtoPage()
                 {
                     ID = item.Id,
                     Name = item.Name,
-                    Description = item.Description,
                     TypeID = item.TypeId,
                     PreviewUrl = item.PreviewUrl
-                    //JSON = item.Json,
-                    //HTML = item.Html,
-                    //tags = new List<dtoPageTag>()
                 };
 
                 result.Add(p);

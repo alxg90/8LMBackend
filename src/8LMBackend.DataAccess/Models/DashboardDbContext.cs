@@ -11,9 +11,9 @@ namespace _8LMBackend.DataAccess.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-            optionsBuilder.UseMySql(@"server=core.mark8.media;userid=rails;pwd=oblisk1;port=3306;database=dashboard_development;sslmode=none;");
+            //optionsBuilder.UseMySql(@"server=core.mark8.media;userid=rails;pwd=oblisk1;port=3306;database=dashboard_development;sslmode=none;");
             //optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3606;database=testdb;sslmode=none;");
-            //optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3306;database=dashboard_development;sslmode=none;");
+            optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3306;database=dashboard_development;sslmode=none;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -58,6 +58,7 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<PageStatistic> PageStatistic { get; set; }
         public virtual DbSet<PageTag> PageTag { get; set; }
         public virtual DbSet<Pages> Pages { get; set; }
+        public virtual DbSet<PageControl> PageControl { get; set; }
         public virtual DbSet<PaymentSetting> PaymentSetting { get; set; }
         public virtual DbSet<PromoCode> PromoCode { get; set; }
         public virtual DbSet<PromoProduct> PromoProduct { get; set; }
@@ -80,9 +81,9 @@ namespace _8LMBackend.DataAccess.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-            optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_development;sslmode=none;");
+            //optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_development;sslmode=none;");
             //optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3606;database=testdb;sslmode=none;");
-            //optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3306;database=railsapi_development;sslmode=none;");
+            optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3306;database=railsapi_development;sslmode=none;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -996,6 +997,34 @@ namespace _8LMBackend.DataAccess.Models
                     .HasForeignKey(d => d.TypeId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FKPagesTypeID");
+            });
+
+            modelBuilder.Entity<PageControl>(entity =>
+            {
+                entity.HasIndex(e => e.TypeId)
+                    .HasName("FKPagesTypeID");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+                
+                entity.Property(e => e.PreviewUrl).HasColumnName("PreviewUrl").HasColumnType("nvarchar(255)");
+
+                entity.Property(e => e.Json)
+                    .IsRequired()
+                    .HasColumnName("JSON");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.TypeId)
+                    .HasColumnName("TypeID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ParentID)
+                    .HasColumnName("ParentID")
+                    .HasColumnType("int(11)");
             });
 
             modelBuilder.Entity<PaymentSetting>(entity =>

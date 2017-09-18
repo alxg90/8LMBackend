@@ -158,11 +158,10 @@ namespace _8LMCore.Controllers
             }
         }
         
-        public dtoPage[] GetControls(string token)
+        public dtoPage[] GetControls(int ParentID, string token)
         {
-            return _pagesService.GetControls(token).ToArray();
+            return _pagesService.GetControls(ParentID, token).ToArray();
         }
-
 
         [HttpGet]
         public JsonResult GetThemes(string token){

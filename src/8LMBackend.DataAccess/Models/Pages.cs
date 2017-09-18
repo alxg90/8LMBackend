@@ -3,6 +3,18 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
+    public partial class PageControl
+    {
+        public int Id { get; set; }
+        public string PreviewUrl { get; set; }
+        public string Json { get; set; }
+        public string Name { get; set; }
+        public int TypeId { get; set; }
+        public int ParentID { get; set; }
+
+        public virtual EntityType Type { get; set; }
+    }
+
     public partial class Pages
     {
         public Pages()
