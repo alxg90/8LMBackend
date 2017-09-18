@@ -10,7 +10,7 @@ namespace _8LMBackend.DataAccess.Models
         public string Json { get; set; }
         public string Name { get; set; }
         public int TypeId { get; set; }
-        public int ParentID { get; set; }
+        public int? ParentID { get; set; }
 
         public virtual EntityType Type { get; set; }
     }
