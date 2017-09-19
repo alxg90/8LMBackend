@@ -1,28 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Net.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
-namespace CssInliner.Controllers
+namespace _8LMCore.Controllers
 {
     public class CssInlinerController : Controller
     {
         [HttpPost]
-        public string Convert(ConvertRequestParam convertParam)
+        public ActionResult Convert([FromBody]ConvertRequestParam convertParam, string token)
         {
             if (convertParam.Key != "65214651465")
             {
-                return "Game over!";
+                return Json( new {error = "Game over!"});
             }
 
             using (var pm = new PreMailer.Net.PreMailer(convertParam.Html))
             {
                 var document = pm.Document;
                 var result = pm.MoveCssInline();
-                return result.Html;
+                return Json(new {result = result.Html});
             }
         }
 

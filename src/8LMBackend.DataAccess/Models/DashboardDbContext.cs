@@ -14,6 +14,8 @@ namespace _8LMBackend.DataAccess.Models
             //optionsBuilder.UseMySql(@"server=core.mark8.media;userid=rails;pwd=oblisk1;port=3306;database=dashboard_development;sslmode=none;");
             //optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3606;database=testdb;sslmode=none;");
             optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3306;database=dashboard_development;sslmode=none;");
+            //For debugging;
+            //optionsBuilder.EnableSensitiveDataLogging();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -84,6 +86,8 @@ namespace _8LMBackend.DataAccess.Models
             //optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_development;sslmode=none;");
             //optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3606;database=testdb;sslmode=none;");
             optionsBuilder.UseMySql(@"server=localhost;userid=root;pwd=oblisk1;port=3306;database=railsapi_development;sslmode=none;");
+            //For debugging;
+            //optionsBuilder.EnableSensitiveDataLogging();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
