@@ -8,7 +8,8 @@ namespace _8LMBackend.Service
     public interface IAccountManagementService
     {
         List<AccountViewModel> AccountList(string access_token);
-		void AssignFunction(int FunctionID, int RoleID, string access_token);
+        AccountViewModel GetAccount(string access_token);
+        void AssignFunction(int FunctionID, int RoleID, string access_token);
 		void DeassignFunction(int FunctionID, int RoleID, string access_token);
         void UpdateCode(int yyyy, int mm, string Code, string access_token);
         List<PromoCode> GetCodes(string access_token);

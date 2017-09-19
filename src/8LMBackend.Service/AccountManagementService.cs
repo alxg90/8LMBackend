@@ -17,7 +17,35 @@ namespace _8LMBackend.Service
 		{
 		}
 
-		public List<AccountViewModel> AccountList(string access_token)
+        public AccountViewModel GetAccount(string access_token)
+        {
+            VerifyFunction(9, access_token);
+
+            int UID = GetUserID(access_token);
+
+            var d = DevDbContext.distributors.First(p => p.id == UID);
+            var u = DbContext.Users.Where(p => p.Id == UID).First();
+            AccountViewModel result = new AccountViewModel()
+            {
+                id = u.Id,
+                login = u.Login,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                ClearPassword = u.ClearPassword,
+                Email = u.Email,
+                typeID = u.TypeId,
+                Icon = u.Icon,
+                company = d.company,
+                phone = d.phone,
+                mailing_state = d.mailing_state,
+                StatusID = u.StatusId,
+                EnrollmentDate = u.CreatedDate
+            };
+
+            return result;
+        }
+
+        public List<AccountViewModel> AccountList(string access_token)
 		{
             VerifyFunction(9, access_token);
 
