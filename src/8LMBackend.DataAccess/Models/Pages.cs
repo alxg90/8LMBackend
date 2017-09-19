@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
+    public partial class ExcludeEmail
+    {
+        public int UserID { get; set; }
+        public string email { get; set; }
+        public DateTime CreatedDate { get; set; }
+    }
+
     public partial class PageControl
     {
         public int Id { get; set; }

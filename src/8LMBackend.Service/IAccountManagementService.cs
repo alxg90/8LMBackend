@@ -9,6 +9,7 @@ namespace _8LMBackend.Service
     {
         List<AccountViewModel> AccountList(string access_token);
         AccountViewModel GetAccount(string access_token);
+        void ExcludeEmailAddress(string access_token, string email);
         void AssignFunction(int FunctionID, int RoleID, string access_token);
 		void DeassignFunction(int FunctionID, int RoleID, string access_token);
         void UpdateCode(int yyyy, int mm, string Code, string access_token);

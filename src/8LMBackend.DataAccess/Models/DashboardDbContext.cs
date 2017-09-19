@@ -60,6 +60,7 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<PageStatistic> PageStatistic { get; set; }
         public virtual DbSet<PageTag> PageTag { get; set; }
         public virtual DbSet<Pages> Pages { get; set; }
+        public virtual DbSet<ExcludeEmail> ExcludeEmail { get; set; }
         public virtual DbSet<PageControl> PageControl { get; set; }
         public virtual DbSet<PaymentSetting> PaymentSetting { get; set; }
         public virtual DbSet<PromoCode> PromoCode { get; set; }
@@ -1029,6 +1030,22 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.ParentID)
                     .HasColumnName("ParentID")
                     .HasColumnType("int(11)");
+            });
+
+            modelBuilder.Entity<ExcludeEmail>(entity =>
+            {
+                entity.HasKey(e => new { e.UserID, e.email })
+                    .HasName("PK_ExcludeEmail");
+
+                entity.Property(e => e.UserID)
+                    .HasColumnName("UserID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.email)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<PaymentSetting>(entity =>

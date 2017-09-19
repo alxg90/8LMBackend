@@ -45,6 +45,22 @@ namespace _8LMBackend.Service
             return result;
         }
 
+        public void ExcludeEmailAddress(string access_token, string email)
+        {
+            int UID = GetUserID(access_token);
+
+            ExcludeEmail item = DbContext.ExcludeEmail.FirstOrDefault(p => p.UserID == UID && p.email.ToUpper() == email.ToUpper());
+            if (item == null)
+            {
+                item = new ExcludeEmail();
+                item.UserID = UID;
+                item.email = email;
+                item.CreatedDate = DateTime.UtcNow;
+                DbContext.Set<ExcludeEmail>().Add(item);
+                DbContext.SaveChanges();
+            }
+        }
+
         public List<AccountViewModel> AccountList(string access_token)
 		{
             VerifyFunction(9, access_token);
