@@ -58,6 +58,15 @@ namespace _8LMBackend.Service
             return item;
         }
 
+        public PageControl GetPageControl(int id)
+        {
+            var item = DbContext.PageControl.Where(p => p.Id == id).FirstOrDefault();
+            if (item == null)
+                throw new Exception("PageControl with ID = " + id.ToString() + " not found");
+
+            return item;
+        }
+
         public MemoryStream Download(Pages page)
         {
             PageSpider ps = new PageSpider(page.Html);

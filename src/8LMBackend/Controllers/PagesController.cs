@@ -51,7 +51,12 @@ namespace _8LMCore.Controllers
         {
             return _pagesService.GetPage(id);
         }
-        
+
+        public PageControl GetPageControl(int id, string token)
+        {
+            return _pagesService.GetPageControl(id);
+        }
+
         public ActionResult DownloadPage(int pageID)
         {
             var page = _pagesService.GetPage(pageID);
