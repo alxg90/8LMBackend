@@ -209,7 +209,7 @@ namespace _8LMBackend.Service
 
         public void UpdateCode(int yyyy, int mm, string Code, string access_token)
         {
-            VerifyFunction(12, access_token);
+            IsAdmin(access_token);
 
             if (!DbContext.PromoCode.Where(p => p.Code == Code).Any())
             {
@@ -246,7 +246,7 @@ namespace _8LMBackend.Service
 
         public void DeletePromoCode(int yyyy, int mm, string access_token)
         {
-            VerifyFunction(12, access_token);
+            IsAdmin(access_token);
 
             var item = DbContext.PromoCode.Where(p => p.Yyyy == yyyy && p.Mm == mm).FirstOrDefault();
             if (item != default(PromoCode))
@@ -260,6 +260,8 @@ namespace _8LMBackend.Service
 
         public void CodesBulkUpdate(List<PromoCode> codes, string access_token)
         {
+            IsAdmin(access_token);
+
             foreach (var c in codes)
                 UpdateCode(c.Yyyy, c.Mm, c.Code, access_token);
         }
@@ -474,7 +476,7 @@ namespace _8LMBackend.Service
 
         public void DeletePromoUser(int ID, string token)
         {
-            VerifyFunction(12, token);
+            IsAdmin(token);
 
             foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == ID).ToList())
                 DbContext.Set<PromoProduct>().Remove(pp);
@@ -521,6 +523,18 @@ namespace _8LMBackend.Service
 
             string SupplierPDFPath = DbContext.PaymentSetting.First().SupplierPDFPath;
             return File.OpenRead(SupplierPDFPath);
+        }
+
+        void IsAdmin(string token)
+        {
+            var u = DbContext.UserToken.Where(p => p.Token == token).FirstOrDefault();
+            if (u == default(UserToken))
+                throw new Exception("Not authorized");
+
+            var ur = DbContext.Users.First(p => p.Id == u.UserId);
+
+            if (ur.TypeId != 4)
+                throw new Exception("Only admin is authorized to perform this action");
         }
     }
 }
