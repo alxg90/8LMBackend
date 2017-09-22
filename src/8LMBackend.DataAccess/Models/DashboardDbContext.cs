@@ -29,6 +29,11 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.company).HasColumnType("varchar(255)");
                 entity.Property(e => e.phone).HasColumnType("varchar(255)");
                 entity.Property(e => e.mailing_state).HasColumnType("varchar(255)");
+                entity.Property(e => e.mailing_address).HasColumnType("varchar(255)");
+                entity.Property(e => e.mailing_address2).HasColumnType("varchar(255)");
+                entity.Property(e => e.mailing_city).HasColumnType("varchar(255)");
+                entity.Property(e => e.mailing_zip).HasColumnType("varchar(255)");
+                entity.Property(e => e.mailing_country).HasColumnType("varchar(255)");
             });
         }
     }

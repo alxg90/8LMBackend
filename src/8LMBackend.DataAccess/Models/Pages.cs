@@ -3,6 +3,16 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
+    public partial class Gallery
+    {
+        public int ID { get; set; }
+        public int UserID { get; set; }
+        public int TypeID { get; set; }
+        public string Title { get; set; }
+        public string FileName { get; set; }
+        public string CurrentName { get; set; }
+    }
+
     public partial class ExcludeEmail
     {
         public int UserID { get; set; }

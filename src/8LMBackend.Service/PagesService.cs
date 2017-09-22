@@ -99,7 +99,7 @@ namespace _8LMBackend.Service
             return result.Distinct().ToList();
         }
 
-        int GetUserID(string access_token)
+        public int GetUserID(string access_token)
         {
             var u = DbContext.UserToken.Where(p => p.Token == access_token).FirstOrDefault();
             if (u == default(UserToken))
@@ -316,6 +316,17 @@ namespace _8LMBackend.Service
         {
             var result = DbContext.PaymentSetting.First();
             return result.defaultEmailTemplateID;
+        }
+
+        public void UpdloadImage(string token, string fileName, string title)
+        {
+            int UserID = GetUserID(token);
+
+            if (!Directory.Exists(UserID.ToString()))
+            {
+                Directory.CreateDirectory(UserID.ToString());
+            }
+
         }
     }
 }

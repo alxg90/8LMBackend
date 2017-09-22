@@ -13,6 +13,11 @@ namespace _8LMBackend.DataAccess.Models
         public string phone { get; set; }
         public string company { get; set; }
         public string mailing_state { get; set; }
+        public string mailing_address { get; set; }
+        public string mailing_address2 { get; set; }
+        public string mailing_city { get; set; }
+        public string mailing_zip { get; set; }
+        public string mailing_country { get; set; }
     }
 
     public partial class Users

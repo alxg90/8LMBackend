@@ -31,7 +31,7 @@ namespace _8LMBackend.Service
                 login = u.Login,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
-                ClearPassword = u.ClearPassword,
+                //ClearPassword = u.ClearPassword,
                 Email = u.Email,
                 typeID = u.TypeId,
                 Icon = u.Icon,
@@ -39,7 +39,12 @@ namespace _8LMBackend.Service
                 phone = d.phone,
                 mailing_state = d.mailing_state,
                 StatusID = u.StatusId,
-                EnrollmentDate = u.CreatedDate
+                EnrollmentDate = u.CreatedDate,
+                mailing_address = d.mailing_address,
+                mailing_address2 = d.mailing_address2,
+                mailing_city = d.mailing_city,
+                mailing_zip = d.mailing_zip,
+                mailing_country = d.mailing_country
             };
 
             return result;
@@ -125,7 +130,7 @@ namespace _8LMBackend.Service
                     login = u.Login,
                     FirstName = u.FirstName,
                     LastName = u.LastName,
-                    ClearPassword = u.ClearPassword,
+                    //ClearPassword = u.ClearPassword,
                     Email = u.Email,
                     typeID = u.TypeId,
                     typeName = u.Type.Name,
@@ -491,7 +496,7 @@ namespace _8LMBackend.Service
             {
                 item.FirstName = u.FirstName;
                 item.LastName = u.LastName;
-                item.ClearPassword = u.ClearPassword;
+                //item.ClearPassword = u.ClearPassword;
                 item.Email = u.Email;
                 item.Icon = u.Icon;
                 DbContext.SaveChanges();

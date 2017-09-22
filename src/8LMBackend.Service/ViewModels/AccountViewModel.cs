@@ -13,7 +13,7 @@ namespace _8LMBackend.Service.ViewModels
 		public string login { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string ClearPassword { get; set; }
+        //public string ClearPassword { get; set; }
         public string Email { get; set; }
         public string Icon { get; set; }
         public string company { get; set; }
@@ -24,6 +24,11 @@ namespace _8LMBackend.Service.ViewModels
         public int StatusID { get; set; }
         public string StatusName { get; set; }
         public DateTime EnrollmentDate { get; set; }
+        public string mailing_address { get; set; }
+        public string mailing_address2 { get; set; }
+        public string mailing_city { get; set; }
+        public string mailing_zip { get; set; }
+        public string mailing_country { get; set; }
 
         public List<RoleViewModel> roles { get; set; }
         public List<PackageViewModel> packages { get; set; }
