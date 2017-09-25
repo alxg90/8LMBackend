@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using _8LMBackend.Service.DTO;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Http;
 
 namespace _8LMCore.Controllers
 {
@@ -237,24 +238,8 @@ namespace _8LMCore.Controllers
             return Json(new { status, message, data });
         }
 
-        [HttpPost("UploadFiles")]
-        public void UploadImage(FormFile file, string token)
-        {
-            int UserID = _pagesService.GetUserID(token);
-            string dir = "Gallery/" + UserID.ToString();
-
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-            using (var stream = new FileStream(dir + "/12345.tmp", FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-        }
-
         [HttpPost]
-        public void UploadImage1(FormFile file, string token)
+        public void UploadImage(IFormFile file, string token)
         {
             int UserID = _pagesService.GetUserID(token);
             string dir = "Gallery/" + UserID.ToString();
