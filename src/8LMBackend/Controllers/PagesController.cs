@@ -239,19 +239,61 @@ namespace _8LMCore.Controllers
         }
 
         [HttpPost]
-        public void UploadImage(IFormFile file, string token)
+        public ActionResult UploadImage(IFormFile file, int TypeID, string title, string token)
         {
-            int UserID = _pagesService.GetUserID(token);
-            string dir = "Gallery/" + UserID.ToString();
+            try
+            {
+                int UserID = _pagesService.GetUserID(token);
+                string dir = "Gallery/" + UserID.ToString();
+                string cn = Guid.NewGuid().ToString();
 
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                using (var stream = new FileStream(dir + "/" + cn, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+
+                Gallery item = new Gallery()
+                {
+                    UserID = UserID,
+                    TypeID = TypeID,
+                    Title = title,
+                    FileName = file.FileName,
+                    CurrentName = cn
+                };
+                _pagesService.SaveGallery(item, token);
+
+                return Json(new { status = "OK" });
             }
-            using (var stream = new FileStream(dir + "/12345.tmp", FileMode.Create))
+            catch (System.Exception ex)
             {
-                file.CopyTo(stream);
+                return Json(new
+                {
+                    status = "failed",
+                    error = ex.Message
+                });
             }
+        }
+
+        public JsonResult GetGalleryList(int TypeID, string token)
+        {
+            var status = "ok";
+            var message = "";
+            List<Gallery> data = null;
+            try
+            {
+                data = _pagesService.GetGalleryList(TypeID, token);
+            }
+            catch (Exception ex)
+            {
+                status = "fail";
+                message = ex.Message;
+            }
+
+            return Json(new { status, message, data });
         }
     }
 }

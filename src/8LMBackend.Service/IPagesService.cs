@@ -27,6 +27,7 @@ namespace _8LMBackend.Service
         int GetDefaultLandingPageTemplateID();
         int GetDefaultEmailTemplateID();
         int GetUserID(string access_token);
-        void UpdloadImage(string token, string fileName, string title);
+        void SaveGallery(Gallery image, string token);
+        List<Gallery> GetGalleryList(int TypeID, string token);
     }
 }

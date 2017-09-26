@@ -65,6 +65,7 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<PageStatistic> PageStatistic { get; set; }
         public virtual DbSet<PageTag> PageTag { get; set; }
         public virtual DbSet<Pages> Pages { get; set; }
+        public virtual DbSet<Gallery> Gallery { get; set; }
         public virtual DbSet<ExcludeEmail> ExcludeEmail { get; set; }
         public virtual DbSet<PageControl> PageControl { get; set; }
         public virtual DbSet<PaymentSetting> PaymentSetting { get; set; }
@@ -1007,6 +1008,33 @@ namespace _8LMBackend.DataAccess.Models
                     .HasForeignKey(d => d.TypeId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FKPagesTypeID");
+            });
+
+            modelBuilder.Entity<Gallery>(entity =>
+            {
+                entity.Property(e => e.ID)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.UserID)
+                    .HasColumnName("UserID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.TypeID)
+                    .HasColumnName("TypeID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.FileName)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.CurrentName)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
             });
 
             modelBuilder.Entity<PageControl>(entity =>

@@ -318,15 +318,17 @@ namespace _8LMBackend.Service
             return result.defaultEmailTemplateID;
         }
 
-        public void UpdloadImage(string token, string fileName, string title)
+        public void SaveGallery(Gallery image, string token)
         {
-            int UserID = GetUserID(token);
+            DbContext.Gallery.Add(image);
+            DbContext.SaveChanges();
+        }
 
-            if (!Directory.Exists(UserID.ToString()))
-            {
-                Directory.CreateDirectory(UserID.ToString());
-            }
-
+        public List<Gallery> GetGalleryList(int TypeID, string token)
+        {
+            int UID = GetUserID(token);
+            var result = DbContext.Gallery.Where(p => p.UserID == UID && p.TypeID == TypeID).ToList();
+            return result;
         }
     }
 }
