@@ -330,5 +330,19 @@ namespace _8LMBackend.Service
             var result = DbContext.Gallery.Where(p => p.UserID == UID && p.TypeID == TypeID).ToList();
             return result;
         }
+
+        public Gallery GetGallery(int ID, string token)
+        {
+            int UID = GetUserID(token);
+
+            var item = DbContext.Gallery.FirstOrDefault(p => p.ID == ID);
+            if (item == null)
+                throw new Exception("Image with ID = " + ID.ToString() + " not found in Gallery");
+
+            if (item.UserID != UID)
+                throw new Exception("This image does not belong to the user");
+
+            return item;
+        }
     }
 }

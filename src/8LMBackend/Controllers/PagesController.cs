@@ -295,5 +295,24 @@ namespace _8LMCore.Controllers
 
             return Json(new { status, message, data });
         }
+
+        public ActionResult DownloadImage(int ID, string token)
+        {
+            var image = _pagesService.GetGallery(ID, token);
+
+            int UserID = _pagesService.GetUserID(token);
+            string dir = "Gallery/" + UserID.ToString();
+
+            MemoryStream ms = new MemoryStream();
+            using (var stream = new FileStream(dir + "/" + image.CurrentName, FileMode.Open))
+            {
+                stream.CopyTo(ms);
+            }
+
+            ms.Position = 0;
+
+            Extention ext = new Extention();
+            return File(ms, ext.Get(Path.GetExtension(image.FileName)), image.FileName);
+        }
     }
 }

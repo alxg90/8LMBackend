@@ -29,5 +29,6 @@ namespace _8LMBackend.Service
         int GetUserID(string access_token);
         void SaveGallery(Gallery image, string token);
         List<Gallery> GetGalleryList(int TypeID, string token);
+        Gallery GetGallery(int ID, string token);
     }
 }
