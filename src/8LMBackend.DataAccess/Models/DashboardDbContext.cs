@@ -66,6 +66,7 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<PageTag> PageTag { get; set; }
         public virtual DbSet<Pages> Pages { get; set; }
         public virtual DbSet<Gallery> Gallery { get; set; }
+        public virtual DbSet<Gallery> FileLibrary { get; set; }
         public virtual DbSet<ExcludeEmail> ExcludeEmail { get; set; }
         public virtual DbSet<PageControl> PageControl { get; set; }
         public virtual DbSet<PaymentSetting> PaymentSetting { get; set; }
@@ -1027,6 +1028,21 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.FileName)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.CurrentName)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+            });
+
+            modelBuilder.Entity<FileLibrary>(entity =>
+            {
+                entity.Property(e => e.ID)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.FileName)
                     .IsRequired()

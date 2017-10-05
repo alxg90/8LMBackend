@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace _8LMBackend.DataAccess.Models
 {
+    public partial class FileLibrary
+    {
+        public int ID { get; set; }
+        public string FileName { get; set; }
+        public string CurrentName { get; set; }
+    }
+
     public partial class Gallery
     {
         public int ID { get; set; }
