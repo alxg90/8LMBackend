@@ -47,7 +47,7 @@ namespace _8LMBackend
             services.AddScoped(typeof(IProxyService), typeof(ProxyService));
             services.AddScoped(typeof(IPagesService), typeof(PagesService));
             services.AddScoped(typeof(ISubscribeService), typeof(SubscribeService));
-            services.AddScoped(typeof(IFileManager), typeof(FileManager));
+            services.AddScoped(typeof(IFileManagerService), typeof(FileManagerService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

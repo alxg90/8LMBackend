@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using _8LMBackend.DataAccess.Enums;
+using _8LMBackend.DataAccess.Infrastructure;
 using _8LMBackend.DataAccess.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace _8LMBackend.Service
 {
-    public class FileManager: IFileManager
+    public class FileManagerService: ServiceBase, IFileManagerService
     {
         private readonly IPagesService _pagesService;
-        public FileManager(IPagesService pagesService){
+        public FileManagerService(IDbFactory dbFactory, IPagesService pagesService)
+            : base(dbFactory)
+        {
             _pagesService = pagesService;
         }
 
@@ -21,24 +24,30 @@ namespace _8LMBackend.Service
         /// <param name="type">StorageType</param>
         /// <param name="token">Token</param>
         /// <param name="file">File to save</param>
-        public Guid SaveFile(StorageType type, string token, IFormFile file)
+        public string SaveFile(StorageType type, string token, IFormFile file)
         {
             try
             {
-                int UserID = _pagesService.GetUserID(token);
-                string dir = EnumExtensions.GetEnumDescription(type) + UserID.ToString();
-                Guid newObjId = Guid.NewGuid();
-                string cn = newObjId.ToString();
+                int userId = _pagesService.GetUserID(token);
+                string dir = EnumExtensions.GetEnumDescription(type) + userId.ToString();
+                string newObjId = Guid.NewGuid().ToString();
                 if (!Directory.Exists(dir))
                 {
                     Directory.CreateDirectory(dir);
                 }
-                using (var stream = new FileStream(dir + "/" + cn, FileMode.Create))
+                using (var stream = new FileStream(dir + "/" + newObjId, FileMode.Create))
                 {
                     file.CopyTo(stream);
                 }
                 //save into new table
-                //new guid, string originalname file
+                FileLibrary fileLibrary = new FileLibrary{
+                    CurrentName = newObjId,
+                    FileName = file.FileName,
+                };
+
+                DbContext.Add(fileLibrary);
+                DbContext.SaveChanges();
+
                 return newObjId;
             }
             catch (System.Exception ex)

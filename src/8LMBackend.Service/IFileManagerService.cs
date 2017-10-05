@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace _8LMBackend.Service
 {
-    public interface IFileManager
+    public interface IFileManagerService
     {
         /// <summary>
         /// Save file to the disk and db
@@ -13,6 +13,6 @@ namespace _8LMBackend.Service
         /// <param name="type">StorageType</param>
         /// <param name="token">Token</param>
         /// <param name="file">File to save</param>
-        Guid SaveFile(StorageType type, string token, IFormFile file);
+        string SaveFile(StorageType type, string token, IFormFile file);
     }
 }

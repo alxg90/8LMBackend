@@ -13,8 +13,8 @@ namespace _8LMBackend.Service
 {
     public class AccountManagementService : ServiceBase, IAccountManagementService
     {
-        private readonly IFileManager _fileManager;
-		public AccountManagementService(IDbFactory dbFactory, IFileManager fileManager)
+        private readonly IFileManagerService _fileManager;
+		public AccountManagementService(IDbFactory dbFactory, IFileManagerService fileManager)
 			: base(dbFactory) 
 		{
             _fileManager = fileManager;
@@ -311,7 +311,7 @@ namespace _8LMBackend.Service
                 item = new PromoSupplier();
                 isNew = true;
             }
-            Guid? logoId = null;
+            string logoId = string.Empty;
             if(u.upload_file != null){
                 logoId = _fileManager.SaveFile(StorageType.SupplierAssets, access_token, u.upload_file);
             }
@@ -330,7 +330,7 @@ namespace _8LMBackend.Service
             item.notes = u.notes;
             item.externalLink = u.externalLink;
             item.DocumentPath = u.DocumentPath;
-            item.LogoId = logoId.GetValueOrDefault();
+            //item.LogoId = logoId;
 
             if (isNew)
                 DbContext.Set<PromoSupplier>().Add(item);

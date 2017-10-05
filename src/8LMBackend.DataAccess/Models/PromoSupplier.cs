@@ -31,6 +31,6 @@ namespace _8LMBackend.DataAccess.Models
         /// <summary>
         /// LodoId for Suppplier
         /// </summary>
-        public Guid? LogoId { get; set; }
+        //public string LogoId { get; set; }
     }
 }
