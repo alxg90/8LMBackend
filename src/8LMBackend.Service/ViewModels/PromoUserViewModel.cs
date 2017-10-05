@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using _8LMBackend.DataAccess.Infrastructure;
+using Microsoft.AspNetCore.Http;
 
 namespace _8LMBackend.Service.ViewModels
 {
@@ -26,5 +27,10 @@ namespace _8LMBackend.Service.ViewModels
         public string DocumentPath { get; set; }
 
         public List<string> products = new List<string>();
+        
+        /// <summary>
+        /// File to upload
+        /// </summary>
+        public IFormFile upload_file { get; set; }
     }
 }

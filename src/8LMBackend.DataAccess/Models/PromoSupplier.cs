@@ -27,5 +27,10 @@ namespace _8LMBackend.DataAccess.Models
         public string DocumentPath { get; set; }
 
         public virtual ICollection<PromoProduct> PromoProduct { get; set; }
+
+        /// <summary>
+        /// LodoId for Suppplier
+        /// </summary>
+        public Guid? LogoId { get; set; }
     }
 }

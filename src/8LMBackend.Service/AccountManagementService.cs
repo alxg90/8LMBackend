@@ -7,14 +7,17 @@ using Microsoft.EntityFrameworkCore;
 using _8LMBackend.DataAccess.Models;
 using _8LMBackend.DataAccess.DtoModels;
 using System.IO;
+using _8LMBackend.DataAccess.Enums;
 
 namespace _8LMBackend.Service
 {
     public class AccountManagementService : ServiceBase, IAccountManagementService
     {
-		public AccountManagementService(IDbFactory dbFactory)
+        private readonly IFileManager _fileManager;
+		public AccountManagementService(IDbFactory dbFactory, IFileManager fileManager)
 			: base(dbFactory) 
 		{
+            _fileManager = fileManager;
 		}
 
         public AccountViewModel GetAccount(string access_token)
@@ -308,6 +311,10 @@ namespace _8LMBackend.Service
                 item = new PromoSupplier();
                 isNew = true;
             }
+            Guid? logoId = null;
+            if(u.upload_file != null){
+                logoId = _fileManager.SaveFile(StorageType.SupplierAssets, access_token, u.upload_file);
+            }
 
             item.Name = u.name;
             item.Address = u.address;
@@ -323,6 +330,7 @@ namespace _8LMBackend.Service
             item.notes = u.notes;
             item.externalLink = u.externalLink;
             item.DocumentPath = u.DocumentPath;
+            item.LogoId = logoId.GetValueOrDefault();
 
             if (isNew)
                 DbContext.Set<PromoSupplier>().Add(item);
