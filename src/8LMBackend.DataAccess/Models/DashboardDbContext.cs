@@ -4,6 +4,47 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace _8LMBackend.DataAccess.Models
 {
+    public partial class ProductionDbContext : DbContext
+    {
+        public virtual DbSet<PageControl> PageControl { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseMySql(@"server=localhost;userid=core;pwd=Obl1skc3p0!;port=3306;database=dashboard_development;sslmode=none;");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PageControl>(entity =>
+            {
+                /*entity.HasIndex(e => e.TypeId)
+                    .HasName("FKPagesTypeID");*/
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.PreviewUrl).HasColumnName("PreviewUrl").HasColumnType("nvarchar(255)");
+
+                entity.Property(e => e.Json)
+                    .IsRequired()
+                    .HasColumnName("JSON");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.TypeId)
+                    .HasColumnName("TypeID")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.ParentID)
+                    .HasColumnName("ParentID")
+                    .HasColumnType("int(11)");
+            });
+        }
+    }
+
     public partial class DevelopmentDbContext : DbContext
     {
         public virtual DbSet<distributors> distributors { get; set; }
@@ -1055,8 +1096,8 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<PageControl>(entity =>
             {
-                entity.HasIndex(e => e.TypeId)
-                    .HasName("FKPagesTypeID");
+                /*entity.HasIndex(e => e.TypeId)
+                    .HasName("FKPagesTypeID");*/
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")

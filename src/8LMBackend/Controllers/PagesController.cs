@@ -314,5 +314,40 @@ namespace _8LMCore.Controllers
             Extention ext = new Extention();
             return File(ms, ext.Get(Path.GetExtension(image.FileName)), image.FileName);
         }
+
+        public void MigratePageControlsFromDevToProd()
+        {
+            List<int> excludeIDs = new List<int>()
+            {
+                3194,
+                4313,
+                4696
+            };
+            string replaceFrom = "http://ang.mark8.media/";
+            string replaceTo = "https://app.eightlegged.media/";
+
+            List<PageControl> controls;
+            using (DashboardDbContext db = new DashboardDbContext())
+            {
+                controls = db.PageControl.ToList();
+            }
+
+            using (ProductionDbContext db = new ProductionDbContext())
+            {
+                foreach (var c in controls)
+                {
+                    if (!excludeIDs.Contains(c.Id))
+                    {
+                        if (c.Json != null)
+                            c.Json.Replace(replaceFrom, replaceTo);
+
+                        if (c.PreviewUrl != null)
+                        c.PreviewUrl.Replace(replaceFrom, replaceTo);
+                            db.Set<PageControl>().Add(c);
+                    }
+                }
+                db.SaveChanges();
+            }
+        }
     }
 }
