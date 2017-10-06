@@ -25,6 +25,7 @@ namespace _8LMBackend.DataAccess.Models
         public string notes { get; set; }
         public string externalLink { get; set; }
         public string DocumentPath { get; set; }
+        public int LogoID { get; set; }
 
         public virtual ICollection<PromoProduct> PromoProduct { get; set; }
     }

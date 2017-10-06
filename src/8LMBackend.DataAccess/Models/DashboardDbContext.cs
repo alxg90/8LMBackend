@@ -1273,6 +1273,9 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.DocumentPath)
                     .HasColumnName("DocumentPath")
                     .HasColumnType("nvarchar(255)");
+                entity.Property(e => e.LogoID)
+                    .HasColumnName("LogoID")
+                    .HasColumnType("int(11)");
             });
 
             modelBuilder.Entity<RelayAuthorizeNetresponse>(entity =>
