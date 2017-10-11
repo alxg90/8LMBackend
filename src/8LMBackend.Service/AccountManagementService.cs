@@ -27,7 +27,7 @@ namespace _8LMBackend.Service
 
         public AccountViewModel GetAccount(string access_token)
         {
-            VerifyFunction(9, access_token);
+            VerifyFunction(SecurityFunctions.Emails_Broadcast, access_token);
 
             int UID = GetUserID(access_token);
 
@@ -76,10 +76,9 @@ namespace _8LMBackend.Service
 
         public List<AccountViewModel> AccountList(string access_token)
 		{
-            VerifyFunction(9, access_token);
+            VerifyFunction(SecurityFunctions.Emails_Broadcast, access_token);
 
 			var result = new List<AccountViewModel>();
-
             var distributors = DevDbContext.distributors;
 
             Dictionary<int, string> dCompany = new Dictionary<int, string>();
@@ -185,7 +184,7 @@ namespace _8LMBackend.Service
 
         public void AssignFunction(int FunctionID, int RoleID, string access_token)
 		{
-            VerifyFunction(10, access_token);
+            VerifyFunction(SecurityFunctions.LandingPage_RO, access_token);
 
             var rf = DbContext.RoleFunction.Where(p => p.RoleId == RoleID && p.FunctionId == FunctionID).FirstOrDefault();
 			if (rf == default(RoleFunction))
@@ -205,7 +204,7 @@ namespace _8LMBackend.Service
 
 		public void DeassignFunction(int FunctionID, int RoleID, string access_token)
 		{
-            VerifyFunction(10, access_token);
+            VerifyFunction(SecurityFunctions.LandingPage_RO, access_token);
 
             var rf = DbContext.RoleFunction.Where(p => p.RoleId == RoleID && p.FunctionId == FunctionID).FirstOrDefault();
             if (rf != null)
@@ -247,7 +246,7 @@ namespace _8LMBackend.Service
 
         public List<PromoCode> GetCodes(string access_token)
         {
-            VerifyFunction(16, access_token);
+            VerifyFunction(SecurityFunctions.PromoEQP_CrUD, access_token);
 
             return DbContext.PromoCode.OrderBy(y => y.Yyyy).OrderBy(m => m.Mm).ToList();
         }
@@ -276,8 +275,7 @@ namespace _8LMBackend.Service
 
         public List<PromoUserViewModel> GetPromoSuppliers(string access_token)
         {
-            VerifyFunction(16, access_token);
-            var allowLogoAccess = VerifyFunction(15, access_token);
+            VerifyFunction(SecurityFunctions.PromoEQP_RO, access_token);
             var files = DbContext.FileLibrary.ToList();
             var userId = GetUserID(access_token);
             List<PromoUserViewModel> result = new List<PromoUserViewModel>();
@@ -285,13 +283,11 @@ namespace _8LMBackend.Service
             {
                 var logoPath = string.Empty;
                 var logoName = string.Empty;
-                if (allowLogoAccess){
-                    if (u.LogoID.HasValue){
-                        var currFile = files.FirstOrDefault(x=> x.ID == u.LogoID.GetValueOrDefault());
-                        if (currFile != null){
-                            logoPath = _fileManager.GetFilePath(StorageType.SupplierAssets, currFile, userId);
-                            logoName = currFile.FileName; 
-                        }
+                if (u.LogoID.HasValue){
+                    var currFile = files.FirstOrDefault(x=> x.ID == u.LogoID.GetValueOrDefault());
+                    if (currFile != null){
+                        logoPath = _fileManager.GetFilePath(StorageType.SupplierAssets, currFile, userId);
+                        logoName = currFile.FileName; 
                     }
                 }
                 PromoUserViewModel item = new PromoUserViewModel()
@@ -322,7 +318,7 @@ namespace _8LMBackend.Service
 
         public void UpdatePromoUser(PromoUserViewModel u, string access_token)
         {
-            VerifyFunction(12, access_token);
+            VerifyFunction(SecurityFunctions.ePages_RO, access_token);
 
             bool isNew = false;
             int? logoId = null;
@@ -410,7 +406,7 @@ namespace _8LMBackend.Service
 
         public int CreateSecurityRole(string Name, string Description, string access_token)
         {
-            VerifyFunction(10, access_token);
+            VerifyFunction(SecurityFunctions.LandingPage_RO, access_token);
 
             var item = DbContext.SecurityRole.Where(p => p.Name.ToUpper() == Name.ToUpper()).FirstOrDefault();
             if (item == default(SecurityRole))
@@ -434,7 +430,7 @@ namespace _8LMBackend.Service
 
         public void UpdateSecurityRole(int ID, string Name, string Description, string access_token)
         {
-            VerifyFunction(10, access_token);
+            VerifyFunction(SecurityFunctions.LandingPage_RO, access_token);
 
             var item = DbContext.SecurityRole.Where(p => p.Id == ID).FirstOrDefault();
             if (item == default(SecurityRole))
@@ -451,7 +447,7 @@ namespace _8LMBackend.Service
 
         public void DeleteSecurityRole(int ID, string access_token)
         {
-            VerifyFunction(10, access_token);
+            VerifyFunction(SecurityFunctions.LandingPage_RO, access_token);
 
             var item = DbContext.SecurityRole.Where(p => p.Id == ID).Include(p => p.RoleFunction).Include(p => p.UserRole).FirstOrDefault();
             // var item = DbContext.SecurityRole.FirstOrDefault(p => p.Id == ID);
@@ -470,7 +466,7 @@ namespace _8LMBackend.Service
 
         public void AssignRole(int UserID, int RoleID, string access_token)
         {
-            VerifyFunction(10, access_token);
+            VerifyFunction(SecurityFunctions.LandingPage_RO, access_token);
 
             var item = DbContext.UserRole.Where(p => p.UserId == UserID && p.RoleId == RoleID).FirstOrDefault();
             if (item == default(UserRole))
@@ -487,7 +483,7 @@ namespace _8LMBackend.Service
 
         public void DeassignRole(int UserID, int RoleID, string access_token)
         {
-            VerifyFunction(10, access_token);
+            VerifyFunction(SecurityFunctions.LandingPage_RO, access_token);
 
             var item = DbContext.UserRole.Where(p => p.UserId == UserID && p.RoleId == RoleID).FirstOrDefault();
             if (item != default(UserRole))
@@ -506,13 +502,13 @@ namespace _8LMBackend.Service
             return u.UserId;
         }
 
-        public bool VerifyFunction(int FunctionID, string access_token)
+        public void VerifyFunction(SecurityFunctions functionName, string access_token)
         {
+            var functionId = (int)functionName;
             var fs = GetFunctionsForUser(access_token);
-            if (!fs.Contains(FunctionID)){
+            if (!fs.Contains(functionId)){
                 throw new Exception("Access denied");
             }   
-            return true;
         }
 
         public void DeletePromoUser(int ID, string token)
@@ -532,7 +528,7 @@ namespace _8LMBackend.Service
 
         public void UpdateUser(AccountViewModel u, string token)
         {
-            VerifyFunction(10, token);
+            VerifyFunction(SecurityFunctions.LandingPage_RO, token);
 
             var item = DbContext.Users.Where(p => p.Id == u.id).FirstOrDefault();
             if (item != default(Users))
@@ -560,7 +556,7 @@ namespace _8LMBackend.Service
 
         public FileStream DownloadSupplierPDF(string token)
         {
-            VerifyFunction(15, token);
+            VerifyFunction(SecurityFunctions.PromoEQP_RO, token);
 
             string SupplierPDFPath = DbContext.PaymentSetting.First().SupplierPDFPath;
             return File.OpenRead(SupplierPDFPath);
