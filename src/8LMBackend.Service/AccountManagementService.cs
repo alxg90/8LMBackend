@@ -14,10 +14,15 @@ namespace _8LMBackend.Service
     public class AccountManagementService : ServiceBase, IAccountManagementService
     {
         private readonly IFileManagerService _fileManager;
-		public AccountManagementService(IDbFactory dbFactory, IFileManagerService fileManager)
+        private readonly IPagesService _pagesService;
+		public AccountManagementService(
+            IDbFactory dbFactory, 
+            IFileManagerService fileManager,
+            IPagesService pagesService)
 			: base(dbFactory) 
 		{
             _fileManager = fileManager;
+            _pagesService = pagesService;
 		}
 
         public AccountViewModel GetAccount(string access_token)
@@ -272,10 +277,23 @@ namespace _8LMBackend.Service
         public List<PromoUserViewModel> GetPromoSuppliers(string access_token)
         {
             VerifyFunction(16, access_token);
-
+            var allowLogoAccess = VerifyFunction(15, access_token);
+            var files = DbContext.FileLibrary.ToList();
+            var userId = GetUserID(access_token);
             List<PromoUserViewModel> result = new List<PromoUserViewModel>();
             foreach (var u in DbContext.PromoSupplier.Include("PromoProduct").OrderBy(p => p.Id).ToList())
             {
+                var logoPath = string.Empty;
+                var logoName = string.Empty;
+                if (allowLogoAccess){
+                    if (u.LogoID.HasValue){
+                        var currFile = files.FirstOrDefault(x=> x.ID == u.LogoID.GetValueOrDefault());
+                        if (currFile != null){
+                            logoPath = _fileManager.GetFilePath(StorageType.SupplierAssets, currFile, userId);
+                            logoName = currFile.FileName; 
+                        }
+                    }
+                }
                 PromoUserViewModel item = new PromoUserViewModel()
                 {
                     id = u.Id,
@@ -292,7 +310,9 @@ namespace _8LMBackend.Service
                     customCode = u.CustomCode,
                     notes = u.notes,
                     externalLink = u.externalLink,
-                    DocumentPath = u.DocumentPath
+                    DocumentPath = u.DocumentPath,
+                    logoPath = logoPath,
+                    logoName = logoName
                 };
                 item.products.AddRange(u.PromoProduct.Select(p => p.Name));
                 result.Add(item);
@@ -305,15 +325,26 @@ namespace _8LMBackend.Service
             VerifyFunction(12, access_token);
 
             bool isNew = false;
+            int? logoId = null;
+            int userId = _pagesService.GetUserID(access_token);
             var item = DbContext.PromoSupplier.Where(p => p.Id == u.id).FirstOrDefault();
             if (item == default(PromoSupplier))
             {
                 item = new PromoSupplier();
                 isNew = true;
             }
-            string logoId = string.Empty;
-            if(u.upload_file != null){
-                logoId = _fileManager.SaveFile(StorageType.SupplierAssets, access_token, u.upload_file);
+
+            switch(u.uploadedFileState){
+                case UploadedFileState.Create:
+                    logoId = _fileManager.SaveFile(StorageType.SupplierAssets, u.upload_file, userId);
+                break;
+                case UploadedFileState.Update:
+                    _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
+                    logoId = _fileManager.SaveFile(StorageType.SupplierAssets, u.upload_file, userId);
+                break;
+                case UploadedFileState.Delete:
+                    _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
+                break;
             }
 
             item.Name = u.name;
@@ -330,7 +361,7 @@ namespace _8LMBackend.Service
             item.notes = u.notes;
             item.externalLink = u.externalLink;
             item.DocumentPath = u.DocumentPath;
-            //item.LogoId = logoId;
+            item.LogoID = logoId;
 
             if (isNew)
                 DbContext.Set<PromoSupplier>().Add(item);
@@ -475,11 +506,13 @@ namespace _8LMBackend.Service
             return u.UserId;
         }
 
-        public void VerifyFunction(int FunctionID, string access_token)
+        public bool VerifyFunction(int FunctionID, string access_token)
         {
             var fs = GetFunctionsForUser(access_token);
-            if (!fs.Contains(FunctionID))
+            if (!fs.Contains(FunctionID)){
                 throw new Exception("Access denied");
+            }   
+            return true;
         }
 
         public void DeletePromoUser(int ID, string token)

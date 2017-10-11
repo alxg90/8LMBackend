@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using _8LMBackend.DataAccess.Enums;
 using _8LMBackend.DataAccess.Infrastructure;
 using Microsoft.AspNetCore.Http;
 
@@ -32,5 +33,20 @@ namespace _8LMBackend.Service.ViewModels
         /// File to upload
         /// </summary>
         public IFormFile upload_file { get; set; }
+
+        /// <summary>
+        /// Supplier logo path
+        /// </summary>
+        public string logoPath { get; set; }
+
+        /// <summary>
+        /// File State(create, update, delete)
+        /// </summary>
+        public UploadedFileState uploadedFileState { get; set; }
+
+        /// <summary>
+        /// Logo full name
+        /// </summary>
+        public string logoName { get; set; }
     }
 }

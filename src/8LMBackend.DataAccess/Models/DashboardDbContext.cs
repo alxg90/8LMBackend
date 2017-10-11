@@ -66,7 +66,7 @@ namespace _8LMBackend.DataAccess.Models
         public virtual DbSet<PageTag> PageTag { get; set; }
         public virtual DbSet<Pages> Pages { get; set; }
         public virtual DbSet<Gallery> Gallery { get; set; }
-        public virtual DbSet<Gallery> FileLibrary { get; set; }
+        public virtual DbSet<FileLibrary> FileLibrary { get; set; }
         public virtual DbSet<ExcludeEmail> ExcludeEmail { get; set; }
         public virtual DbSet<PageControl> PageControl { get; set; }
         public virtual DbSet<PaymentSetting> PaymentSetting { get; set; }
