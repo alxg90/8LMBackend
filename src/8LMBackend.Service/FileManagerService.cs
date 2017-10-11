@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using _8LMBackend.DataAccess.Enums;
@@ -12,12 +11,12 @@ namespace _8LMBackend.Service
 {
     public class FileManagerService: ServiceBase, IFileManagerService
     {
-        private readonly IPagesService _pagesService;
         public const string rootFolder = "Content/";
-        public FileManagerService(IDbFactory dbFactory, IPagesService pagesService)
+        private IHttpContextAccessor _contextAccessor;
+        public FileManagerService(IDbFactory dbFactory, IHttpContextAccessor contextAccessor)
             : base(dbFactory)
         {
-            _pagesService = pagesService;
+            _contextAccessor = contextAccessor;
         }
 
         /// <summary>
@@ -67,9 +66,10 @@ namespace _8LMBackend.Service
         /// <param name="userId">UserID</param>
         public string GetFilePath(StorageType type, FileLibrary model, int userId)
         {
-            var filePath = string.Empty;
+           
+            var hostName = "//" + _contextAccessor.HttpContext.Request.Host.Value;
             string dir = rootFolder + EnumExtensions.GetEnumDescription(type) + userId.ToString();
-            filePath =  dir + "/" + model.CurrentName;     
+            var filePath = hostName + "/" + dir + "/" + model.CurrentName;     
             
             return filePath;
             
