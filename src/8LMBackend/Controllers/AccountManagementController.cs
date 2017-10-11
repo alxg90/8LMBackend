@@ -309,14 +309,5 @@ namespace _8LMCore.Controllers
                 return Json(new { status = "failed", error = ex.Message });
             }
         }
-
-        public string GetCurrentDomain()
-        {
-            StringBuilder result = new StringBuilder();
-            result.Append(HttpContext.Request.IsHttps ? "https://" : "http://");
-            result.Append(HttpContext.Request.Host.Value);
-            result.Append("/");
-            return result.ToString();
-        }
     }
 }
