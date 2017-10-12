@@ -36,7 +36,7 @@ namespace _8LMBackend.DataAccess.Models
         public int TypeId { get; set; }
         public int? ParentID { get; set; }
 
-        public virtual EntityType Type { get; set; }
+        //public virtual EntityType Type { get; set; }
     }
 
     public partial class Pages
