@@ -1214,6 +1214,9 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<PromoSupplier>(entity =>
             {
+                entity.HasIndex(e => e.LogoID)
+                    .HasName("FKPromoSupplierLogoID");
+
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .HasColumnType("int(11)");
@@ -1273,9 +1276,16 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.DocumentPath)
                     .HasColumnName("DocumentPath")
                     .HasColumnType("nvarchar(255)");
+
                 entity.Property(e => e.LogoID)
                     .HasColumnName("LogoID")
                     .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.FileLibrary)
+                    .WithMany(p => p.PromoSupplier)
+                    .HasForeignKey(d => d.LogoID)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FKPromoSupplierLogoID");
             });
 
             modelBuilder.Entity<RelayAuthorizeNetresponse>(entity =>

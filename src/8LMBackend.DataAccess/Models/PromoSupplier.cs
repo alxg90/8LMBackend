@@ -28,5 +28,6 @@ namespace _8LMBackend.DataAccess.Models
         public int LogoID { get; set; }
 
         public virtual ICollection<PromoProduct> PromoProduct { get; set; }
+        public virtual FileLibrary FileLibrary { get; set; }
     }
 }
