@@ -161,7 +161,7 @@ namespace _8LMCore.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdatePromoUser([FromBody]PromoUserViewModel u)
+        public JsonResult UpdatePromoUser(PromoUserViewModel u)
         {
             try
             {

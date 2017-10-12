@@ -2,6 +2,7 @@
 using _8LMBackend.Service.ViewModels;
 using _8LMBackend.DataAccess.Models;
 using System.IO;
+using _8LMBackend.DataAccess.Enums;
 
 namespace _8LMBackend.Service
 {
@@ -25,7 +26,7 @@ namespace _8LMBackend.Service
         void AssignRole(int UserID, int RoleID, string access_token);
         void DeassignRole(int UserID, int RoleID, string access_token);
         int GetUserID(string access_token);
-        void VerifyFunction(int FunctionID, string access_token);
+        void VerifyFunction(SecurityFunctions functionName, string access_token);
         void DeletePromoUser(int ID, string token);
         void UpdateUser(AccountViewModel u, string token);
         FileStream DownloadSupplierPDF(string token);

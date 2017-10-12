@@ -349,7 +349,7 @@ namespace _8LMCore.Controllers
                 db.SaveChanges();
             }
         }
-
+        
         public void ParseEmailList()
         {
             throw new NotImplementedException();
