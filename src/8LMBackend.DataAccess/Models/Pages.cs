@@ -13,7 +13,6 @@ namespace _8LMBackend.DataAccess.Models
         public int ID { get; set; }
         public string FileName { get; set; }
         public string CurrentName { get; set; }
-
         public virtual ICollection<PromoSupplier> PromoSupplier { get; set; }
     }
 

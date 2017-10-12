@@ -349,13 +349,10 @@ namespace _8LMCore.Controllers
                 db.SaveChanges();
             }
         }
-<<<<<<< HEAD
-=======
-
+        
         public void ParseEmailList()
         {
             throw new NotImplementedException();
         }
->>>>>>> master
     }
 }

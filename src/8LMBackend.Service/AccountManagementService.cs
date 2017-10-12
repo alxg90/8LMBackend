@@ -276,19 +276,16 @@ namespace _8LMBackend.Service
         public List<PromoUserViewModel> GetPromoSuppliers(string access_token)
         {
             VerifyFunction(SecurityFunctions.PromoEQP_RO, access_token);
-            var files = DbContext.FileLibrary.ToList();  //should be filtered
+          
             var userId = GetUserID(access_token);
             List<PromoUserViewModel> result = new List<PromoUserViewModel>();
-            foreach (var u in DbContext.PromoSupplier.Include("PromoProduct").OrderBy(p => p.Id).ToList())
+            foreach (var u in DbContext.PromoSupplier.Include("PromoProduct").Include("FileLibrary").OrderBy(p => p.Id).ToList())
             {
                 var logoPath = string.Empty;
                 var logoName = string.Empty;
-                if (u.LogoID.HasValue){
-                    var currFile = files.FirstOrDefault(x=> x.ID == u.LogoID.GetValueOrDefault());
-                    if (currFile != null){
-                        logoPath = _fileManager.GetFilePath(StorageType.SupplierAssets, currFile, userId);
-                        logoName = currFile.FileName; 
-                    }
+                if (u.FileLibrary != null){
+                    logoPath = _fileManager.GetFilePath(StorageType.SupplierAssets, u.FileLibrary, userId);
+                    logoName = u.FileLibrary.FileName; 
                 }
                 PromoUserViewModel item = new PromoUserViewModel()
                 {
@@ -339,7 +336,7 @@ namespace _8LMBackend.Service
                 _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
                 logoId = _fileManager.SaveFile(StorageType.SupplierAssets, u.upload_file, userId);
             }
-            else if (string.IsNullOrEmpty(u.logoName) && u.upload_file == null)
+            else if (u.upload_file == null)
             {
                 _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
             }

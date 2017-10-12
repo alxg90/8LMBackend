@@ -1276,11 +1276,6 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.DocumentPath)
                     .HasColumnName("DocumentPath")
                     .HasColumnType("nvarchar(255)");
-<<<<<<< HEAD
-                entity.Property(e => e.LogoID)
-                    .HasColumnName("LogoID")
-                    .HasColumnType("int(11)");
-=======
 
                 entity.Property(e => e.LogoID)
                     .HasColumnName("LogoID")
@@ -1291,7 +1286,6 @@ namespace _8LMBackend.DataAccess.Models
                     .HasForeignKey(d => d.LogoID)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FKPromoSupplierLogoID");
->>>>>>> master
             });
 
             modelBuilder.Entity<RelayAuthorizeNetresponse>(entity =>
