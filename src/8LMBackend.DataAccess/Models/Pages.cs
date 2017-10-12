@@ -5,9 +5,16 @@ namespace _8LMBackend.DataAccess.Models
 {
     public partial class FileLibrary
     {
+        public FileLibrary()
+        {
+            PromoSupplier = new HashSet<PromoSupplier>();
+        }
+
         public int ID { get; set; }
         public string FileName { get; set; }
         public string CurrentName { get; set; }
+
+        public virtual ICollection<PromoSupplier> PromoSupplier { get; set; }
     }
 
     public partial class Gallery

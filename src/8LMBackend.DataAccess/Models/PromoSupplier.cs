@@ -31,5 +31,7 @@ namespace _8LMBackend.DataAccess.Models
         /// LodoId for Suppplier
         /// </summary>
         public int? LogoID { get; set; }
+
+        public virtual FileLibrary FileLibrary { get; set; }
     }
 }
