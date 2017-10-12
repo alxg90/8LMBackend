@@ -40,11 +40,6 @@ namespace _8LMBackend.Service.ViewModels
         public string logoPath { get; set; }
 
         /// <summary>
-        /// File State(create, update, delete)
-        /// </summary>
-        public UploadedFileState uploadedFileState { get; set; }
-
-        /// <summary>
         /// Logo full name
         /// </summary>
         public string logoName { get; set; }

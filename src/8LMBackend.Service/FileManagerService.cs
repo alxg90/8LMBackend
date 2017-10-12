@@ -11,7 +11,7 @@ namespace _8LMBackend.Service
 {
     public class FileManagerService: ServiceBase, IFileManagerService
     {
-        public const string rootFolder = "Content/";
+        public const string rootFolder = "Content";
         private IHttpContextAccessor _contextAccessor;
         public FileManagerService(IDbFactory dbFactory, IHttpContextAccessor contextAccessor)
             : base(dbFactory)
@@ -30,13 +30,16 @@ namespace _8LMBackend.Service
             try
             {
                 var extension = System.IO.Path.GetExtension(file.FileName);
-                string folder = rootFolder + EnumExtensions.GetEnumDescription(type) + userId.ToString();
+                string folder = type == StorageType.SupplierAssets 
+                    ? Path.Combine(rootFolder, EnumExtensions.GetEnumDescription(type))
+                    : Path.Combine(rootFolder, EnumExtensions.GetEnumDescription(type), userId.ToString());
+
                 string newObjId = Guid.NewGuid().ToString();
                 if (!Directory.Exists(folder))
                 {
                     Directory.CreateDirectory(folder);
                 }
-                using (var stream = new FileStream(folder + "/" + newObjId + extension, FileMode.Create))
+                using (var stream = new FileStream(Path.Combine(folder, newObjId) + extension, FileMode.Create))
                 {
                     file.CopyTo(stream);
                 }
@@ -66,10 +69,13 @@ namespace _8LMBackend.Service
         /// <param name="userId">UserID</param>
         public string GetFilePath(StorageType type, FileLibrary model, int userId)
         {
-           
+            
             var hostName = "//" + _contextAccessor.HttpContext.Request.Host.Value;
-            string dir = rootFolder + EnumExtensions.GetEnumDescription(type) + userId.ToString();
-            var filePath = hostName + "/" + dir + "/" + model.CurrentName;     
+            string dir = type == StorageType.SupplierAssets
+                ? Path.Combine(rootFolder, EnumExtensions.GetEnumDescription(type))
+                : Path.Combine(rootFolder, EnumExtensions.GetEnumDescription(type), userId.ToString());
+
+            var filePath = Path.Combine(hostName, dir) + "/" + model.CurrentName;     
             
             return filePath;
             
@@ -80,19 +86,22 @@ namespace _8LMBackend.Service
         /// </summary>
         /// <param name="type">StorageType</param>
         /// <param name="userId">UserId</param>
-        /// <param name="logoId">Logo to remove</param>
-        public void RemoveFile(StorageType type, int userId, int logoId)
+        /// <param name="fileLibraryId">FileId to remove</param>
+        public void RemoveFile(StorageType type, int userId, int fileLibraryId)
         {
             try
             {
-                var currentLogo = DbContext.FileLibrary.FirstOrDefault(x=> x.ID == logoId);
-                if (currentLogo != null){
-                    DbContext.Entry(currentLogo).State = EntityState.Deleted;
+                var currentFile = DbContext.FileLibrary.FirstOrDefault(x=> x.ID == fileLibraryId);
+                if (currentFile != null){
+                    DbContext.Entry(currentFile).State = EntityState.Deleted;
                 }
-                string folder = rootFolder + EnumExtensions.GetEnumDescription(type) + userId.ToString();
+                string folder = type == StorageType.SupplierAssets
+                    ? Path.Combine(rootFolder, EnumExtensions.GetEnumDescription(type))
+                    : Path.Combine(rootFolder, EnumExtensions.GetEnumDescription(type), userId.ToString());
+                
                 if (Directory.Exists(folder))
                 {
-                    var filepath = folder + "/" + currentLogo.CurrentName;
+                    var filepath = folder + currentFile.CurrentName;
                     File.Delete(filepath);
                 }
 

@@ -276,7 +276,7 @@ namespace _8LMBackend.Service
         public List<PromoUserViewModel> GetPromoSuppliers(string access_token)
         {
             VerifyFunction(SecurityFunctions.PromoEQP_RO, access_token);
-            var files = DbContext.FileLibrary.ToList();
+            var files = DbContext.FileLibrary.ToList();  //should be filtered
             var userId = GetUserID(access_token);
             List<PromoUserViewModel> result = new List<PromoUserViewModel>();
             foreach (var u in DbContext.PromoSupplier.Include("PromoProduct").OrderBy(p => p.Id).ToList())
@@ -330,17 +330,18 @@ namespace _8LMBackend.Service
                 isNew = true;
             }
 
-            switch(u.uploadedFileState){
-                case UploadedFileState.Create:
-                    logoId = _fileManager.SaveFile(StorageType.SupplierAssets, u.upload_file, userId);
-                break;
-                case UploadedFileState.Update:
-                    _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
-                    logoId = _fileManager.SaveFile(StorageType.SupplierAssets, u.upload_file, userId);
-                break;
-                case UploadedFileState.Delete:
-                    _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
-                break;
+            if (string.IsNullOrEmpty(u.logoName) && !string.IsNullOrEmpty(u.upload_file?.FileName))
+            {
+                logoId = _fileManager.SaveFile(StorageType.SupplierAssets, u.upload_file, userId);
+            }
+            else if (!string.IsNullOrEmpty(u.logoName) && !string.IsNullOrEmpty(u.upload_file?.FileName))
+            {
+                _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
+                logoId = _fileManager.SaveFile(StorageType.SupplierAssets, u.upload_file, userId);
+            }
+            else if (string.IsNullOrEmpty(u.logoName) && u.upload_file == null)
+            {
+                _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
             }
 
             item.Name = u.name;

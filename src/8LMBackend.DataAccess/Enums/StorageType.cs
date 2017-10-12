@@ -9,10 +9,10 @@ namespace _8LMBackend.DataAccess.Enums
 {
     public enum StorageType 
     {
-        [Display(Description = "Galary/")]
-        Galery = 1,
+        [Display(Description = "Gallery")]
+        Gallery = 1,
 
-        [Display(Description = "SupplierAssets/")]
+        [Display(Description = "SupplierAssets")]
         SupplierAssets = 2
         
     }

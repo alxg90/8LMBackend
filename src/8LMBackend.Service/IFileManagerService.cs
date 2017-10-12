@@ -28,7 +28,7 @@ namespace _8LMBackend.Service
         /// </summary>
         /// <param name="type">StorageType</param>
         /// <param name="userId">UserID</param>
-        /// <param name="logoId">Logo to remove</param>
-        void RemoveFile(StorageType type, int userId, int logoId);
+        /// <param name="fileLibraryId">FileId to remove</param>
+        void RemoveFile(StorageType type, int userId, int fileLibraryId);
     }
 }
