@@ -183,7 +183,8 @@ namespace _8LMCore.Controllers
                 if(relDto.x_response_code != 1)
                 {
                     _8LMBackend.Logger.SaveLog(relDto.x_response_reason_text);
-                    return Json(new{status = "fail", message = relDto.x_response_reason_text});
+                    ViewBag.message = relDto.x_response_reason_text;
+                    return View("PaymentError");
                 }
                 var rel = RelayDtoToNormal(relDto);
                 _subscribeService.AcceptPayment(rel);

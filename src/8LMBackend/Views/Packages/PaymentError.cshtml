@@ -45,6 +45,10 @@
 
         }
 
+        .done span.error {
+            color: #FF5252;
+        }
+
         button {
             background: #8BC34A;
             border-radius: 4px;
@@ -100,22 +104,18 @@
             <div class="done">
                 <i class="material-icons">clear</i>
                 <span>Sorry, we was not able to charge your credit card. Please verify your data and try again.</span><br>
+                <!-- @if(ViewBag.message != null){ -->
+                <!-- } -->
             </div>
-            <div>
-                <!--<a href="http://core.mark8.media/admin/login" target="_top"><button>Login to CORE</button></a>-->
+            <div class="done">
+                <span class="error">Error: @viewBag.message</span>
             </div>
             <div class="contact-details">
-                <div>
-                    <!--<span class="label">All login information has been sent to </span><span class="data"> @ViewBag.email</span>-->
-                </div>
-                <!--<div>
-                    <span class="label">Temporary password*: </span><span class="data"> @ViewBag.password</span>
-                </div>                
-                <div class="hint">*Please change your password afer first login</div>-->
+                <!-- @if(ViewBag.message != null){ -->
+                    <div>
+                    </div>
+                <!-- } -->
             </div>
-            <!--<div class="contact-details">
-                <span class="data">We've send information about you purchase and access data to your email.</span>
-            </div>            -->
         </div> 
     </body>
 </html>
