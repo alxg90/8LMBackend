@@ -319,8 +319,6 @@ namespace _8LMCore.Controllers
         {
             List<int> excludeIDs = new List<int>()
             {
-                3194,
-                4313,
                 4696
             };
             string replaceFrom = "http://ang.mark8.media/";

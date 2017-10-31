@@ -309,5 +309,11 @@ namespace _8LMCore.Controllers
                 return Json(new { status = "failed", error = ex.Message });
             }
         }
+
+        public string GetContentType(string ext)
+        {
+            var e = new Extention();
+            return e.Get(ext);
+        }
     }
 }
