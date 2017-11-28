@@ -324,11 +324,15 @@ namespace _8LMBackend.Service
             DbContext.SaveChanges();
         }
 
-        public List<Gallery> GetGalleryList(int TypeID, int PageCapacity, int PageNumber, string token)
+        public List<Gallery> GetGalleryList(int TypeID, int PageCapacity, int PageNumber, string search, string token)
         {
             int UID = GetUserID(token);
             var result = DbContext.Gallery.Where(p => p.UserID == UID && p.TypeID == TypeID).ToList();
-            return result.Skip(PageNumber* PageCapacity).Take(PageCapacity).ToList();
+
+            if (search != null && search.Length > 0)
+                return result.Skip(PageNumber * PageCapacity).Take(PageCapacity).ToList().FindAll(s => s.Title.ToUpper().Contains(search.ToUpper()) || s.FileName.ToUpper().Contains(search.ToUpper()));
+            else
+                return result.Skip(PageNumber * PageCapacity).Take(PageCapacity).ToList();
         }
 
         public Gallery GetGallery(int ID, string token)

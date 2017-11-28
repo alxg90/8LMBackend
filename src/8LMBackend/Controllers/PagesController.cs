@@ -278,14 +278,14 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public JsonResult GetGalleryList(int TypeID, int PageCapacity, int PageNumber, string token)
+        public JsonResult GetGalleryList(int TypeID, int PageCapacity, int PageNumber, string search, string token)
         {
             var status = "ok";
             var message = "";
             List<Gallery> data = null;
             try
             {
-                data = _pagesService.GetGalleryList(TypeID, PageCapacity, PageNumber, token);
+                data = _pagesService.GetGalleryList(TypeID, PageCapacity, PageNumber, search, token);
             }
             catch (Exception ex)
             {
