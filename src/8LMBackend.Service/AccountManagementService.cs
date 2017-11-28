@@ -307,7 +307,10 @@ namespace _8LMBackend.Service
                     logoPath = logoPath,
                     logoName = logoName
                 };
-                item.products.AddRange(u.PromoProduct.Select(p => p.Name));
+                var lp = u.PromoProduct.Select(p => p.Name);
+                if (lp != null)
+                    item.products = lp.ToArray();
+
                 result.Add(item);
             }
             return result.OrderBy(x => x.name).ToList();
@@ -331,7 +334,7 @@ namespace _8LMBackend.Service
             {
                 logoId = _fileManager.SaveFile(StorageType.SupplierAssets, u.upload_file, userId);
             }
-            else if (!string.IsNullOrEmpty(u.logoName) && !string.IsNullOrEmpty(u.upload_file?.FileName))
+            /*else if (!string.IsNullOrEmpty(u.logoName) && !string.IsNullOrEmpty(u.upload_file?.FileName))
             {
                 _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
                 logoId = _fileManager.SaveFile(StorageType.SupplierAssets, u.upload_file, userId);
@@ -339,7 +342,7 @@ namespace _8LMBackend.Service
             else if (u.upload_file == null)
             {
                 _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
-            }
+            }*/
 
             item.Name = u.name;
             item.Address = u.address;
@@ -364,15 +367,16 @@ namespace _8LMBackend.Service
                 foreach (var pp in DbContext.PromoProduct.Where(p => p.SupplierId == u.id).ToList())
                     DbContext.Set<PromoProduct>().Remove(pp);
 
-            foreach (var pp in u.products)
-            {
-                PromoProduct npp = new PromoProduct()
+            if (u.products != null)
+                foreach (var pp in u.products)
                 {
-                    SupplierId = u.id,
-                    Name = pp
-                };
-                DbContext.Set<PromoProduct>().Add(npp);
-            }
+                    PromoProduct npp = new PromoProduct()
+                    {
+                        SupplierId = u.id,
+                        Name = pp
+                    };
+                    DbContext.Set<PromoProduct>().Add(npp);
+                }
 
             DbContext.SaveChanges();
         }

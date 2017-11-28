@@ -27,8 +27,8 @@ namespace _8LMBackend.Service.ViewModels
         public string externalLink { get; set; }
         public string DocumentPath { get; set; }
 
-        public List<string> products = new List<string>();
-        
+        public string[] products { get; set; }
+
         /// <summary>
         /// File to upload
         /// </summary>

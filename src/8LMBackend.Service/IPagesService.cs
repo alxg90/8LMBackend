@@ -28,7 +28,9 @@ namespace _8LMBackend.Service
         int GetDefaultEmailTemplateID();
         int GetUserID(string access_token);
         void SaveGallery(Gallery image, string token);
-        List<Gallery> GetGalleryList(int TypeID, string token);
+        List<Gallery> GetGalleryList(int TypeID, int PageCapacity, int PageNumber, string token);
         Gallery GetGallery(int ID, string token);
+        void RemoveGalleryItem(int ID, string token);
+        void UpdateGalleryItem(int ID, string Name, string token);
     }
 }

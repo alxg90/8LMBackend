@@ -278,14 +278,14 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public JsonResult GetGalleryList(int TypeID, string token)
+        public JsonResult GetGalleryList(int TypeID, int PageCapacity, int PageNumber, string token)
         {
             var status = "ok";
             var message = "";
             List<Gallery> data = null;
             try
             {
-                data = _pagesService.GetGalleryList(TypeID, token);
+                data = _pagesService.GetGalleryList(TypeID, PageCapacity, PageNumber, token);
             }
             catch (Exception ex)
             {
@@ -351,6 +351,40 @@ namespace _8LMCore.Controllers
         public void ParseEmailList()
         {
             throw new NotImplementedException();
+        }
+
+        public JsonResult RemoverGalleryItem(int ID, string token)
+        {
+            var status = "ok";
+            var message = "";
+            try
+            {
+                _pagesService.RemoveGalleryItem(ID, token);
+            }
+            catch (Exception ex)
+            {
+                status = "fail";
+                message = ex.Message;
+            }
+
+            return Json(new { status, message});
+        }
+
+        public JsonResult UpdateGalleryItem(int ID, string Name, string token)
+        {
+            var status = "ok";
+            var message = "";
+            try
+            {
+                _pagesService.UpdateGalleryItem(ID, Name, token);
+            }
+            catch (Exception ex)
+            {
+                status = "fail";
+                message = ex.Message;
+            }
+
+            return Json(new { status, message});
         }
     }
 }

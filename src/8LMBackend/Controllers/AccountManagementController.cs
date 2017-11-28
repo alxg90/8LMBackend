@@ -161,16 +161,16 @@ namespace _8LMCore.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdatePromoUser([FromBody]PromoUserViewModel u)
+        public JsonResult UpdatePromoUser(PromoUserViewModel u)
         {
-            try
+            //try
             {
                 _accountManagementService.UpdatePromoUser(u, Request.Query["token"]);
             }
-            catch (System.Exception ex)
+            /*catch (System.Exception ex)
             {
                 return Json(new { status = "failed", error = ex.Message });
-            }
+            }*/
 
             return Json(new { status = "ok" });
         }

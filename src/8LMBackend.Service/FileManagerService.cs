@@ -89,29 +89,25 @@ namespace _8LMBackend.Service
         /// <param name="fileLibraryId">FileId to remove</param>
         public void RemoveFile(StorageType type, int userId, int fileLibraryId)
         {
-            try
+            var currentFile = DbContext.FileLibrary.FirstOrDefault(x => x.ID == fileLibraryId);
+            if (currentFile != null)
             {
-                var currentFile = DbContext.FileLibrary.FirstOrDefault(x=> x.ID == fileLibraryId);
-                if (currentFile != null){
-                    DbContext.Entry(currentFile).State = EntityState.Deleted;
-                }
-                string folder = type == StorageType.SupplierAssets
-                    ? Path.Combine(rootFolder, EnumExtensions.GetEnumDescription(type))
-                    : Path.Combine(rootFolder, EnumExtensions.GetEnumDescription(type), userId.ToString());
-                
-                if (Directory.Exists(folder))
-                {
-                    var filepath = folder + currentFile.CurrentName;
-                    File.Delete(filepath);
-                }
+                DbContext.Entry(currentFile).State = EntityState.Deleted;
+            }
+            else
+                return;
 
-                DbContext.SaveChanges();
-                
-            }
-            catch(Exception ex)
+            string folder = type == StorageType.SupplierAssets
+                ? Path.Combine(rootFolder, EnumExtensions.GetEnumDescription(type))
+                : Path.Combine(rootFolder, EnumExtensions.GetEnumDescription(type), userId.ToString());
+
+            if (Directory.Exists(folder))
             {
-                throw new Exception(ex.Message);
+                var filepath = folder + currentFile.CurrentName;
+                File.Delete(filepath);
             }
+
+            DbContext.SaveChanges();
         }
     }
 }

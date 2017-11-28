@@ -324,11 +324,11 @@ namespace _8LMBackend.Service
             DbContext.SaveChanges();
         }
 
-        public List<Gallery> GetGalleryList(int TypeID, string token)
+        public List<Gallery> GetGalleryList(int TypeID, int PageCapacity, int PageNumber, string token)
         {
             int UID = GetUserID(token);
             var result = DbContext.Gallery.Where(p => p.UserID == UID && p.TypeID == TypeID).ToList();
-            return result;
+            return result.Skip(PageNumber* PageCapacity).Take(PageCapacity).ToList();
         }
 
         public Gallery GetGallery(int ID, string token)
@@ -343,6 +343,29 @@ namespace _8LMBackend.Service
                 throw new Exception("This image does not belong to the user");
 
             return item;
+        }
+
+        public void RemoveGalleryItem(int ID, string token)
+        {
+            var item = DbContext.Gallery.FirstOrDefault(p => p.ID == ID);
+
+            if (item != null)
+            {
+                DbContext.Remove(item);
+            }
+        }
+
+        public void UpdateGalleryItem(int ID, string Name, string token)
+        {
+            var item = DbContext.Gallery.FirstOrDefault(p => p.ID == ID);
+
+            if (item != null)
+            {
+                item.CurrentName = Name;
+                DbContext.SaveChanges();
+            }
+            else
+                throw new Exception("Gallery item with ID = " + ID.ToString() + " not found");
         }
     }
 }
