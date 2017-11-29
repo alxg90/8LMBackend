@@ -87,6 +87,13 @@ namespace _8LMBackend
                RequestPath = new PathString("/Content")
             });
 
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+               FileProvider = new PhysicalFileProvider(
+                     Path.Combine(Directory.GetCurrentDirectory(), @"Gallery")),
+               RequestPath = new PathString("/Gallery")
+            });
+
             app.UseCors("CorsPolicy");
 
             app.UseMvc(routes =>

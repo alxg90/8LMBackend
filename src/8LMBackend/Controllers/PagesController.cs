@@ -245,7 +245,7 @@ namespace _8LMCore.Controllers
             {
                 int UserID = _pagesService.GetUserID(token);
                 string dir = "Gallery/" + UserID.ToString();
-                string cn = Guid.NewGuid().ToString();
+                string cn = $"{Guid.NewGuid()}-{file.FileName}";
 
                 if (!Directory.Exists(dir))
                 {
@@ -278,14 +278,14 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public JsonResult GetGalleryList(int TypeID, int PageCapacity, int PageNumber, string search, string token)
+        public JsonResult GetGalleryList(int PageCapacity, int PageNumber, string search, string token)
         {
             var status = "ok";
             var message = "";
-            List<Gallery> data = null;
+            GalleryViewModel data = null;
             try
             {
-                data = _pagesService.GetGalleryList(TypeID, PageCapacity, PageNumber, search, token);
+                data = _pagesService.GetGalleryList(PageCapacity, PageNumber, search, token);
             }
             catch (Exception ex)
             {
@@ -353,7 +353,7 @@ namespace _8LMCore.Controllers
             throw new NotImplementedException();
         }
 
-        public JsonResult RemoverGalleryItem(int ID, string token)
+        public JsonResult RemoveGalleryItem(int ID, string token)
         {
             var status = "ok";
             var message = "";
@@ -370,13 +370,14 @@ namespace _8LMCore.Controllers
             return Json(new { status, message});
         }
 
-        public JsonResult UpdateGalleryItem(int ID, string Name, string token)
+        [HttpPost]
+        public JsonResult UpdateGalleryItem([FromBody]Gallery item, string token)
         {
             var status = "ok";
             var message = "";
             try
             {
-                _pagesService.UpdateGalleryItem(ID, Name, token);
+                _pagesService.UpdateGalleryItem(item.ID, item.Title, token);
             }
             catch (Exception ex)
             {
