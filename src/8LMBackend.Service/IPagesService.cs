@@ -4,6 +4,7 @@ using _8LMBackend.DataAccess.Models;
 using System;
 using System.IO;
 using _8LMBackend.Service.DTO;
+using _8LMBackend.DataAccess.Enums;
 
 namespace _8LMBackend.Service
 {
@@ -28,7 +29,7 @@ namespace _8LMBackend.Service
         int GetDefaultEmailTemplateID();
         int GetUserID(string access_token);
         void SaveGallery(Gallery image, string token);
-        GalleryViewModel GetGalleryList(int PageCapacity, int PageNumber, string search, string token);
+        GalleryViewModel GetGalleryList(GalleryType type, int PageCapacity, int PageNumber, string search, string token);
         Gallery GetGallery(int ID, string token);
         void RemoveGalleryItem(int ID, string token);
         void UpdateGalleryItem(int ID, string Name, string token);

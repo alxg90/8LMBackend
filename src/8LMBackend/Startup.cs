@@ -9,6 +9,7 @@ using _8LMBackend.Service;
 using _8LMBackend.DataAccess.Repositories;
 using _8LMBackend.DataAccess.Infrastructure;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Http.Features;
 using System.IO;
 
 namespace _8LMBackend
@@ -38,6 +39,14 @@ namespace _8LMBackend
                     .AllowAnyHeader()
                     .AllowCredentials() );
             });
+
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = 10485760;
+                x.MultipartBodyLengthLimit = 10485760;
+                x.MultipartHeadersLengthLimit = 10485760;
+            });
+
             // Add framework services.
             services.AddMvc();
 

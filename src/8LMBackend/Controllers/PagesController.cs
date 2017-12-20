@@ -1,6 +1,7 @@
 using _8LMBackend.DataAccess.Models;
 using _8LMBackend.DataAccess.DtoModels;
 using _8LMBackend.Service;
+using _8LMBackend.DataAccess.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -245,7 +246,7 @@ namespace _8LMCore.Controllers
             {
                 int UserID = _pagesService.GetUserID(token);
                 string dir = "Gallery/" + UserID.ToString();
-                string cn = $"{Guid.NewGuid()}-{file.FileName}";
+                string cn = $"{Guid.NewGuid()}-{file.FileName.Replace(" ", "-")}";
 
                 if (!Directory.Exists(dir))
                 {
@@ -278,14 +279,14 @@ namespace _8LMCore.Controllers
             }
         }
 
-        public JsonResult GetGalleryList(int PageCapacity, int PageNumber, string search, string token)
+        public JsonResult GetGalleryList(int ItemType, int PageCapacity, int PageNumber, string search, string token)
         {
             var status = "ok";
             var message = "";
             GalleryViewModel data = null;
             try
             {
-                data = _pagesService.GetGalleryList(PageCapacity, PageNumber, search, token);
+                data = _pagesService.GetGalleryList((GalleryType)ItemType, PageCapacity, PageNumber, search, token);
             }
             catch (Exception ex)
             {

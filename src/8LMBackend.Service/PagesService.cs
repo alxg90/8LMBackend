@@ -8,6 +8,7 @@ using _8LMBackend.DataAccess.Models;
 using System.IO;
 using _8LMBackend.DataAccess.DtoModels;
 using _8LMBackend.Service.DTO;
+using _8LMBackend.DataAccess.Enums;
 
 namespace _8LMBackend.Service
 {
@@ -324,39 +325,26 @@ namespace _8LMBackend.Service
             DbContext.SaveChanges();
         }
 
-        public GalleryViewModel GetGalleryList(int PageCapacity, int PageNumber, string search, string token)
+        public GalleryViewModel GetGalleryList(GalleryType type, int PageCapacity, int PageNumber, string search, string token)
         {
             int UID = GetUserID(token);
 
-            var logoQuery = PrepareGetGalleryQuery(1, PageCapacity, PageNumber, search, UID);
-            var imageQuery = PrepareGetGalleryQuery(0, PageCapacity, PageNumber, search, UID);
+            var query = PrepareGetGalleryQuery(type, PageCapacity, PageNumber, search, UID);
             
-            var totalPagesLogo = logoQuery.Count() / PageCapacity;
-            var totalPagesImage = imageQuery.Count() / PageCapacity;
+            var totalPages = (query.Count() - 1) / PageCapacity;
 
             return new GalleryViewModel {
-                TotalPages = Math.Max(totalPagesImage, totalPagesLogo),
-                Logos = logoQuery.Skip(PageNumber * PageCapacity).Take(PageCapacity).ToList(),
-                Images = imageQuery.Skip(PageNumber * PageCapacity).Take(PageCapacity).ToList()
+                TotalPages = totalPages,
+                Items = query.Skip(PageNumber * PageCapacity).Take(PageCapacity).ToList()
             };
         }
 
-        private IQueryable<Gallery> PrepareGetGalleryQuery(int TypeID, int PageCapacity, int PageNumber, string search, int UID){
+        private IQueryable<Gallery> PrepareGetGalleryQuery(GalleryType type, int PageCapacity, int PageNumber, string search, int UID){
            
-            var resultQuery = DbContext.Gallery.Where(p => p.UserID == UID && p.TypeID == TypeID);
-
-            Func<IQueryable<Gallery>, IQueryable<Gallery>> filterImageExpr = (q) => 
-            {
-                return q.Where(x => x.Title.ToUpper().Contains(search.ToUpper()));
-            };
-            
-            Func<IQueryable<Gallery>, IQueryable<Gallery>> filterLogoExpr = (q) => 
-            {
-                return q.Where(x => x.FileName.ToUpper().Contains(search.ToUpper()));
-            };
+            var resultQuery = DbContext.Gallery.Where(p => p.UserID == UID && p.TypeID == (int)type);
 
             if (search != null && search.Length > 0){
-                resultQuery = TypeID == 0 ? filterImageExpr(resultQuery) : filterLogoExpr(resultQuery);
+                resultQuery = resultQuery.Where(x => x.Title.ToUpper().Contains(search.ToUpper()));
             }
 
             return resultQuery;

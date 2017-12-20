@@ -16,6 +16,11 @@ namespace _8LMBackend.DataAccess.Enums
         SupplierAssets = 2
         
     }
+
+    public enum GalleryType {
+        RegularImage,
+        Logo
+    }
 }
 
 public static class EnumExtensions
