@@ -324,15 +324,42 @@ namespace _8LMBackend.Service
             DbContext.SaveChanges();
         }
 
-        public List<Gallery> GetGalleryList(int TypeID, int PageCapacity, int PageNumber, string search, string token)
+        public GalleryViewModel GetGalleryList(int PageCapacity, int PageNumber, string search, string token)
         {
             int UID = GetUserID(token);
-            var result = DbContext.Gallery.Where(p => p.UserID == UID && p.TypeID == TypeID).ToList();
 
-            if (search != null && search.Length > 0)
-                return result.Skip(PageNumber * PageCapacity).Take(PageCapacity).ToList().FindAll(s => s.Title.ToUpper().Contains(search.ToUpper()) || s.FileName.ToUpper().Contains(search.ToUpper()));
-            else
-                return result.Skip(PageNumber * PageCapacity).Take(PageCapacity).ToList();
+            var logoQuery = PrepareGetGalleryQuery(1, PageCapacity, PageNumber, search, UID);
+            var imageQuery = PrepareGetGalleryQuery(0, PageCapacity, PageNumber, search, UID);
+            
+            var totalPagesLogo = logoQuery.Count() / PageCapacity;
+            var totalPagesImage = imageQuery.Count() / PageCapacity;
+
+            return new GalleryViewModel {
+                TotalPages = Math.Max(totalPagesImage, totalPagesLogo),
+                Logos = logoQuery.Skip(PageNumber * PageCapacity).Take(PageCapacity).ToList(),
+                Images = imageQuery.Skip(PageNumber * PageCapacity).Take(PageCapacity).ToList()
+            };
+        }
+
+        private IQueryable<Gallery> PrepareGetGalleryQuery(int TypeID, int PageCapacity, int PageNumber, string search, int UID){
+           
+            var resultQuery = DbContext.Gallery.Where(p => p.UserID == UID && p.TypeID == TypeID);
+
+            Func<IQueryable<Gallery>, IQueryable<Gallery>> filterImageExpr = (q) => 
+            {
+                return q.Where(x => x.Title.ToUpper().Contains(search.ToUpper()));
+            };
+            
+            Func<IQueryable<Gallery>, IQueryable<Gallery>> filterLogoExpr = (q) => 
+            {
+                return q.Where(x => x.FileName.ToUpper().Contains(search.ToUpper()));
+            };
+
+            if (search != null && search.Length > 0){
+                resultQuery = TypeID == 0 ? filterImageExpr(resultQuery) : filterLogoExpr(resultQuery);
+            }
+
+            return resultQuery;
         }
 
         public Gallery GetGallery(int ID, string token)
@@ -356,16 +383,17 @@ namespace _8LMBackend.Service
             if (item != null)
             {
                 DbContext.Remove(item);
+                DbContext.SaveChanges();
             }
         }
 
-        public void UpdateGalleryItem(int ID, string Name, string token)
+        public void UpdateGalleryItem(int ID, string Title, string token)
         {
             var item = DbContext.Gallery.FirstOrDefault(p => p.ID == ID);
 
             if (item != null)
             {
-                item.CurrentName = Name;
+                item.Title = Title;
                 DbContext.SaveChanges();
             }
             else
