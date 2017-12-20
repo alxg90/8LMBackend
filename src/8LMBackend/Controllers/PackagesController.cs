@@ -328,13 +328,16 @@ namespace _8LMCore.Controllers
                 pack.PackageRatePlans = new List<PackageRatePlanDto>();
                 pack.Id = item.Id;
                 pack.Name = item.Name;
+                pack.Description = item.Description;
+                pack.Logo = item.Logo;
                 var servDto = new List<ServicesDto>();
                 foreach (var s in packageServices)
                 {
                     servDto.Add(new ServicesDto()
                     {
                         Id = s.ServiceId,
-                        Name = services.FirstOrDefault(x => x.Id == s.ServiceId).Name
+                        Name = services.FirstOrDefault(x => x.Id == s.ServiceId).Name,
+                        Logo = services.FirstOrDefault(x => x.Id == s.ServiceId).Logo
                     });
                 }
                 pack.Services = servDto.ToArray();

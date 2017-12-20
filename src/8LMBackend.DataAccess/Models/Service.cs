@@ -17,6 +17,7 @@ namespace _8LMBackend.DataAccess.Models
         public int Id { get; set; }
         public bool IsActual { get; set; }
         public string Name { get; set; }
+        public string Logo { get; set; }
 
         public virtual ICollection<RoleService> RoleService { get; set; }
         public virtual ICollection<PackageReferenceServiceCode> PackageReferenceServiceCode { get; set; }

@@ -21,6 +21,7 @@ namespace _8LMBackend.DataAccess.Models
         public int UserTypeId { get; set; }
         public string VideoURL { get; set; }
         public int SortOrder { get; set; }
+        public string Logo { get; set; }
 
         public virtual ICollection<PackageRatePlan> PackageRatePlan { get; set; }
         public virtual ICollection<PackageService> PackageService { get; set; }

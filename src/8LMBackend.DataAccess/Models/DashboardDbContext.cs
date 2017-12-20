@@ -734,6 +734,10 @@ namespace _8LMBackend.DataAccess.Models
                     .IsRequired()
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.Logo)
+                    .IsRequired()
+                    .HasColumnType("varchar(4096)");
+
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.Package)
                     .HasForeignKey(d => d.CreatedBy)
@@ -1616,6 +1620,10 @@ namespace _8LMBackend.DataAccess.Models
 
             modelBuilder.Entity<Service>(entity =>
             {
+                entity.Property(e => e.Logo)
+                    .IsRequired()
+                    .HasColumnType("varchar(4096)");
+
                 entity.HasIndex(e => e.Name)
                     .HasName("Name")
                     .IsUnique();

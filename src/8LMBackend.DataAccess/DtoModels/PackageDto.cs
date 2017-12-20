@@ -19,6 +19,8 @@ namespace _8LMBackend.DataAccess.DtoModels
         public DateTime ValidTo { get; set; }
         public string VideoURL { get; set; }
         public int SortOrder { get; set; }
+        public string Description { get; set; }
+        public string Logo { get; set; }
     }
     public class PackageRatePlanDto{
         public int Id { get; set; }
@@ -34,6 +36,7 @@ namespace _8LMBackend.DataAccess.DtoModels
     public class ServicesDto{
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Logo { get; set; }
     }
 
     public class PackageReferenceCodeDto
