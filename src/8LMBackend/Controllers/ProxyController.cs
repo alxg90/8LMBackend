@@ -100,14 +100,14 @@ namespace _8LMCore.Controllers
             return View();
         }
 
-        public WebClick[] GetWebClicks(string userToken, DateTime fromDate, DateTime toDate)
+        public WebClick[] GetWebClicks(string token, DateTime fromDate, DateTime toDate)
         {
-            return _proxyService.GetWebClicks(userToken, fromDate, toDate).ToArray();
+            return _proxyService.GetWebClicks(token, fromDate, toDate).ToArray();
         }
 
-        public WebClickByHour[] GetWebClicksByHour(string userToken, DateTime fromDate, DateTime toDate)
+        public WebClickByHour[] GetWebClicksByHour(string token, DateTime fromDate, DateTime toDate)
         {
-            return _proxyService.GetWebClicksByHour(userToken, fromDate, toDate).ToArray();
+            return _proxyService.GetWebClicksByHour(token, fromDate, toDate).ToArray();
         }
     }
 }
