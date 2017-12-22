@@ -176,7 +176,8 @@ namespace _8LMCore.Controllers
                 return Json(new{status = "fail", message = ex.Message});
             }
         }
-        public ActionResult AcceptPayment(RelayAuthorizeNetresponseDto relDto)
+       
+        public ActionResult AcceptPayment(RelayAuthorizeNetresponseDto relDto, bool isGuest = true)
         {
             try
             {
@@ -197,7 +198,9 @@ namespace _8LMCore.Controllers
                 // Этот профиль записать в таблицу AuthorizeNETCustomerProfile.
                 CreateCustomerProfileFromTransaction(_subscribeService.GetUserByToken(userToken).Id, rel.XTransId);
                 
-                return View();
+                var view = isGuest ? "AcceptPayment" : "AcceptPaymentUser";
+
+                return View(view);
             }
             catch(Exception ex)
             {
