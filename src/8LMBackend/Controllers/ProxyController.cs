@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
+using _8LMBackend.Service.DTO;
 
 namespace _8LMCore.Controllers
 {
@@ -97,6 +98,16 @@ namespace _8LMCore.Controllers
         public ViewResult SaveImage()
         {
             return View();
+        }
+
+        public WebClick[] GetWebClicks(string userToken, DateTime fromDate, DateTime toDate)
+        {
+            return _proxyService.GetWebClicks(userToken, fromDate, toDate).ToArray();
+        }
+
+        public WebClickByHour[] GetWebClicksByHour(string userToken, DateTime fromDate, DateTime toDate)
+        {
+            return _proxyService.GetWebClicksByHour(userToken, fromDate, toDate).ToArray();
         }
     }
 }

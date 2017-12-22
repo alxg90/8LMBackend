@@ -16,4 +16,16 @@ namespace _8LMBackend.Service.DTO
 
         public List<dtoPageTag> tags { get; set; }
     }
+
+    public class WebClick
+    {
+        public string date { get; set; }
+        public int clicks { get; set; }
+    }
+
+    public class WebClickByHour
+    {
+        public string date { get; set; }
+        public int[] clicks { get; set; }
+    }
 }
