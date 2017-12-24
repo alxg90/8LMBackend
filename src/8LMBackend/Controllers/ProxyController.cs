@@ -109,5 +109,15 @@ namespace _8LMCore.Controllers
         {
             return _proxyService.GetWebClicksByHour(token, fromDate, toDate).ToArray();
         }
+
+        public EPageStat[] GetEPageStat(string token, DateTime fromDate, DateTime toDate)
+        {
+            return _proxyService.GetEPageStat(token, fromDate, toDate).ToArray();
+        }
+
+        public EPageStatByHour[] GetEPageStatByHour(string token, DateTime fromDate, DateTime toDate)
+        {
+            return _proxyService.GetEPageStatByHour(token, fromDate, toDate).ToArray();
+        }
     }
 }

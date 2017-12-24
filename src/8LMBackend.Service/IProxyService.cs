@@ -13,5 +13,7 @@ namespace _8LMBackend.Service
         void SaveDBChanges();
         List<WebClick> GetWebClicks(string userToken, DateTime fromDate, DateTime toDate);
         List<WebClickByHour> GetWebClicksByHour(string userToken, DateTime fromDate, DateTime toDate);
+        List<EPageStat> GetEPageStat(string token, DateTime fromDate, DateTime toDate);
+        List<EPageStatByHour> GetEPageStatByHour(string token, DateTime fromDate, DateTime toDate);
     }
 }

@@ -20,6 +20,28 @@ namespace _8LMBackend.DataAccess.Models
         public string mailing_country { get; set; }
     }
 
+    public partial class dist_epage_clicks
+    {
+        public dist_epage_clicks()
+        {
+        }
+
+        public int id { get; set; }
+        public int dist_id { get; set; }
+        public DateTime created_at { get; set; }
+    }
+
+    public partial class dist_epage_views
+    {
+        public dist_epage_views()
+        {
+        }
+
+        public int id { get; set; }
+        public int dist_id { get; set; }
+        public DateTime created_at { get; set; }
+    }
+
     public partial class Users
     {
         public Users()

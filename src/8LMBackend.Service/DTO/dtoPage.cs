@@ -28,4 +28,18 @@ namespace _8LMBackend.Service.DTO
         public string date { get; set; }
         public int[] clicks { get; set; }
     }
+
+    public class EPageStat
+    {
+        public string date { get; set; }
+        public int views { get; set; }
+        public int clicks { get; set; }
+    }
+
+    public class EPageStatByHour
+    {
+        public string date { get; set; }
+        public int[] views { get; set; }
+        public int[] clicks { get; set; }
+    }
 }

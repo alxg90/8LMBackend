@@ -48,6 +48,8 @@ namespace _8LMBackend.DataAccess.Models
     public partial class DevelopmentDbContext : DbContext
     {
         public virtual DbSet<distributors> distributors { get; set; }
+        public virtual DbSet<dist_epage_clicks> dist_epage_clicks { get; set; }
+        public virtual DbSet<dist_epage_views> dist_epage_views { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -75,6 +77,32 @@ namespace _8LMBackend.DataAccess.Models
                 entity.Property(e => e.mailing_city).HasColumnType("varchar(255)");
                 entity.Property(e => e.mailing_zip).HasColumnType("varchar(255)");
                 entity.Property(e => e.mailing_country).HasColumnType("varchar(255)");
+            });
+
+            modelBuilder.Entity<dist_epage_clicks>(entity =>
+            {
+                entity.Property(e => e.id)
+                    .HasColumnName("id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.dist_id)
+                    .HasColumnName("dist_id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.created_at).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<dist_epage_views>(entity =>
+            {
+                entity.Property(e => e.id)
+                    .HasColumnName("id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.dist_id)
+                    .HasColumnName("dist_id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.created_at).HasColumnType("datetime");
             });
         }
     }
