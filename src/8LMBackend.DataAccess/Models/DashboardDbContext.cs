@@ -978,6 +978,18 @@ namespace _8LMBackend.DataAccess.Models
                     .HasColumnName("PageID")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.ControlLink)
+                    .HasColumnName("ControlLink")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.AlternateLink)
+                    .HasColumnName("AlternateLink")
+                    .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.AdditionalLink)
+                    .HasColumnName("AdditionalLink")
+                    .HasColumnType("varchar(255)");
+    
                 entity.HasOne(d => d.Page)
                     .WithMany(p => p.PageStatistic)
                     .HasForeignKey(d => d.PageId)

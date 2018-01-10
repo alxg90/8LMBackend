@@ -11,6 +11,10 @@ namespace _8LMBackend.DataAccess.Models
         public bool? IsLoad { get; set; }
         public int PageId { get; set; }
 
+        public string ControlLink { get; set; }
+        public string AlternateLink { get; set; }
+        public string AdditionalLink { get; set; }
+
         public virtual Pages Page { get; set; }
     }
 }

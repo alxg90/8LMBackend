@@ -26,7 +26,7 @@ namespace _8LMCore.Controllers
         {
             _proxyService = proxyService;
         }
-        public ActionResult UpdateStatistic(string url, string controlId, int pageId, string trackingName)
+        public ActionResult UpdateStatistic(string url, string controlId, int pageId, string trackingName, string AlternateLink, string AdditionalLink)
         {            
             try
             {
@@ -36,6 +36,9 @@ namespace _8LMCore.Controllers
                 stats.CreatedDate = DateTime.UtcNow;
                 stats.PageId = pageId;
                 //stats.Ip = remoteIpAddress.ToString();
+                stats.ControlLink = url;
+                stats.AlternateLink = AlternateLink;
+                stats.AdditionalLink = AdditionalLink;
                 _proxyService.UpdateStatistic(stats, trackingName);
                 _proxyService.SaveDBChanges();
                 return Redirect(url);
