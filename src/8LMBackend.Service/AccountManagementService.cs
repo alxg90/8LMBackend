@@ -330,10 +330,23 @@ namespace _8LMBackend.Service
                 isNew = true;
             }
 
-            if (string.IsNullOrEmpty(u.logoName) && !string.IsNullOrEmpty(u.upload_file?.FileName))
+            bool alreadyHasFile = !string.IsNullOrEmpty(u.logoName);
+            bool newFileUploaded =  !string.IsNullOrEmpty(u.upload_file?.FileName);
+
+            if(newFileUploaded)
             {
                 logoId = _fileManager.SaveFile(StorageType.SupplierAssets, u.upload_file, userId);
             }
+            else if(!alreadyHasFile)
+            {
+                item.LogoID = null;
+                _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
+            }
+
+            // if (string.IsNullOrEmpty(u.logoName) && !string.IsNullOrEmpty(u.upload_file?.FileName))
+            // {
+            //     logoId = _fileManager.SaveFile(StorageType.SupplierAssets, u.upload_file, userId);
+            // }
             /*else if (!string.IsNullOrEmpty(u.logoName) && !string.IsNullOrEmpty(u.upload_file?.FileName))
             {
                 _fileManager.RemoveFile(StorageType.SupplierAssets, userId, item.LogoID.GetValueOrDefault());
@@ -358,7 +371,10 @@ namespace _8LMBackend.Service
             item.notes = u.notes;
             item.externalLink = u.externalLink;
             item.DocumentPath = u.DocumentPath;
-            item.LogoID = logoId;
+            if(logoId != null)
+            {
+                item.LogoID = logoId;
+            }
 
             if (isNew)
                 DbContext.Set<PromoSupplier>().Add(item);
